@@ -54,22 +54,7 @@ onMounted(() => {
       <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
     </div>
 
-    <!-- PARTICULES FLOTTANTES -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div
-        v-for="i in 6"
-        :key="i"
-        class="absolute rounded-full bg-cyan-400/20 blur-xl animate-float"
-        :style="{
-          width: `${80 + i * 40}px`,
-          height: `${80 + i * 40}px`,
-          left: `${10 + i * 15}%`,
-          top: `${20 + (i % 3) * 25}%`,
-          animationDelay: `${i * 0.8}s`,
-          animationDuration: `${6 + i}s`
-        }"
-      ></div>
-    </div>
+
 
     <!-- NAVBAR -->
     <div class="relative z-20 flex justify-center pt-8 px-4">
@@ -88,11 +73,7 @@ onMounted(() => {
       >
         <!-- Logo -->
         <div class="flex items-center gap-3 font-semibold tracking-wide text-lg">
-          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
-            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-            </svg>
-          </div>
+          
           <span class="bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent">
             AquaView
           </span>
@@ -129,26 +110,13 @@ onMounted(() => {
     <!-- HERO -->
     <section
       class="relative z-10 flex flex-col items-center justify-center
-             py-16 md:py-24
+             py-8 md:py-12
              px-6 text-center"
     >
-      <!-- Badge -->
-      <div
-        class="inline-flex items-center gap-2 px-4 py-2 rounded-full
-               bg-cyan-500/10 border border-cyan-400/30
-               text-cyan-300 text-sm
-               transition-all duration-700 ease-out"
-        :class="showBadge ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-        </svg>
-        Nouveau rapport 2024 disponible
-      </div>
 
       <!-- Titre principal -->
       <h1
-        class="mt-8 text-5xl md:text-7xl font-extralight tracking-tight leading-tight
+        class="text-5xl md:text-7xl font-extralight tracking-tight leading-tight
                transition-all duration-700 ease-out"
         :class="showHero ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
       >
