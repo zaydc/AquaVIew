@@ -1,11 +1,18 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const isLoaded = ref(false)
 const showNavbar = ref(false)
 const showBadge = ref(false)
 const showHero = ref(false)
 const showButton = ref(false)
+
+const goToAnalyse = () => {
+  router.push('/analyse')
+}
 
 onMounted(() => {
   setTimeout(() => {
@@ -53,8 +60,6 @@ onMounted(() => {
       <div class="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-blue-900/80 to-cyan-800/70"></div>
       <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
     </div>
-
-
 
     <!-- NAVBAR -->
     <div class="relative z-20 flex justify-center pt-8 px-4">
@@ -144,6 +149,7 @@ onMounted(() => {
         :class="showButton ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
       >
         <button
+          @click="goToAnalyse"
           class="group px-10 py-4 rounded-2xl
                  bg-gradient-to-r from-cyan-500 to-blue-500
                  text-slate-900 font-semibold
