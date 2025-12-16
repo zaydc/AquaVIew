@@ -14,12 +14,12 @@ class User {
         return $stmt->fetch() !== false;
     }
 
-    public function create(string $email, string $passwordHash): bool {
+    public function create(string $nom, string $prenom, string $email, string $numero, string $passwordHash): bool {
         $stmt = $this->pdo->prepare(
-            "INSERT INTO utilisateurs (email, mot_de_passe, date_inscription)
-             VALUES (?, ?, NOW())"
+            "INSERT INTO utilisateurs (nom, prenom, email, numero, mot_de_passe, date_inscription)
+             VALUES (?, ?, ?, ?, ?, NOW())"
         );
-        return $stmt->execute([$email, $passwordHash]);
+        return $stmt->execute([$nom, $prenom, $email, $numero, $passwordHash]);
     }
 
     public function findByEmail(string $email): ?array {

@@ -4,7 +4,10 @@ import { useRouter } from 'vue-router'
 import Navbar from '../components/Navbar.vue'
 
 const router = useRouter()
+const nom = ref('')
+const prenom = ref('')
 const email = ref('')
+const numero = ref('')
 const password = ref('')
 const error = ref('')
 const success = ref('')
@@ -25,7 +28,10 @@ const handleRegister = async () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        nom: nom.value,
+        prenom: prenom.value,
         email: email.value,
+        numero: numero.value,
         password: password.value
       })
     })
@@ -116,6 +122,29 @@ onMounted(() => {
 
           <!-- FORM -->
           <form @submit.prevent="handleRegister" class="space-y-5">
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-white/70 mb-2">Nom</label>
+                <input 
+                  v-model="nom" 
+                  type="text" 
+                  required
+                  placeholder="Votre nom"
+                  class="w-full px-4 py-3 rounded-lg bg-slate-800/50 border border-white/10 text-white placeholder-white/40 focus:border-cyan-400 focus:outline-none transition-colors duration-300"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-white/70 mb-2">Prénom</label>
+                <input 
+                  v-model="prenom" 
+                  type="text" 
+                  required
+                  placeholder="Votre prénom"
+                  class="w-full px-4 py-3 rounded-lg bg-slate-800/50 border border-white/10 text-white placeholder-white/40 focus:border-cyan-400 focus:outline-none transition-colors duration-300"
+                />
+              </div>
+            </div>
+
             <div>
               <label class="block text-sm font-medium text-white/70 mb-2">Email</label>
               <input 
@@ -123,6 +152,17 @@ onMounted(() => {
                 type="email" 
                 required
                 placeholder="votre.email@exemple.com"
+                class="w-full px-4 py-3 rounded-lg bg-slate-800/50 border border-white/10 text-white placeholder-white/40 focus:border-cyan-400 focus:outline-none transition-colors duration-300"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-white/70 mb-2">Numéro de téléphone</label>
+              <input 
+                v-model="numero" 
+                type="tel" 
+                required
+                placeholder="+33 1 23 45 67 89"
                 class="w-full px-4 py-3 rounded-lg bg-slate-800/50 border border-white/10 text-white placeholder-white/40 focus:border-cyan-400 focus:outline-none transition-colors duration-300"
               />
             </div>

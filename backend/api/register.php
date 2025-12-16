@@ -15,10 +15,13 @@ require_once '../models/User.php';
 
 $data = json_decode(file_get_contents("php://input"), true);
 
+$nom = $data['nom'] ?? '';
+$prenom = $data['prenom'] ?? '';
 $email = $data['email'] ?? '';
+$numero = $data['numero'] ?? '';
 $password = $data['password'] ?? '';
 
-if (empty($email) || empty($password)) {
+if (empty($nom) || empty($prenom) || empty($email) || empty($numero) || empty($password)) {
     echo json_encode(["success" => false, "message" => "Tous les champs sont requis."]);
     exit;
 }
@@ -42,7 +45,7 @@ if ($user->emailExists($email)) {
 
 $hash = password_hash($password, PASSWORD_DEFAULT);
 
-if ($user->create($email, $hash)) {
+if ($user->create($nom, $prenom, $email, $numero, $hash)) {
     echo json_encode(["success" => true, "message" => "Compte créé avec succès !"]);
 } else {
     echo json_encode(["success" => false, "message" => "Erreur lors de la création du compte."]);
