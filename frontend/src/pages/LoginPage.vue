@@ -56,7 +56,7 @@ onMounted(() => {
 
 <template>
   <Navbar />
-  <div class="relative min-h-screen text-white bg-slate-900 pt-16">
+  <div class="relative min-h-screen text-white bg-slate-900 pt-20">
     <!-- IMAGE DE FOND AVEC ANIMATION -->
     <div
       class="absolute inset-0 transition-all duration-[2500ms] ease-out"

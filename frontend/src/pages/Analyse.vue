@@ -77,7 +77,7 @@ onMounted(() => {
 
 <template>
   <Navbar />
-  <div class="relative min-h-screen text-white bg-slate-900 pt-16">
+  <div class="relative min-h-screen text-white bg-slate-900 pt-20">
 
     <!-- IMAGE DE FOND -->
     <div
@@ -94,56 +94,6 @@ onMounted(() => {
     <!-- OVERLAY DÉGRADÉ -->
     <div class="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-blue-900/85 to-cyan-800/75"></div>
     <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-slate-900/60"></div>
-
-    <!-- NAVBAR -->
-    <div class="relative z-20 flex justify-center pt-8 px-4">
-      <header
-        class="inline-flex items-center justify-between gap-6 md:gap-12
-               px-6 md:px-10 py-4
-               rounded-2xl
-               backdrop-blur-xl
-               bg-white/5
-               border border-white/10
-               shadow-2xl shadow-black/20
-               transition-all duration-700 ease-out"
-        :class="showContent ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'"
-      >
-        <div class="flex items-center gap-3 font-semibold tracking-wide text-lg">
-          <span class="bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent">
-            AquaView
-          </span>
-        </div>
-
-        <nav class="hidden md:flex gap-8 text-sm">
-          <a
-            v-for="item in ['Accueil', 'Explorer', 'Données', 'Équipe']"
-            :key="item"
-            :href="item === 'Accueil' ? '/' : '#'"
-            class="relative text-white/70 hover:text-white transition-colors duration-300 cursor-pointer group"
-            :class="{ 'text-white': item === 'Explorer' }"
-          >
-            {{ item }}
-            <span 
-              class="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-400 transition-all duration-300"
-              :class="item === 'Explorer' ? 'w-full' : 'w-0 group-hover:w-full'"
-            ></span>
-          </a>
-        </nav>
-
-        <button
-          class="px-6 py-2.5 rounded-xl
-                 bg-gradient-to-r from-cyan-500/20 to-blue-500/20
-                 border border-white/20
-                 text-sm font-medium
-                 hover:from-cyan-500/30 hover:to-blue-500/30
-                 hover:border-white/40
-                 hover:shadow-lg hover:shadow-cyan-500/20
-                 transition-all duration-300"
-        >
-          Connexion
-        </button>
-      </header>
-    </div>
 
     <!-- CONTENU PRINCIPAL -->
     <main class="relative z-10 max-w-7xl mx-auto px-6 py-12">
