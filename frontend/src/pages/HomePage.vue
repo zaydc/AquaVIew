@@ -1,11 +1,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import Navbar from '../components/Navbar.vue'
 
 const router = useRouter()
 
 const isLoaded = ref(false)
-const showNavbar = ref(false)
 const showBadge = ref(false)
 const showHero = ref(false)
 const showButton = ref(false)
@@ -18,10 +18,6 @@ onMounted(() => {
   setTimeout(() => {
     isLoaded.value = true
   }, 100)
-
-  setTimeout(() => {
-    showNavbar.value = true
-  }, 400)
 
   setTimeout(() => {
     showBadge.value = true
@@ -38,7 +34,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="relative min-h-screen text-white bg-slate-900">
+  <Navbar />
+  <div class="relative min-h-screen text-white bg-slate-900 pt-16">
 
     <!-- IMAGE DE FOND AVEC ANIMATION -->
     <div
@@ -59,57 +56,6 @@ onMounted(() => {
     >
       <div class="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-blue-900/80 to-cyan-800/70"></div>
       <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
-    </div>
-
-    <!-- NAVBAR -->
-    <div class="relative z-20 flex justify-center pt-8 px-4">
-      <header
-        class="inline-flex items-center justify-between gap-6 md:gap-12
-               px-6 md:px-10 py-4
-               rounded-2xl
-               backdrop-blur-xl
-               bg-white/5
-               border border-white/10
-               shadow-2xl shadow-black/20
-               transition-all duration-700 ease-out"
-        :class="showNavbar
-          ? 'opacity-100 translate-y-0'
-          : 'opacity-0 -translate-y-8'"
-      >
-        <!-- Logo -->
-        <div class="flex items-center gap-3 font-semibold tracking-wide text-lg">
-          
-          <span class="bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent">
-            AquaView
-          </span>
-        </div>
-
-        <!-- Menu -->
-        <nav class="hidden md:flex gap-8 text-sm">
-          <a
-            v-for="item in ['Accueil', 'Explorer', 'Données', 'Équipe']"
-            :key="item"
-            class="relative text-white/70 hover:text-white transition-colors duration-300 cursor-pointer group"
-          >
-            {{ item }}
-            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-400 transition-all duration-300 group-hover:w-full"></span>
-          </a>
-        </nav>
-
-        <!-- Bouton -->
-        <button
-          class="px-6 py-2.5 rounded-xl
-                 bg-gradient-to-r from-cyan-500/20 to-blue-500/20
-                 border border-white/20
-                 text-sm font-medium
-                 hover:from-cyan-500/30 hover:to-blue-500/30
-                 hover:border-white/40
-                 hover:shadow-lg hover:shadow-cyan-500/20
-                 transition-all duration-300"
-        >
-          Connexion
-        </button>
-      </header>
     </div>
 
     <!-- HERO -->

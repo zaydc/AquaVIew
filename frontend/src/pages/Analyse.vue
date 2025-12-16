@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import Navbar from '../components/Navbar.vue'
 
 const isLoaded = ref(false)
 const showContent = ref(false)
@@ -75,7 +76,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="relative min-h-screen text-white bg-slate-900">
+  <Navbar />
+  <div class="relative min-h-screen text-white bg-slate-900 pt-16">
 
     <!-- IMAGE DE FOND -->
     <div
