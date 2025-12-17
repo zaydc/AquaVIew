@@ -83,7 +83,7 @@ onMounted(() => {
           <div class="relative mb-6">
             <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
               <img 
-                :src="`/placeholder.svg?height=128&width=128&query=data+scientist+portrait`" 
+                src="/team/zayd.jpeg"
                 alt="Zayd"
                 class="w-full h-full rounded-full object-cover bg-slate-700"
               />
@@ -103,7 +103,7 @@ onMounted(() => {
           <div class="relative mb-6">
             <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
               <img 
-                :src="`/placeholder.svg?height=128&width=128&query=marine+biologist+portrait`" 
+                src="/team/ryan.jpeg"
                 alt="Ryan"
                 class="w-full h-full rounded-full object-cover bg-slate-700"
               />
@@ -123,7 +123,7 @@ onMounted(() => {
           <div class="relative mb-6">
             <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
               <img 
-                :src="`/placeholder.svg?height=128&width=128&query=software+engineer+portrait`" 
+                src="/team/adam.png"
                 alt="Adam"
                 class="w-full h-full rounded-full object-cover bg-slate-700"
               />
