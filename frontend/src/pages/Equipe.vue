@@ -143,7 +143,7 @@ onMounted(() => {
           <div class="relative mb-6">
             <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
               <img 
-                :src="`/placeholder.svg?height=128&width=128&query=environmental+scientist+portrait`" 
+                src="/team/fiona.JPG" 
                 alt="Fiona"
                 class="w-full h-full rounded-full object-cover bg-slate-700"
               />
@@ -171,7 +171,7 @@ onMounted(() => {
           </div>
           <div class="text-center">
             <h3 class="text-xl font-semibold text-white mb-2">Selmane</h3>
-            <p class="text-cyan-400 font-medium mb-3">Responsable Qualité</p>
+            <p class="text-cyan-400 font-medium mb-3">Responsable Tests</p>
             <p class="text-blue-200/80 text-sm leading-relaxed mb-4">
               Tests fonctionnels, validation de la stabilité de l’application et rédaction de la documentation du projet
             </p>
