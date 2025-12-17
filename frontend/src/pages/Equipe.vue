@@ -64,19 +64,16 @@ onMounted(() => {
             <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
               <img 
                 :src="`/placeholder.svg?height=128&width=128&query=oceanographer+portrait`" 
-                alt="Zayd Crombez"
+                alt="Ahmed"
                 class="w-full h-full rounded-full object-cover bg-slate-700"
               />
             </div>
-            <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-cyan-400 rounded-full p-2">
-              <Waves class="w-5 h-5 text-slate-900" />
-            </div>
           </div>
           <div class="text-center">
-            <h3 class="text-xl font-semibold text-white mb-2"> Zayd Crombez</h3>
-            <p class="text-cyan-400 font-medium mb-3">Chargé du développement du front-end</p>
+            <h3 class="text-xl font-semibold text-white mb-2"> Ahmed</h3>
+            <p class="text-cyan-400 font-medium mb-3">Chef de projet</p>
             <p class="text-blue-200/80 text-sm leading-relaxed mb-4">
-                Développement d'interfaces utilisateur intuitives pour la visualisation des données océaniques
+                Coordination de l’équipe, planification des tâches et garantie du respect des objectifs et des délais du projet
             </p>
           </div>
         </div>
@@ -87,28 +84,17 @@ onMounted(() => {
             <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
               <img 
                 :src="`/placeholder.svg?height=128&width=128&query=data+scientist+portrait`" 
-                alt="Marc Dubois"
+                alt="Zayd"
                 class="w-full h-full rounded-full object-cover bg-slate-700"
               />
             </div>
-            <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-cyan-400 rounded-full p-2">
-              <Database class="w-5 h-5 text-slate-900" />
-            </div>
           </div>
           <div class="text-center">
-            <h3 class="text-xl font-semibold text-white mb-2">Marc Dubois</h3>
-            <p class="text-cyan-400 font-medium mb-3">Analyste de Données</p>
+            <h3 class="text-xl font-semibold text-white mb-2">Zayd</h3>
+            <p class="text-cyan-400 font-medium mb-3">Développeur Frontend</p>
             <p class="text-blue-200/80 text-sm leading-relaxed mb-4">
-              Expert en traitement et visualisation des données océaniques
+              Création d’interfaces utilisateur claires, intuitives et responsives pour la visualisation des données
             </p>
-            <div class="flex justify-center gap-3">
-              <a href="#" class="text-blue-300 hover:text-cyan-400 transition-colors">
-                <Linkedin class="w-5 h-5" />
-              </a>
-              <a href="#" class="text-blue-300 hover:text-cyan-400 transition-colors">
-                <Mail class="w-5 h-5" />
-              </a>
-            </div>
           </div>
         </div>
 
@@ -118,28 +104,17 @@ onMounted(() => {
             <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
               <img 
                 :src="`/placeholder.svg?height=128&width=128&query=marine+biologist+portrait`" 
-                alt="Emma Chen"
+                alt="Ryan"
                 class="w-full h-full rounded-full object-cover bg-slate-700"
               />
             </div>
-            <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-cyan-400 rounded-full p-2">
-              <Fish class="w-5 h-5 text-slate-900" />
-            </div>
           </div>
           <div class="text-center">
-            <h3 class="text-xl font-semibold text-white mb-2">Emma Chen</h3>
-            <p class="text-cyan-400 font-medium mb-3">Biologiste Marine</p>
+            <h3 class="text-xl font-semibold text-white mb-2">Ryan</h3>
+            <p class="text-cyan-400 font-medium mb-3">Développeur Backend</p>
             <p class="text-blue-200/80 text-sm leading-relaxed mb-4">
-              Recherche sur l'impact de l'hypoxie sur les écosystèmes marins
+              Gestion de la logique métier et communication entre la base de données et l’application
             </p>
-            <div class="flex justify-center gap-3">
-              <a href="#" class="text-blue-300 hover:text-cyan-400 transition-colors">
-                <Linkedin class="w-5 h-5" />
-              </a>
-              <a href="#" class="text-blue-300 hover:text-cyan-400 transition-colors">
-                <Mail class="w-5 h-5" />
-              </a>
-            </div>
           </div>
         </div>
 
@@ -149,28 +124,17 @@ onMounted(() => {
             <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
               <img 
                 :src="`/placeholder.svg?height=128&width=128&query=software+engineer+portrait`" 
-                alt="Thomas Martin"
+                alt="Adam"
                 class="w-full h-full rounded-full object-cover bg-slate-700"
               />
             </div>
-            <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-cyan-400 rounded-full p-2">
-              <Code class="w-5 h-5 text-slate-900" />
-            </div>
           </div>
           <div class="text-center">
-            <h3 class="text-xl font-semibold text-white mb-2">Thomas Martin</h3>
-            <p class="text-cyan-400 font-medium mb-3">Développeur Full-Stack</p>
+            <h3 class="text-xl font-semibold text-white mb-2">Adam</h3>
+            <p class="text-cyan-400 font-medium mb-3">Gestionnaire de Base de Données</p>
             <p class="text-blue-200/80 text-sm leading-relaxed mb-4">
-              Création de plateformes innovantes pour la recherche océanique
+              Conception, optimisation et sécurisation des bases de données pour garantir la fiabilité et la cohérence des données
             </p>
-            <div class="flex justify-center gap-3">
-              <a href="#" class="text-blue-300 hover:text-cyan-400 transition-colors">
-                <Linkedin class="w-5 h-5" />
-              </a>
-              <a href="#" class="text-blue-300 hover:text-cyan-400 transition-colors">
-                <Mail class="w-5 h-5" />
-              </a>
-            </div>
           </div>
         </div>
 
@@ -180,28 +144,17 @@ onMounted(() => {
             <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
               <img 
                 :src="`/placeholder.svg?height=128&width=128&query=environmental+scientist+portrait`" 
-                alt="Léa Rousseau"
+                alt="Fiona"
                 class="w-full h-full rounded-full object-cover bg-slate-700"
               />
             </div>
-            <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-cyan-400 rounded-full p-2">
-              <Sparkles class="w-5 h-5 text-slate-900" />
-            </div>
           </div>
           <div class="text-center">
-            <h3 class="text-xl font-semibold text-white mb-2">Léa Rousseau</h3>
-            <p class="text-cyan-400 font-medium mb-3">Scientifique Environnementale</p>
+            <h3 class="text-xl font-semibold text-white mb-2">Fiona</h3>
+            <p class="text-cyan-400 font-medium mb-3">Analyste de Données</p>
             <p class="text-blue-200/80 text-sm leading-relaxed mb-4">
-              Modélisation climatique et prévision des zones hypoxiques
+              Traitement, analyse et mise en forme des données à travers des visualisations interactives et lisibles
             </p>
-            <div class="flex justify-center gap-3">
-              <a href="#" class="text-blue-300 hover:text-cyan-400 transition-colors">
-                <Linkedin class="w-5 h-5" />
-              </a>
-              <a href="#" class="text-blue-300 hover:text-cyan-400 transition-colors">
-                <Mail class="w-5 h-5" />
-              </a>
-            </div>
           </div>
         </div>
 
@@ -211,28 +164,17 @@ onMounted(() => {
             <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
               <img 
                 :src="`/placeholder.svg?height=128&width=128&query=communications+manager+portrait`" 
-                alt="Alex Bernard"
+                alt="Selmane"
                 class="w-full h-full rounded-full object-cover bg-slate-700"
               />
             </div>
-            <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-cyan-400 rounded-full p-2">
-              <Users class="w-5 h-5 text-slate-900" />
-            </div>
           </div>
           <div class="text-center">
-            <h3 class="text-xl font-semibold text-white mb-2">Alex Bernard</h3>
-            <p class="text-cyan-400 font-medium mb-3">Responsable Communication</p>
+            <h3 class="text-xl font-semibold text-white mb-2">Selmane</h3>
+            <p class="text-cyan-400 font-medium mb-3">Responsable Qualité</p>
             <p class="text-blue-200/80 text-sm leading-relaxed mb-4">
-              Sensibilisation du public aux enjeux de l'océan
+              Tests fonctionnels, validation de la stabilité de l’application et rédaction de la documentation du projet
             </p>
-            <div class="flex justify-center gap-3">
-              <a href="#" class="text-blue-300 hover:text-cyan-400 transition-colors">
-                <Linkedin class="w-5 h-5" />
-              </a>
-              <a href="#" class="text-blue-300 hover:text-cyan-400 transition-colors">
-                <Mail class="w-5 h-5" />
-              </a>
-            </div>
           </div>
         </div>
       </div>
