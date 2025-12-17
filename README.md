@@ -51,7 +51,7 @@ Ce projet repose sur une architecture **MVC (Modèle-Vue-Contrôleur)** native e
 * **Backend :** PHP 8 (POO rigoureuse), MySQL.
 * **Frontend :** HTML5, CSS3 (Design moderne type Tailwind/Custom CSS), JavaScript.
 * **Structure :** Architecture MVC personnalisée avec Autoloader PSR-4.
-* **Outils :** Git, Composer (optionnel selon config).
+* **Outils :** Git, Teams.
 
 ## 📂 Architecture du Projet
 
