@@ -31,7 +31,7 @@
 ## 📸 Aperçu
 
 <div align="center">
-  <img src="path/to/your/screenshot_home.png" alt="AquaView Dashboard" width="800" style="border-radius: 10px; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);">
+  <img src="web/assets/image.png" alt="AquaView Dashboard" width="800" style="border-radius: 10px; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);">
   <br><br>
 </div>
 
