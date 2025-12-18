@@ -72,7 +72,7 @@
                         <div class="relative p-8 rounded-3xl backdrop-blur-xl bg-slate-800/30 border border-white/20 shadow-2xl shadow-black/40">
                             <div class="mb-8 space-y-4">
                                 <div class="flex items-center justify-between mb-6">
-                                    <h3 class="text-xl font-semibold text-white">État Actuel</h3>
+                                    <h3 class="text-xl font-light text-white">Éxaminez en détail l'évolution des différents paramètres</h3>
                                     <div class="flex items-center gap-2 px-3 py-1 ">
                                         
                                     </div>
