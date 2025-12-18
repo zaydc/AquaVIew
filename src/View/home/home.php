@@ -84,20 +84,21 @@
                                     <div class="w-full bg-cyan-500/60 rounded-t h-[85%]"></div>
                                     <div class="w-full bg-cyan-500/50 rounded-t h-[60%]"></div>
                                 </div>
-                                <div class="grid grid-cols-3 gap-4 mt-6">
-                                    <div class="text-center">
-                                        <div class="text-2xl font-bold text-white">3.2</div>
-                                        <div class="text-xs text-slate-300">mg/L O₂</div>
-                                    </div>
-                                    <div class="text-center border-l border-white/10">
-                                        <div class="text-2xl font-bold text-white">18.5</div>
-                                        <div class="text-xs text-slate-300">Temp °C</div>
-                                    </div>
-                                    <div class="text-center border-l border-white/10">
-                                        <div class="text-2xl font-bold text-white">24</div>
-                                        <div class="text-xs text-slate-300">Stations</div>
-                                    </div>
-                                </div>
+                        <div class="grid grid-cols-3 gap-4 mt-6">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-white">≈ 3.0</div>
+                            <div class="text-xs text-slate-300">mg/L O₂</div>
+                        </div>
+                        <div class="text-center border-l border-white/10">
+                            <div class="text-2xl font-bold text-white">≈ 19.6</div>
+                            <div class="text-xs text-slate-300">Temp °C</div>
+                        </div>
+                        <div class="text-center border-l border-white/10">
+                            <div class="text-2xl font-bold text-white">~ 690</div>
+                            <div class="text-xs text-slate-300">Stations</div>
+                        </div>
+                    </div>
+
                             </div>
                             <a href="?action=analyse" class="group w-full px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-semibold shadow-lg shadow-cyan-900/20 hover:shadow-cyan-500/40 hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-3">
                                 <span>Lancer l'analyse</span>
@@ -127,78 +128,122 @@
             <div class="max-w-7xl mx-auto px-6 relative z-10">
                 
                 <div class="mb-20 text-center reveal-on-scroll">
-                    <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Comprendre l'invisible</h2>
-                    <p class="text-slate-300 max-w-2xl mx-auto text-lg leading-relaxed">Découvrez les mécanismes complexes qui régissent la santé de nos océans à travers une vue d'ensemble structurée.</p>
+                    <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Explorer et comprendre</h2>
+                    <p class="text-slate-300 max-w-2xl mx-auto text-lg leading-relaxed">AquaView analyse des données environnementales réelles pour mettre en lumière les tendances spatio-temporelles de la désoxygénation des eaux.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-16">
 
                     <div class="md:col-span-8 bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:bg-slate-800/70 hover:border-cyan-500/30 transition-all duration-300 reveal-on-scroll shadow-lg">
                         <div class="flex items-start justify-between mb-4">
-                            <h3 class="text-2xl font-semibold text-white">Qu'est-ce que c'est ?</h3>
+                            <h3 class="text-2xl font-semibold text-white">Notre approche</h3>
                             <div class="p-2 bg-white/5 rounded-lg text-cyan-400">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                             </div>
                         </div>
                         <p class="text-slate-300 leading-relaxed text-lg">
-                            C'est l'asphyxie progressive de nos mers. La concentration en oxygène dissous diminue drastiquement, créant des zones "hypoxiques" où la vie ne peut plus subsister.
+                            AquaView exploite des données géolocalisées (latitude, longitude) et historiques couvrant plusieurs décennies. L'objectif est pédagogique et analytique : comprendre où, quand et dans quelles conditions la désoxygénation est observée, tout en assumant les limites des données disponibles.
                         </p>
                     </div>
 
                     <div class="md:col-span-4 bg-gradient-to-br from-cyan-950/50 to-blue-950/30 backdrop-blur-xl border border-white/10 rounded-3xl p-8 flex flex-col justify-center items-center text-center reveal-on-scroll delay-100 shadow-lg hover:border-cyan-500/30 transition-all">
-                        <div class="text-6xl font-bold bg-gradient-to-r from-cyan-300 to-blue-300 bg-clip-text text-transparent mb-2">2%</div>
-                        <p class="text-slate-200 uppercase tracking-widest text-sm font-semibold">Oxygène Perdu</p>
-                        <p class="text-cyan-200/60 text-xs mt-2">Globalement depuis 1960</p>
+                        <div class="text-6xl font-bold bg-gradient-to-r from-cyan-300 to-blue-300 bg-clip-text text-transparent mb-2">20+</div>
+                        <p class="text-slate-200 uppercase tracking-widest text-sm font-semibold">Années de données</p>
+                        <p class="text-cyan-200/60 text-xs mt-2">Analyses historiques</p>
                     </div>
 
-                    <div class="md:col-span-6 bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:bg-slate-800/70 hover:border-red-400/30 transition-all duration-300 reveal-on-scroll delay-200 shadow-lg">
+                    <div class="md:col-span-6 bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:bg-slate-800/70 hover:border-cyan-400/30 transition-all duration-300 reveal-on-scroll delay-200 shadow-lg">
                         <h3 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
-                            <span class="w-2 h-2 rounded-full bg-red-400 shadow-[0_0_10px_rgba(248,113,113,0.5)]"></span>
-                            Les Causes
+                            <span class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.5)]"></span>
+                            Paramètres analysés
                         </h3>
                         <ul class="space-y-4">
                             <li class="flex gap-4">
-                                <span class="p-1.5 bg-red-500/10 rounded-lg text-red-400 h-fit"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></span>
-                                <span class="text-slate-300 text-sm leading-relaxed"><strong>Réchauffement :</strong> L'eau chaude retient moins de gaz.</span>
+                                <span class="p-1.5 bg-cyan-500/10 rounded-lg text-cyan-400 h-fit"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></span>
+                                <span class="text-slate-300 text-sm leading-relaxed"><strong>Oxygène dissous :</strong> Concentration en O₂ dans l'eau (mg/L).</span>
                             </li>
                             <li class="flex gap-4">
-                                <span class="p-1.5 bg-red-500/10 rounded-lg text-red-400 h-fit"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg></span>
-                                <span class="text-slate-300 text-sm leading-relaxed"><strong>Eutrophisation :</strong> Les nutriments agricoles en excès.</span>
+                                <span class="p-1.5 bg-cyan-500/10 rounded-lg text-cyan-400 h-fit"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg></span>
+                                <span class="text-slate-300 text-sm leading-relaxed"><strong>Température :</strong> Évolution thermique des masses d'eau.</span>
+                            </li>
+                            <li class="flex gap-4">
+                                <span class="p-1.5 bg-cyan-500/10 rounded-lg text-cyan-400 h-fit"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span>
+                                <span class="text-slate-300 text-sm leading-relaxed"><strong>Salinité & Géolocalisation :</strong> Contexte spatial des mesures.</span>
                             </li>
                         </ul>
                     </div>
 
-                    <div class="md:col-span-6 bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:bg-slate-800/70 hover:border-purple-400/30 transition-all duration-300 reveal-on-scroll delay-200 shadow-lg">
-                        <h3 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
-                            <span class="w-2 h-2 rounded-full bg-purple-400 shadow-[0_0_10px_rgba(192,132,252,0.5)]"></span>
-                            Conséquences
-                        </h3>
-                        <ul class="space-y-4">
-                            <li class="flex gap-4">
-                                <span class="p-1.5 bg-purple-500/10 rounded-lg text-purple-400 h-fit"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></span>
-                                <span class="text-slate-300 text-sm leading-relaxed">Apparition de zones mortes.</span>
-                            </li>
-                            <li class="flex gap-4">
-                                <span class="p-1.5 bg-purple-500/10 rounded-lg text-purple-400 h-fit"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg></span>
-                                <span class="text-slate-300 text-sm leading-relaxed">Effondrement de la biodiversité.</span>
-                            </li>
-                        </ul>
+                  <div class="md:col-span-6 bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:bg-slate-800/70 hover:border-teal-400/30 transition-all duration-300 reveal-on-scroll delay-200 shadow-lg">
+    <h3 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+        <span class="w-2 h-2 rounded-full bg-teal-400 shadow-[0_0_10px_rgba(45,212,191,0.5)]"></span>
+        Objectifs
+    </h3>
+    <ul class="space-y-4">
+        <li class="flex gap-4">
+            <span class="p-1.5 bg-teal-500/10 rounded-lg text-teal-400 h-fit">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </span>
+            <span class="text-slate-300 text-sm leading-relaxed">
+                Mettre en évidence des <strong>tendances temporelles</strong> de la désoxygénation sur plusieurs décennies.
+            </span>
+        </li>
+
+        <li class="flex gap-4">
+            <span class="p-1.5 bg-teal-500/10 rounded-lg text-teal-400 h-fit">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </span>
+            <span class="text-slate-300 text-sm leading-relaxed">
+                Comparer les <strong>différences spatiales</strong> des niveaux d’oxygène dissous entre différentes zones géographiques.
+            </span>
+        </li>
+
+        <li class="flex gap-4">
+            <span class="p-1.5 bg-teal-500/10 rounded-lg text-teal-400 h-fit">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </span>
+            <span class="text-slate-300 text-sm leading-relaxed">
+                Analyser les <strong>relations entre désoxygénation et paramètres environnementaux</strong> (température, salinité).
+            </span>
+        </li>
+
+        <li class="flex gap-4">
+            <span class="p-1.5 bg-teal-500/10 rounded-lg text-teal-400 h-fit">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M5 13l4 4L19 7"></path>
+                </svg>
+            </span>
+            <span class="text-slate-300 text-sm leading-relaxed">
+                Identifier des <strong>zones potentiellement à risque</strong> pour les écosystèmes marins.
+            </span>
+        </li>
+    </ul>
+</div>
+
+                <div class="md:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-slate-800/40 backdrop-blur-md rounded-2xl p-6 text-center border border-white/10 reveal-on-scroll hover:bg-slate-800/60 transition-colors">
+                        <div class="text-3xl font-bold text-white">Spatio</div>
+                        <div class="text-cyan-400 text-xs uppercase tracking-wider mt-1">Analyse géographique</div>
                     </div>
-                    
-                     <div class="md:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="bg-slate-800/40 backdrop-blur-md rounded-2xl p-6 text-center border border-white/10 reveal-on-scroll hover:bg-slate-800/60 transition-colors">
-                            <div class="text-3xl font-bold text-white">500+</div>
-                            <div class="text-cyan-400 text-xs uppercase tracking-wider mt-1">Zones mortes</div>
-                        </div>
-                        <div class="bg-slate-800/40 backdrop-blur-md rounded-2xl p-6 text-center border border-white/10 reveal-on-scroll delay-100 hover:bg-slate-800/60 transition-colors">
-                            <div class="text-3xl font-bold text-white">4.5M</div>
-                            <div class="text-cyan-400 text-xs uppercase tracking-wider mt-1">Km² Affectés</div>
-                        </div>
-                        <div class="bg-slate-800/40 backdrop-blur-md rounded-2xl p-6 text-center border border-white/10 reveal-on-scroll delay-200 hover:bg-slate-800/60 transition-colors">
-                            <div class="text-3xl font-bold text-white">x10</div>
-                            <div class="text-cyan-400 text-xs uppercase tracking-wider mt-1">Depuis 1950</div>
-                        </div>
+                    <div class="bg-slate-800/40 backdrop-blur-md rounded-2xl p-6 text-center border border-white/10 reveal-on-scroll delay-100 hover:bg-slate-800/60 transition-colors">
+                        <div class="text-3xl font-bold text-white">Temporel</div>
+                        <div class="text-cyan-400 text-xs uppercase tracking-wider mt-1">Tendances historiques</div>
                     </div>
+                    <div class="bg-slate-800/40 backdrop-blur-md rounded-2xl p-6 text-center border border-white/10 reveal-on-scroll delay-200 hover:bg-slate-800/60 transition-colors">
+                        <div class="text-3xl font-bold text-white">Multi-zones</div>
+                        <div class="text-cyan-400 text-xs uppercase tracking-wider mt-1">Océans & côtes</div>
+                    </div>
+                </div>
+
                 </div>
                 
                 <div class="text-center mt-20 reveal-on-scroll pb-20">
