@@ -7,7 +7,7 @@ $navItems = [
     ['label' => 'Accueil', 'path' => '?action=home', 'action' => 'home'],
     ['label' => 'Analyse', 'path' => '?action=analyse', 'action' => 'analyse'],
     ['label' => 'Équipe', 'path' => '?action=equipe', 'action' => 'equipe'],
-    ['label' => 'En savoir plus', 'path' => '?action=ensavoirplus', 'action' => 'ensavoirplus'],
+    
 ];
 ?>
 
