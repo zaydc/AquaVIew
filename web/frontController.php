@@ -10,6 +10,9 @@ $loader->addNamespace('App', __DIR__ . '/../src');
 
 use App\Config\Conf;
 use App\Controller\ControllerUtilisateur;
+use App\Lib\GeoHelper;
+use App\Lib\TimeHelper;
+use App\Lib\MetricHelper;
 
 // Get action from URL
 $action = $_GET['action'] ?? 'home';
@@ -34,6 +37,13 @@ try {
                     require_once __DIR__ . '/../src/View/home/register.php';
                     break;
                 case 'analyse':
+                    // Régions océaniques définies dynamiquement
+                    $regions = array_keys(GeoHelper::getRegions());
+                    // Périodes disponibles définies dynamiquement
+                    $periods = TimeHelper::getAvailablePeriods();
+                    // Métriques disponibles définies dynamiquement
+                    $metrics = MetricHelper::getAvailableMetrics();
+
                     require_once __DIR__ . '/../src/View/home/analyse.php';
                     break;
                 case 'equipe':

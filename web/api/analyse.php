@@ -1,37 +1,102 @@
 <?php
-header('Content-Type: application/json');
+declare(strict_types=1);
 
-$pdo = new PDO(
-    'mysql:host=localhost;dbname=aquaview;charset=utf8',
-    'root',
-    '',
-    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-);
+// ==========================
+// Error handling
+// ==========================
+error_reporting(E_ALL);
+ini_set('display_errors', '0');
 
-// Oxygène dissous
-$oxygen = $pdo->query("
-    SELECT 
-        ROUND(AVG(valeur), 2) AS moyenne,
-        ROUND(MIN(valeur), 2) AS minimum
-    FROM variables
-    WHERE variable_name = 'dissoxygen'
-")->fetch(PDO::FETCH_ASSOC);
+// ==========================
+// Autoloader PSR-4
+// ==========================
+require_once __DIR__ . '/../../src/Lib/Psr4AutoloaderClass.php';
 
-// Température
-$temperature = $pdo->query("
-    SELECT ROUND(AVG(valeur), 2)
-    FROM variables
-    WHERE variable_name = 'water_temp'
-")->fetchColumn();
+$loader = new App\Lib\Psr4AutoloaderClass();
+$loader->register();
+$loader->addNamespace('App', __DIR__ . '/../../src');
 
-// Stations actives
-$stations = $pdo->query("
-    SELECT COUNT(DISTINCT sample_site)
-    FROM mesures
-")->fetchColumn();
+header('Content-Type: application/json; charset=utf-8');
 
-echo json_encode([
-    'oxygen' => $oxygen,
-    'temperature_moyenne' => $temperature,
-    'stations_actives' => $stations
-], JSON_PRETTY_PRINT);
+// ==========================
+// Error handler
+// ==========================
+function handleApiError(string $message, array $details = [], int $statusCode = 500) {
+    http_response_code($statusCode);
+    echo json_encode([
+        'error' => $message,
+        'details' => $details,
+        'timestamp' => date('c')
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+// ==========================
+// Imports
+// ==========================
+use App\Model\Repository\OceanDataRepository;
+use App\Lib\GeoHelper;
+use App\Lib\TimeHelper;
+
+// ==========================
+// Paramètres reçus
+// ==========================
+try {
+    $region = $_GET['region'] ?? 'Atlantique';
+    $metric = $_GET['metric'] ?? 'dissoxygen';
+    
+    $startDate = $_GET['start_date'] ?? null;
+    $endDate = $_GET['end_date'] ?? null;
+    $years = isset($_GET['periode']) ? (int)$_GET['periode'] : null;
+
+    // ==========================
+    // Construction des filtres
+    // ==========================
+    $whereRegion = GeoHelper::regionWhere($region);
+    
+    if ($startDate || $endDate) {
+        $wherePeriod = TimeHelper::getDateRangeCondition($startDate, $endDate);
+    } else {
+        $wherePeriod = TimeHelper::getTimePeriod($years ?? 1);
+    }
+
+    // ==========================
+    // Repository
+    // ==========================
+    $repo = new OceanDataRepository();
+
+    // Statistiques de la métrique
+    $stats = $repo->getMetricStats($metric, $whereRegion, $wherePeriod);
+
+    // Évolution temporelle de la métrique
+    $evolution = $repo->getMetricEvolution($metric, $whereRegion, $wherePeriod);
+
+    // Comptage des mesures
+    $nbMesures = $repo->countMeasures($whereRegion, $wherePeriod);
+
+    // ==========================
+    // Réponse JSON
+    // ==========================
+    echo json_encode([
+        'region' => $region,
+        'periode_ans' => $years,
+        'start_date' => $startDate,
+        'end_date' => $endDate,
+        'metric' => $metric,
+        'nb_mesures' => $nbMesures,
+        'stats' => [
+            'avg_value' => $stats['avg_value'] ?? null,
+            'min_value' => $stats['min_value'] ?? null,
+            'max_value' => $stats['max_value'] ?? null,
+            'count_measures' => $stats['count_measures'] ?? 0
+        ],
+        'evolution' => $evolution
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+} catch (Exception $e) {
+    handleApiError('API Error', [
+        'message' => $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine()
+    ], 500);
+}
