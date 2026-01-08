@@ -6,7 +6,7 @@ class Conf {
         'hostname' => 'localhost',
         'database' => 'aquaview',
         'login' => 'root',
-        'password' => ''
+        'password' => 'root'
     ];
 
     public static function getLogin(): string {
