@@ -6,6 +6,8 @@
     <title>Analyse - AquaView</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         .fade-in { animation: fadeIn 0.7s ease-out forwards; }
         .slide-up { animation: slideUp 0.7s ease-out forwards; opacity: 0; }
@@ -23,6 +25,100 @@
         input[type="date"]::-webkit-calendar-picker-indicator {
             filter: invert(1);
             cursor: pointer;
+        }
+        
+        /* Leaflet Map Styling */
+        .leaflet-container {
+            background: #0f172a !important;
+            border-radius: 0.5rem;
+        }
+        
+        .leaflet-control-container .leaflet-control {
+            background: rgba(15, 23, 42, 0.9) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            border-radius: 0.5rem !important;
+        }
+        
+        .leaflet-control-container .leaflet-control a {
+            color: white !important;
+            background: transparent !important;
+        }
+        
+        .leaflet-control-container .leaflet-control a:hover {
+            background: rgba(34, 211, 238, 0.2) !important;
+        }
+        
+        .leaflet-popup-content-wrapper {
+            background: rgba(15, 23, 42, 0.95) !important;
+            border: 1px solid rgba(34, 211, 238, 0.3) !important;
+            border-radius: 0.5rem !important;
+            color: white !important;
+        }
+        
+        .leaflet-popup-tip {
+            background: rgba(15, 23, 42, 0.95) !important;
+        }
+        
+        .leaflet-popup-content {
+            color: white !important;
+            margin: 0.5rem !important;
+        }
+        
+        /* Custom marker styling */
+        .custom-marker {
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 12px;
+            height: 12px;
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.6);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 20px rgba(34, 211, 238, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(34, 211, 238, 0.8);
+            }
+            100% {
+                box-shadow: 0 0 20px rgba(34, 211, 238, 0.6);
+            }
+        }
+        
+        /* Table styling */
+        .table-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .table-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+        
+        .table-container::-webkit-scrollbar-thumb {
+            background: rgba(34, 211, 238, 0.3);
+            border-radius: 3px;
+        }
+        
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(34, 211, 238, 0.5);
+        }
+        
+        /* Tooltip styling */
+        .custom-tooltip {
+            background: rgba(15, 23, 42, 0.95) !important;
+            border: 1px solid rgba(34, 211, 238, 0.3) !important;
+            border-radius: 0.5rem !important;
+            color: white !important;
+            font-size: 12px !important;
+            padding: 6px 10px !important;
+        }
+        
+        .custom-tooltip::before {
+            border-top-color: rgba(34, 211, 238, 0.3) !important;
         }
     </style>
 </head>
@@ -62,22 +158,7 @@
             <!-- Panneau de sélection -->
             <div class="mb-8 p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 slide-up slide-up-2">
                 <!-- Grille adaptée pour inclure les filtres de date -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    
-                    <!-- Sélection de région -->
-                    <div>
-                        <label class="block text-sm font-medium text-white/70 mb-2">
-                            Région océanique
-                        </label>
-                        <select
-                            id="region"
-                            class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white focus:outline-none focus:border-cyan-400/50 focus:bg-white/10 transition-all duration-300 cursor-pointer"
-                        >
-                            <option value="Méditeranée">Méditerranée</option>
-                            <option value="Atlantique">Atlantique</option>
-                            <option value="Pacifique">Pacifique</option>
-                        </select>
-                    </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                     <!-- Sélection de métrique -->
                     <div>
@@ -207,20 +288,20 @@
                         <p id="chartSubtitle" class="text-white/50 text-sm mt-1">Sélectionnez une métrique et lancez l'analyse</p>
                     </div>
                     <div class="flex gap-2">
-                        <button class="px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
+                        <button id="btnMapView" class="px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
                             Carte
                         </button>
-                        <button class="px-4 py-2 rounded-lg text-sm bg-white/10 border border-white/20 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
+                        <button id="btnChartView" class="px-4 py-2 rounded-lg text-sm bg-white/10 border border-white/20 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
                             Graphique
                         </button>
-                        <button class="px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
+                        <button id="btnTableView" class="px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
                             Tableau
                         </button>
                     </div>
                 </div>
 
                 <!-- Placeholder for the graph -->
-                <div class="h-96 rounded-xl bg-slate-900/50 border border-white/10 p-4 relative">
+                <div id="chartView" class="h-96 rounded-xl bg-slate-900/50 border border-white/10 p-4 relative">
                     <!-- Loading state -->
                     <div id="chartLoading" class="absolute inset-0 flex items-center justify-center hidden">
                         <div class="flex flex-col items-center gap-3">
@@ -243,6 +324,90 @@
                     <!-- Chart canvas -->
                     <canvas id="evolutionChart" class="w-full h-full"></canvas>
                 </div>
+
+                <!-- Map container -->
+                <div id="mapView" class="h-96 rounded-xl bg-slate-900/50 border border-white/10 p-4 relative hidden">
+                    <!-- Loading state -->
+                    <div id="mapLoading" class="absolute inset-0 flex items-center justify-center hidden">
+                        <div class="flex flex-col items-center gap-3">
+                            <div class="w-10 h-10 border-2 border-cyan-400/30 border-t-cyan-400 rounded-full animate-spin"></div>
+                            <p class="text-white/50 text-sm">Chargement de la carte...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Empty state -->
+                    <div id="mapEmpty" class="absolute inset-0 flex items-center justify-center">
+                        <div class="text-center">
+                            <svg class="w-16 h-16 mx-auto mb-4 text-cyan-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                            </svg>
+                            <p class="text-white/50 text-lg">Carte interactive</p>
+                            <p class="text-white/30 text-sm mt-2">Cliquez sur "Lancer l'analyse" pour afficher les points de prélèvement</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Map container -->
+                    <div id="mapContainer" class="w-full h-full rounded-lg overflow-hidden"></div>
+                </div>
+
+                <!-- Map Legend - Outside the map -->
+                <div id="mapLegendContainer" class="mt-4 flex items-center justify-center hidden">
+                    <div class="bg-slate-900/90 backdrop-blur-sm border border-white/20 rounded-lg p-4">
+                        <div class="text-sm font-medium text-white/80 mb-3">Qualité de l'eau</div>
+                        <div class="flex items-center gap-6">
+                            <div class="flex items-center gap-2">
+                                <div class="w-4 h-4 rounded-full bg-green-500"></div>
+                                <span class="text-sm text-white/70" id="legendGood">Bon</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-4 h-4 rounded-full bg-amber-500"></div>
+                                <span class="text-sm text-white/70" id="legendModerate">Modéré</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-4 h-4 rounded-full bg-red-500"></div>
+                                <span class="text-sm text-white-70" id="legendPoor">Mauvais</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table container -->
+                <div id="tableView" class="h-96 rounded-xl bg-slate-900/50 border border-white/10 p-4 relative hidden">
+                    <!-- Loading state -->
+                    <div id="tableLoading" class="absolute inset-0 flex items-center justify-center hidden">
+                        <div class="flex flex-col items-center gap-3">
+                            <div class="w-10 h-10 border-2 border-cyan-400/30 border-t-cyan-400 rounded-full animate-spin"></div>
+                            <p class="text-white/50 text-sm">Chargement des données...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Empty state -->
+                    <div id="tableEmpty" class="absolute inset-0 flex items-center justify-center">
+                        <div class="text-center">
+                            <svg class="w-16 h-16 mx-auto mb-4 text-cyan-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                            </svg>
+                            <p class="text-white/50 text-lg">Tableau de données</p>
+                            <p class="text-white/30 text-sm mt-2">Cliquez sur "Lancer l'analyse" pour afficher les données</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Table container -->
+                    <div id="tableContainer" class="w-full h-full overflow-auto">
+                        <table class="w-full text-sm text-white">
+                            <thead class="text-white/70 border-b border-white/10">
+                                <tr>
+                                    <th class="px-4 py-2 text-left">Date</th>
+                                    <th class="px-4 py-2 text-left">Latitude</th>
+                                    <th class="px-4 py-2 text-left">Longitude</th>
+                                    <th class="px-4 py-2 text-left">Valeur</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody" class="text-white/50">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 
                 <!-- Chart legend -->
                 <div id="chartLegend" class="mt-4 flex items-center justify-center gap-6 text-sm text-white/60 hidden">
@@ -261,15 +426,70 @@
 
     <script>
     let evolutionChart = null;
+    let map = null;
+    let markers = [];
+    let currentView = 'chart';
     let availableDateRange = { min_date: null, max_date: null };
     
-    // Metric labels and units
+    // Metric labels, units, and quality thresholds
     const metricConfig = {
-        'dissoxygen': { label: "Niveau d'oxygène", unit: 'mg/L', color: 'rgb(34, 211, 238)' },
-        'water_temp': { label: 'Température', unit: '°C', color: 'rgb(251, 146, 60)' },
-        'salinity': { label: 'Salinité', unit: 'PSU', color: 'rgb(96, 165, 250)' },
-        'ph': { label: 'pH', unit: '', color: 'rgb(167, 139, 250)' }
+        'dissoxygen': { 
+            label: "Niveau d'oxygène", 
+            unit: 'mg/L', 
+            color: 'rgb(34, 211, 238)',
+            thresholds: {
+                good: { min: 6, max: Infinity, color: '#10b981', label: 'Bon' },
+                moderate: { min: 4, max: 6, color: '#f59e0b', label: 'Modéré' },
+                poor: { min: 0, max: 4, color: '#ef4444', label: 'Mauvais' }
+            }
+        },
+        'water_temp': { 
+            label: 'Température', 
+            unit: '°C', 
+            color: 'rgb(251, 146, 60)',
+            thresholds: {
+                good: { min: 15, max: 25, color: '#10b981', label: 'Normal' },
+                moderate: { min: 10, max: 30, color: '#f59e0b', label: 'Élevé/Bas' },
+                poor: { min: 0, max: 10, color: '#ef4444', label: 'Extrême' }
+            }
+        },
+        'salinity': { 
+            label: 'Salinité', 
+            unit: 'PSU', 
+            color: 'rgb(96, 165, 250)',
+            thresholds: {
+                good: { min: 33, max: 37, color: '#10b981', label: 'Normal' },
+                moderate: { min: 30, max: 40, color: '#f59e0b', label: 'Varié' },
+                poor: { min: 0, max: 30, color: '#ef4444', label: 'Anormal' }
+            }
+        },
+        'ph': { 
+            label: 'pH', 
+            unit: '', 
+            color: 'rgb(167, 139, 250)',
+            thresholds: {
+                good: { min: 7.5, max: 8.5, color: '#10b981', label: 'Optimal' },
+                moderate: { min: 7.0, max: 9.0, color: '#f59e0b', label: 'Acceptable' },
+                poor: { min: 0, max: 7.0, color: '#ef4444', label: 'Acide' }
+            }
+        }
     };
+
+    // Function to determine quality based on metric value
+    function getQualityLevel(metric, value) {
+        const config = metricConfig[metric];
+        if (!config || !config.thresholds || value === null) return null;
+        
+        const thresholds = config.thresholds;
+        
+        if (value >= thresholds.good.min && value <= thresholds.good.max) {
+            return { ...thresholds.good, level: 'good' };
+        } else if (value >= thresholds.moderate.min && value <= thresholds.moderate.max) {
+            return { ...thresholds.moderate, level: 'moderate' };
+        } else {
+            return { ...thresholds.poor, level: 'poor' };
+        }
+    }
 
     async function loadDateRange() {
         try {
@@ -466,14 +686,12 @@
     document.getElementById('btnAnalyse').addEventListener('click', () => {
         if (!validateDates()) return;
         
-        const region = document.getElementById('region').value;
         const metric = document.getElementById('metric').value;
         const startDate = document.getElementById('startDate').value;
         const endDate = document.getElementById('endDate').value;
 
         let url = `/web/api/analyse.php`
-            + `?region=${encodeURIComponent(region)}`
-            + `&metric=${encodeURIComponent(metric)}`;
+            + `?metric=${encodeURIComponent(metric)}`;
         
         if (startDate) {
             url += `&start_date=${encodeURIComponent(startDate)}`;
@@ -512,17 +730,34 @@
                 document.getElementById('nbStations').textContent =
                     data.nb_mesures ?? '–';
                 
+                // Handle chart view
                 if (data.evolution && data.evolution.length > 0) {
                     const chartData = processEvolutionData(data.evolution);
                     createChart(chartData, metric);
+                    document.getElementById('chartEmpty').classList.add('hidden');
+                    document.getElementById('chartLegend').classList.remove('hidden');
                 } else {
                     // Aucune donnée d'évolution
                     document.getElementById('chartEmpty').classList.remove('hidden');
                     document.getElementById('chartLegend').classList.add('hidden');
                 }
                 
-                // Hide loading state
+                // Handle map view - add markers for measurement points
+                if (currentView === 'map' && map) {
+                    document.getElementById('mapEmpty').classList.add('hidden');
+                    addMarkers(data.evolution || [], metric);
+                }
+                
+                // Handle table view - populate with data
+                if (currentView === 'table') {
+                    document.getElementById('tableEmpty').classList.add('hidden');
+                    populateTable(data.evolution || []);
+                }
+                
+                // Hide loading state for all views
                 document.getElementById('chartLoading').classList.add('hidden');
+                document.getElementById('mapLoading').classList.add('hidden');
+                document.getElementById('tableLoading').classList.add('hidden');
             })
             .catch(error => {
                 console.error('Erreur API:', error);
@@ -531,6 +766,146 @@
                 alert('Erreur lors de l\'analyse');
             });
     });
+
+    // View switching functions
+    function switchView(view) {
+        currentView = view;
+        
+        // Hide all views
+        document.getElementById('chartView').classList.add('hidden');
+        document.getElementById('mapView').classList.add('hidden');
+        document.getElementById('tableView').classList.add('hidden');
+        
+        // Reset button styles
+        document.getElementById('btnMapView').className = 'px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300';
+        document.getElementById('btnChartView').className = 'px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300';
+        document.getElementById('btnTableView').className = 'px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300';
+        
+        // Show selected view and highlight button
+        switch(view) {
+            case 'map':
+                document.getElementById('mapView').classList.remove('hidden');
+                document.getElementById('btnMapView').className = 'px-4 py-2 rounded-lg text-sm bg-white/10 border border-white/20 hover:bg-white/10 hover:border-white/20 transition-all duration-300';
+                initializeMap();
+                break;
+            case 'chart':
+                document.getElementById('chartView').classList.remove('hidden');
+                document.getElementById('btnChartView').className = 'px-4 py-2 rounded-lg text-sm bg-white/10 border border-white/20 hover:bg-white/10 hover:border-white/20 transition-all duration-300';
+                break;
+            case 'table':
+                document.getElementById('tableView').classList.remove('hidden');
+                document.getElementById('btnTableView').className = 'px-4 py-2 rounded-lg text-sm bg-white/10 border border-white/20 hover:bg-white/10 hover:border-white/20 transition-all duration-300';
+                break;
+        }
+    }
+    
+    function initializeMap() {
+        if (!map) {
+            // Initialize the map
+            map = L.map('mapContainer').setView([20, 0], 2);
+            
+            // Add beautiful dark tile layer
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '© OpenStreetMap contributors © CARTO',
+                subdomains: 'abcd',
+                maxZoom: 19
+            }).addTo(map);
+        }
+    }
+    
+    function addMarkers(data, metric) {
+        // Clear existing markers
+        markers.forEach(marker => map.removeLayer(marker));
+        markers = [];
+        
+        // Update legend with metric-specific labels
+        const config = metricConfig[metric];
+        if (config && config.thresholds) {
+            document.getElementById('legendGood').textContent = config.thresholds.good.label;
+            document.getElementById('legendModerate').textContent = config.thresholds.moderate.label;
+            document.getElementById('legendPoor').textContent = config.thresholds.poor.label;
+            document.getElementById('mapLegendContainer').classList.remove('hidden');
+        }
+        
+        if (data && data.length > 0) {
+            const bounds = [];
+            
+            data.forEach(item => {
+                if (item.latitude && item.longitude && item.value !== null) {
+                    // Determine quality level and color
+                    const quality = getQualityLevel(metric, parseFloat(item.value));
+                    const color = quality ? quality.color : '#6b7280';
+                    const qualityLabel = quality ? quality.label : 'Inconnu';
+                    
+                    const marker = L.circleMarker([item.latitude, item.longitude], {
+                        radius: 10,
+                        fillColor: color,
+                        color: '#ffffff',
+                        weight: 2,
+                        opacity: 1,
+                        fillOpacity: 0.8
+                    }).addTo(map);
+                    
+                    // Add popup with measurement info and quality
+                    const popupContent = `
+                        <div style="color: white; min-width: 200px;">
+                            <div style="margin-bottom: 8px;">
+                                <strong style="color: ${color};">● ${qualityLabel}</strong>
+                            </div>
+                            <div><strong>Date:</strong> ${new Date(item.date).toLocaleDateString('fr-FR')}</div>
+                            <div><strong>Latitude:</strong> ${item.latitude.toFixed(4)}</div>
+                            <div><strong>Longitude:</strong> ${item.longitude.toFixed(4)}</div>
+                            <div><strong>Valeur:</strong> ${parseFloat(item.value).toFixed(2)} ${metricConfig[metric]?.unit || ''}</div>
+                        </div>
+                    `;
+                    marker.bindPopup(popupContent);
+                    
+                    // Add tooltip on hover
+                    marker.bindTooltip(`${qualityLabel}: ${parseFloat(item.value).toFixed(2)} ${metricConfig[metric]?.unit || ''}`, {
+                        permanent: false,
+                        direction: 'top',
+                        offset: [0, -10],
+                        className: 'custom-tooltip'
+                    });
+                    
+                    markers.push(marker);
+                    bounds.push([item.latitude, item.longitude]);
+                }
+            });
+            
+            // Fit map to show all markers
+            if (bounds.length > 0) {
+                map.fitBounds(bounds, { padding: [20, 20] });
+            }
+        } else {
+            // Hide legend if no data
+            document.getElementById('mapLegendContainer').classList.add('hidden');
+        }
+    }
+    
+    function populateTable(data) {
+        const tableBody = document.getElementById('tableBody');
+        tableBody.innerHTML = '';
+        
+        if (data && data.length > 0) {
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = 'border-b border-white/5 hover:bg-white/5 transition-colors';
+                row.innerHTML = `
+                    <td class="px-4 py-2">${new Date(item.date).toLocaleDateString('fr-FR')}</td>
+                    <td class="px-4 py-2">${item.latitude ? item.latitude.toFixed(4) : 'N/A'}</td>
+                    <td class="px-4 py-2">${item.longitude ? item.longitude.toFixed(4) : 'N/A'}</td>
+                    <td class="px-4 py-2">${item.value ? item.value.toFixed(2) : 'N/A'}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+    }
+    
+    // Event listeners for view buttons
+    document.getElementById('btnMapView').addEventListener('click', () => switchView('map'));
+    document.getElementById('btnChartView').addEventListener('click', () => switchView('chart'));
+    document.getElementById('btnTableView').addEventListener('click', () => switchView('table'));
 
     document.addEventListener('DOMContentLoaded', loadDateRange);
     </script>

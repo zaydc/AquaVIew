@@ -35,14 +35,12 @@ function handleApiError(string $message, array $details = [], int $statusCode = 
 // Imports
 // ==========================
 use App\Model\Repository\OceanDataRepository;
-use App\Lib\GeoHelper;
 use App\Lib\TimeHelper;
 
 // ==========================
 // Paramètres reçus
 // ==========================
 try {
-    $region = $_GET['region'] ?? 'Atlantique';
     $metric = $_GET['metric'] ?? 'dissoxygen';
     
     $startDate = $_GET['start_date'] ?? null;
@@ -52,8 +50,6 @@ try {
     // ==========================
     // Construction des filtres
     // ==========================
-    $whereRegion = GeoHelper::regionWhere($region);
-    
     if ($startDate || $endDate) {
         $wherePeriod = TimeHelper::getDateRangeCondition($startDate, $endDate);
     } else {
@@ -66,19 +62,18 @@ try {
     $repo = new OceanDataRepository();
 
     // Statistiques de la métrique
-    $stats = $repo->getMetricStats($metric, $whereRegion, $wherePeriod);
+    $stats = $repo->getMetricStats($metric, $wherePeriod);
 
     // Évolution temporelle de la métrique
-    $evolution = $repo->getMetricEvolution($metric, $whereRegion, $wherePeriod);
+    $evolution = $repo->getMetricEvolution($metric, $wherePeriod);
 
     // Comptage des mesures
-    $nbMesures = $repo->countMeasures($whereRegion, $wherePeriod);
+    $nbMesures = $repo->countMeasures($wherePeriod);
 
     // ==========================
     // Réponse JSON
     // ==========================
     echo json_encode([
-        'region' => $region,
         'periode_ans' => $years,
         'start_date' => $startDate,
         'end_date' => $endDate,

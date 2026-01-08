@@ -24,18 +24,15 @@ class OceanDataRepository
     }
 
     /**
-     * Applique les filtres région + période
+     * Applique les filtres de période
      */
     public function countMeasures(
-        string $whereRegion,
         string $wherePeriod
     ): int {
         $sql = "
             SELECT COUNT(*)
             FROM mesures m
             WHERE
-                $whereRegion
-            AND
                 $wherePeriod
         ";
 
@@ -47,7 +44,6 @@ class OceanDataRepository
      */
     public function getMetricStats(
         string $metric,
-        string $whereRegion,
         string $wherePeriod
     ): array {
         $metricCondition = MetricHelper::getMetricColumn($metric);
@@ -61,8 +57,6 @@ class OceanDataRepository
             FROM mesures m
             JOIN variables v ON m.id = v.mesure_id
             WHERE
-                $whereRegion
-            AND
                 $wherePeriod
             AND
                 $metricCondition
@@ -76,11 +70,10 @@ class OceanDataRepository
     }
 
     /**
-     * Obtient l'évolution temporelle d'une métrique
+     * Obtient l'évolution temporelle d'une métrique avec coordonnées
      */
     public function getMetricEvolution(
         string $metric,
-        string $whereRegion,
         string $wherePeriod
     ): array {
         $metricCondition = MetricHelper::getMetricColumn($metric);
@@ -89,12 +82,12 @@ class OceanDataRepository
             SELECT 
                 DATE(m.date_mesure) as date,
                 AVG(v.valeur) as value,
-                COUNT(*) as count_measures
+                COUNT(*) as count_measures,
+                m.latitude,
+                m.longitude
             FROM mesures m
             JOIN variables v ON m.id = v.mesure_id
             WHERE
-                $whereRegion
-            AND
                 $wherePeriod
             AND
                 $metricCondition
@@ -102,7 +95,7 @@ class OceanDataRepository
                 v.qa_flag = 1
             AND
                 v.valeur IS NOT NULL
-            GROUP BY DATE(m.date_mesure)
+            GROUP BY DATE(m.date_mesure), m.latitude, m.longitude
             ORDER BY m.date_mesure ASC
         ";
 
