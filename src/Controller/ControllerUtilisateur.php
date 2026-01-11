@@ -45,6 +45,15 @@ class ControllerUtilisateur {
             case 'delete':
                 $this->delete();
                 break;
+            case 'profile':
+                $this->profile();
+                break;
+            case 'doUpdateProfile':
+                $this->doUpdateProfile();
+                break;
+            case 'doDeleteAccount':
+                $this->doDeleteAccount();
+                break;
             default:
                 $this->list();
         }
@@ -203,5 +212,99 @@ class ControllerUtilisateur {
         $_SESSION['success'] = 'Utilisateur supprimé.';
         header('Location: ?controller=utilisateur&action=list');
         exit;
+    }
+
+    private function profile(): void {
+        if (!isset($_SESSION['user'])) {
+            header('Location: ?controller=utilisateur&action=login');
+            exit;
+        }
+        
+        $userId = $_SESSION['user']['id'];
+        $utilisateur = $this->repository->findById($userId);
+        require_once __DIR__ . '/../View/utilisateur/profile.php';
+    }
+
+    private function doUpdateProfile(): void {
+        if (!isset($_SESSION['user'])) {
+            header('Location: ?controller=utilisateur&action=login');
+            exit;
+        }
+
+        $userId = $_SESSION['user']['id'];
+        $nom = $_POST['nom'] ?? '';
+        $prenom = $_POST['prenom'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $numero = $_POST['numero'] ?? '';
+
+        if (empty($nom) || empty($prenom) || empty($email) || empty($numero)) {
+            $_SESSION['error'] = 'Tous les champs sont requis.';
+            header('Location: ?controller=utilisateur&action=profile');
+            exit;
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $_SESSION['error'] = 'Email invalide.';
+            header('Location: ?controller=utilisateur&action=profile');
+            exit;
+        }
+
+        if ($this->repository->emailExists($email) && $email !== $_SESSION['user']['email']) {
+            $_SESSION['error'] = 'Cet email est déjà utilisé.';
+            header('Location: ?controller=utilisateur&action=profile');
+            exit;
+        }
+
+        if ($this->repository->update($userId, [
+            'nom' => $nom,
+            'prenom' => $prenom,
+            'email' => $email,
+            'numero' => $numero
+        ])) {
+            $_SESSION['user']['nom'] = $nom;
+            $_SESSION['user']['prenom'] = $prenom;
+            $_SESSION['user']['email'] = $email;
+            $_SESSION['success'] = 'Profil mis à jour avec succès !';
+        } else {
+            $_SESSION['error'] = 'Erreur lors de la mise à jour du profil.';
+        }
+
+        header('Location: ?controller=utilisateur&action=profile');
+        exit;
+    }
+
+    private function doDeleteAccount(): void {
+        if (!isset($_SESSION['user'])) {
+            header('Location: ?controller=utilisateur&action=login');
+            exit;
+        }
+
+        $password = $_POST['password'] ?? '';
+        $userId = $_SESSION['user']['id'];
+
+        if (empty($password)) {
+            $_SESSION['error'] = 'Le mot de passe est requis pour supprimer votre compte.';
+            header('Location: ?controller=utilisateur&action=profile');
+            exit;
+        }
+
+        $utilisateur = $this->repository->findById($userId);
+        
+        if (!$utilisateur || !password_verify($password, $utilisateur['mot_de_passe'])) {
+            $_SESSION['error'] = 'Mot de passe incorrect. La suppression du compte a été annulée.';
+            header('Location: ?controller=utilisateur&action=profile');
+            exit;
+        }
+
+        if ($this->repository->delete($userId)) {
+            session_destroy();
+            $_SESSION['success'] = 'Votre compte a été supprimé avec succès.';
+            header('Location: ?controller=utilisateur&action=login');
+            exit;
+        } else {
+            $_SESSION['error'] = 'Erreur lors de la suppression du compte.';
+            header('Location: ?controller=utilisateur&action=profile');
+            exit;
+        }
     }
 }

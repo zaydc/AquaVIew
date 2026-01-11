@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/../view.php'; ?>
+<?php require_once __DIR__ . '/../../Lib/helpers.php'; ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>

@@ -32,3 +32,21 @@ function isCurrentPage(string $action): bool {
     $currentAction = $_GET['action'] ?? 'home';
     return $currentAction === $action;
 }
+
+/**
+ * Get error message from session and clear it
+ */
+function getError(): ?string {
+    $error = $_SESSION['error'] ?? null;
+    unset($_SESSION['error']);
+    return $error;
+}
+
+/**
+ * Get success message from session and clear it
+ */
+function getSuccess(): ?string {
+    $success = $_SESSION['success'] ?? null;
+    unset($_SESSION['success']);
+    return $success;
+}

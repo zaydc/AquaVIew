@@ -35,17 +35,21 @@ $navItems = [
         <!-- Right Side Menu -->
         <div class="hidden md:flex items-center gap-4">
             <?php if ($isLoggedIn): ?>
+                <a href="?controller=utilisateur&action=profile" 
+                   class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/30 transition-colors duration-300 text-sm font-medium">
+                    Mon Profil
+                </a>
                 <span class="text-white/70 text-sm"><?= htmlspecialchars($user['email'] ?? '') ?></span>
-                <a href="?action=logout" 
+                <a href="?controller=utilisateur&action=logout" 
                    class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-red-500/20 to-red-500/20 border border-red-500/30 text-red-300 hover:bg-red-500/30 transition-colors duration-300 text-sm font-medium">
                     Déconnexion
                 </a>
             <?php else: ?>
-                <a href="?action=login" 
+                <a href="?controller=utilisateur&action=login" 
                    class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-white/20 text-sm font-medium text-white/70 hover:from-cyan-500/30 hover:to-blue-500/30 hover:border-white/40 hover:shadow-lg hover:shadow-cyan-500/20 transition-all duration-300">
                     Connexion
                 </a>
-                <a href="?action=register" 
+                <a href="?controller=utilisateur&action=register" 
                    class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 text-sm font-medium">
                     S'inscrire
                 </a>
@@ -73,14 +77,17 @@ $navItems = [
             <?php endforeach; ?>
             <div class="flex flex-col gap-4 mt-8">
                 <?php if ($isLoggedIn): ?>
-                    <a href="?action=logout" class="px-8 py-3 rounded-xl bg-red-500/20 border border-red-500/30 text-red-300 text-center">
+                    <a href="?controller=utilisateur&action=profile" class="px-8 py-3 rounded-xl bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 text-center">
+                        Mon Profil
+                    </a>
+                    <a href="?controller=utilisateur&action=logout" class="px-8 py-3 rounded-xl bg-red-500/20 border border-red-500/30 text-red-300 text-center">
                         Déconnexion
                     </a>
                 <?php else: ?>
-                    <a href="?action=login" class="px-8 py-3 rounded-xl bg-white/10 border border-white/20 text-white text-center">
+                    <a href="?controller=utilisateur&action=login" class="px-8 py-3 rounded-xl bg-white/10 border border-white/20 text-white text-center">
                         Connexion
                     </a>
-                    <a href="?action=register" class="px-8 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-center">
+                    <a href="?controller=utilisateur&action=register" class="px-8 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-center">
                         S'inscrire
                     </a>
                 <?php endif; ?>
