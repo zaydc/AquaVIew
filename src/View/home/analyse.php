@@ -730,6 +730,11 @@
                 document.getElementById('nbStations').textContent =
                     data.nb_mesures ?? '–';
                 
+                // Enregistrer l'analyse si l'utilisateur est connecté et des données sont disponibles
+                if (data.stats && data.nb_mesures > 0) {
+                    saveAnalysis(metric, startDate, endDate, data.stats, data.nb_mesures);
+                }
+                
                 // Handle chart view
                 if (data.evolution && data.evolution.length > 0) {
                     const chartData = processEvolutionData(data.evolution);
@@ -766,6 +771,60 @@
                 alert('Erreur lors de l\'analyse');
             });
     });
+
+    // Fonction pour enregistrer une analyse utilisateur
+    async function saveAnalysis(metric, startDate, endDate, stats, countMeasures) {
+        try {
+            const analysisData = {
+                metric: metric,
+                start_date: startDate,
+                end_date: endDate,
+                avg_value: stats.avg_value,
+                min_value: stats.min_value,
+                max_value: stats.max_value,
+                count_measures: countMeasures,
+                analysis_data: {
+                    regions: [],
+                    quality: 'good'
+                }
+            };
+
+            const response = await fetch('/web/api/save-analysis.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(analysisData)
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                console.log('Analyse enregistrée avec succès');
+                // Optionnel: afficher une notification discrète
+                showNotification('Analyse enregistrée dans votre profil');
+            } else {
+                console.error('Erreur lors de l\'enregistrement:', result.error);
+            }
+        } catch (error) {
+            console.error('Erreur lors de l\'enregistrement de l\'analyse:', error);
+        }
+    }
+
+    // Fonction pour afficher une notification
+    function showNotification(message) {
+        // Créer un élément de notification
+        const notification = document.createElement('div');
+        notification.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in-up';
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        // Supprimer après 3 secondes
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
 
     // View switching functions
     function switchView(view) {

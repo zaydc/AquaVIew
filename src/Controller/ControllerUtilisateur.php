@@ -2,12 +2,15 @@
 namespace App\Controller;
 
 use App\Model\Repository\UtilisateurRepository;
+use App\Model\Repository\UserAnalysisRepository;
 
 class ControllerUtilisateur {
     private UtilisateurRepository $repository;
+    private UserAnalysisRepository $analysisRepository;
 
     public function __construct() {
         $this->repository = new UtilisateurRepository();
+        $this->analysisRepository = new UserAnalysisRepository();
         $this->handleAction();
     }
 
@@ -222,6 +225,11 @@ class ControllerUtilisateur {
         
         $userId = $_SESSION['user']['id'];
         $utilisateur = $this->repository->findById($userId);
+        
+        // Récupérer les dernières analyses de l'utilisateur
+        $recentAnalyses = $this->analysisRepository->findByUserId($userId, 5);
+        $userStats = $this->analysisRepository->getUserStats($userId);
+        
         require_once __DIR__ . '/../View/utilisateur/profile.php';
     }
 

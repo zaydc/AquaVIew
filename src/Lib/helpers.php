@@ -50,3 +50,31 @@ function getSuccess(): ?string {
     unset($_SESSION['success']);
     return $success;
 }
+
+/**
+ * Get metric label in French
+ */
+function getMetricLabel(string $metric): string {
+    $labels = [
+        'dissoxygen' => "Niveau d'oxygène",
+        'water_temp' => 'Température',
+        'salinity' => 'Salinité',
+        'ph' => 'pH'
+    ];
+    
+    return $labels[$metric] ?? $metric;
+}
+
+/**
+ * Get metric unit
+ */
+function getMetricUnit(string $metric): string {
+    $units = [
+        'dissoxygen' => 'mg/L',
+        'water_temp' => '°C',
+        'salinity' => 'PSU',
+        'ph' => ''
+    ];
+    
+    return $units[$metric] ?? '';
+}
