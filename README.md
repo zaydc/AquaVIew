@@ -33,17 +33,23 @@
 ## ✨ Fonctionnalités
 
 * **📊 Analyse en Temps Réel :** Tableau de bord interactif affichant les taux d'oxygène (mg/L), la température et d'autres métriques critiques.
+* **🗺️ Visualisation Avancée :** Cartes interactives avec marqueurs de qualité, graphiques dynamiques (Chart.js), et tableaux de données détaillés.
+* **📈 Analyses Multiples :** Support de 4 métriques océaniques (Oxygène dissous, Température, Salinité, pH) avec filtres temporels personnalisés.
 * **🌍 Sensibilisation :** Section éducative ("En savoir plus") expliquant les causes et conséquences de la désoxygénation.
-* **🔐 Espace Membre :** Système complet d'authentification (Inscription/Connexion) pour les chercheurs ou utilisateurs passionnés.
+* **🔐 Espace Membre :** Système complet d'authentification (Inscription/Connexion) avec profil utilisateur et historique d'analyses.
+* **💾 Export de Données :** Exportation des résultats d'analyse en multiple formats (CSV, JSON, PDF).
 * **📱 Design Responsive :** Une interface fluide adaptée aux mobiles et desktops (style *Glassmorphism*).
+* **🔄 Gestion d'Erreurs Robuste :** Validation des données et gestion élégante des erreurs pour une expérience utilisateur optimale.
 
 ## 🛠 Stack Technique
 
 Ce projet repose sur une architecture **MVC (Modèle-Vue-Contrôleur)** native en PHP, sans framework lourd, garantissant performance et maîtrise du code.
 
 * **Backend :** PHP 8 (POO rigoureuse), MySQL.
-* **Frontend :** HTML5, CSS3 (Design moderne type Tailwind/Custom CSS), JavaScript.
+* **Frontend :** HTML5, CSS3 (Design moderne type Tailwind/Custom CSS), JavaScript (Chart.js, Leaflet).
 * **Structure :** Architecture MVC personnalisée avec Autoloader PSR-4.
+* **APIs :** RESTful API pour les analyses et exportations de données.
+* **Sécurité :** Validation des entrées, hashage des mots de passe, gestion de sessions sécurisée.
 * **Outils :** Git, Teams.
 
 ## 📂 Architecture du Projet
@@ -53,12 +59,66 @@ La structure du code est organisée pour séparer la logique métier de l'affich
 ```text
 📁 src/
 ├── 📂 Config/          # Configuration de la BDD (Conf.php)
-├── 📂 Controller/      # Logique de contrôle (Utilisateur, Voiture, etc.)
-├── 📂 Lib/             # Utilitaires & Autoloader
+├── 📂 Controller/      # Logique de contrôle (Utilisateur, Export, etc.)
+├── 📂 Lib/             # Utilitaires & Autoloader (GeoHelper, MetricHelper, TimeHelper)
 ├── 📂 Model/           # Accès aux données
-│   ├── 📂 DataObject/  # Objets métiers (User, Voiture)
-│   └── 📂 Repository/  # Requêtes SQL
+│   ├── 📂 DataObject/  # Objets métiers (User, OceanData)
+│   └── 📂 Repository/  # Requêtes SQL (UtilisateurRepository, OceanDataRepository, etc.)
 └── 📂 View/            # Templates HTML/PHP
-    ├── 📂 components/  # Navbar, Footer
-    ├── 📂 home/        # Pages principales (Accueil, Analyse)
-    └── 📂 utilisateur/ # Pages de gestion de compte
+    ├── 📂 components/  # Navbar, Footer, éléments réutilisables
+    ├── 📂 home/        # Pages principales (Accueil, Analyse, Équipe)
+    └── 📂 utilisateur/ # Pages de gestion de compte (Profil, Downloads)
+
+📁 web/
+├── 📂 api/            # Endpoints API REST
+│   ├── analyse.php      # API d'analyse des données
+│   ├── date-range.php  # API des plages de dates
+│   ├── export.php      # API d'exportation
+│   ├── login.php       # API d'authentification
+│   └── register.php   # API d'inscription
+└── frontController.php # Point d'entrée principal de l'application
+
+## 🚀 Dernières Améliorations
+
+### Version Actuelle : v2.0
+
+**Corrections et Optimisations :**
+- ✅ **Redirections améliorées** : Configuration des fichiers `.htaccess` pour un routage propre
+- ✅ **Gestion des erreurs robuste** : Correction des erreurs Chart.js et JavaScript
+- ✅ **Validation des données** : Protection contre les valeurs invalides dans les graphiques
+- ✅ **Expérience utilisateur** : Messages d'erreur clairs et gestion élégante des cas limites
+
+**Nouvelles Fonctionnalités :**
+- 🎯 **Analyse multi-métriques** : Support complet de 4 indicateurs océaniques
+- 📊 **Visualisations avancées** : Graphiques dynamiques et cartes interactives
+- 💾 **Export multi-formats** : CSV, JSON, PDF pour les analyses
+- 👤 **Espace utilisateur** : Profils personnalisés avec historique
+- 🔄 **API RESTful** : Endpoints structurés pour les données
+
+---
+
+## 🔧 Installation
+
+1. **Cloner le repository**
+   ```bash
+   git clone https://github.com/zaydc/AquaVIew.git
+   cd AquaVIew
+   ```
+
+2. **Configuration de la base de données**
+   - Importer le fichier `aquaview.sql` dans MySQL
+   - Configurer les accès dans `src/Config/Conf.php`
+
+3. **Configuration du serveur web**
+   - Assurez-vous que le module `mod_rewrite` Apache est activé
+   - Pointez le document root vers le dossier du projet
+
+4. **Lancement**
+   ```bash
+   # Serveur de développement PHP
+   php -S localhost:8000 -t web/
+   ```
+
+---
+
+**AquaView** - Protégeons nos océans, une donnée à la fois. 🌊🔬
