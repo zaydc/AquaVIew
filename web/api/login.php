@@ -47,7 +47,8 @@ try {
     echo json_encode([
         'success' => true,
         'message' => 'Connexion reussie',
-        'user' => $_SESSION['user']
+        'user' => $_SESSION['user'],
+        'redirect' => '/'
     ]);
     
 } catch (Exception $e) {

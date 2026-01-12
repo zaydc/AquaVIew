@@ -1210,6 +1210,21 @@
             evolutionChart.destroy();
         }
         
+        // Validation des données
+        if (!data || !data.labels || !data.values || data.labels.length === 0 || data.values.length === 0) {
+            console.error('Données invalides pour le graphique:', data);
+            document.getElementById('chartEmpty').classList.remove('hidden');
+            document.getElementById('chartLegend').classList.add('hidden');
+            return;
+        }
+        
+        // S'assurer que les labels sont des chaînes et les valeurs sont des nombres
+        const validLabels = data.labels.map(label => String(label || ''));
+        const validValues = data.values.map(value => {
+            const num = parseFloat(value);
+            return isNaN(num) ? 0 : num;
+        });
+        
         // Cacher l'état vide, afficher le graphique
         document.getElementById('chartEmpty').classList.add('hidden');
         document.getElementById('chartLegend').classList.remove('hidden');
@@ -1221,28 +1236,29 @@
         gradient.addColorStop(0, config.color.replace('rgb', 'rgba').replace(')', ', 0.3)'));
         gradient.addColorStop(1, config.color.replace('rgb', 'rgba').replace(')', ', 0.0)'));
         
-        evolutionChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: data.labels,
-                datasets: [{
-                    label: config.label,
-                    data: data.values,
-                    borderColor: config.color,
-                    backgroundColor: gradient,
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: data.values.length > 50 ? 0 : 4,
-                    pointHoverRadius: 6,
-                    pointBackgroundColor: config.color,
-                    pointBorderColor: 'rgba(15, 23, 42, 0.8)',
-                    pointBorderWidth: 2,
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: config.color,
-                    pointHoverBorderWidth: 2
-                }]
-            },
+        try {
+            evolutionChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: validLabels,
+                    datasets: [{
+                        label: config.label,
+                        data: validValues,
+                        borderColor: config.color,
+                        backgroundColor: gradient,
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: validValues.length > 50 ? 0 : 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: config.color,
+                        pointBorderColor: 'rgba(15, 23, 42, 0.8)',
+                        pointBorderWidth: 2,
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: config.color,
+                        pointHoverBorderWidth: 2
+                    }]
+                },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -1307,6 +1323,16 @@
                 }
             }
         });
+        } catch (error) {
+            console.error('Erreur lors de la création du graphique:', error);
+            document.getElementById('chartEmpty').classList.remove('hidden');
+            document.getElementById('chartLegend').classList.add('hidden');
+            // Afficher un message d'erreur plus clair
+            const errorMessage = error.message || 'Erreur inconnue';
+            if (errorMessage.includes('Expected') && errorMessage.includes('name')) {
+                console.warn('Erreur de format de données pour Chart.js - les données ont été corrigées');
+            }
+        }
     }
 
     function processEvolutionData(evolution) {
@@ -1329,7 +1355,9 @@
                 year: evolution.length > 365 ? 'numeric' : '2-digit'
             });
             labels.push(label);
-            values.push(parseFloat(item.value));
+            // S'assurer que la valeur est bien un nombre valide
+            const value = parseFloat(item.value);
+            values.push(isNaN(value) ? 0 : value);
         });
         
         return { labels, values };
@@ -1666,7 +1694,13 @@
                 
                 let statusIcon, statusText, statusColor, statusBg;
                 
-                if (quality.level === 'good') {
+                // Gérer le cas où quality est null
+                if (!quality) {
+                    statusIcon = '?';
+                    statusText = 'INCONNU';
+                    statusColor = 'text-gray-400';
+                    statusBg = 'bg-gray-500/20';
+                } else if (quality.level === 'good') {
                     statusIcon = '✓';
                     statusText = 'SAIN';
                     statusColor = 'text-green-400';

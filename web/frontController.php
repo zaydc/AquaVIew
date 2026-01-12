@@ -69,7 +69,7 @@ try {
                     break;
                 case 'logout':
                     session_destroy();
-                    header('Location: ?action=home');
+                    header('Location: /');
                     exit;
                 default:
                     require_once __DIR__ . '/../src/View/home/error.php';

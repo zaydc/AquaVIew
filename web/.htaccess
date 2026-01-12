@@ -1,0 +1,20 @@
+# Activation du module de réécriture d'URL
+RewriteEngine On
+
+# Définition du répertoire de base pour les réécritures
+RewriteBase /
+
+# Rediriger toutes les requêtes vers frontController.php
+# Sauf si c'est un fichier ou un dossier qui existe réellement
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Réécriture vers frontController.php
+RewriteRule ^(.*)$ frontController.php [QSA,L]
+
+# Définir le fichier par défaut
+DirectoryIndex frontController.php
+
+# Options de sécurité
+Options -Indexes
+ServerSignature Off
