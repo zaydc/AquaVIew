@@ -1,6 +1,12 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * API pour recuperer l'intervalle de dates disponibles
+ * BUT2 - S3 - AquaView Project
+ * Retourne les dates min et max des donnees oceaniques
+ */
+
 // ==========================
 // Autoloader PSR-4
 // ==========================
@@ -26,7 +32,7 @@ try {
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode([
-        'error' => 'Erreur lors de la récupération des dates',
+        'error' => 'Erreur lors de la recuperation des dates',
         'message' => $e->getMessage()
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 }

@@ -29,45 +29,47 @@ try {
     
     $email = trim($data['email']);
     $password = $data['password'];
-    $nom = trim($data['nom']);
-    $prenom = trim($data['prenom']);
+    $nom = $data['nom'];
+    $prenom = $data['prenom'];
     $numero = trim($data['numero'] ?? '');
     
-    // Validate email format
+    // Validation email
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo json_encode(['success' => false, 'message' => 'Format d\'email invalide']);
+        echo json_encode(['success' => false, 'message' => 'Email invalide']);
         exit;
     }
     
-    // Validate password strength
-    if (strlen($password) < 8) {
-        echo json_encode(['success' => false, 'message' => 'Le mot de passe doit contenir au moins 8 caractères']);
+    // Validation mot de passe
+    if (!preg_match('/^(?=.*[A-Z])(?=.*\d).{8,}$/', $password)) {
+        echo json_encode(['success' => false, 'message' => 'Mot de passe invalide (min 8 car., 1 Maj, 1 Chiffre)']);
         exit;
     }
     
     $repo = new UtilisateurRepository();
     
-    // Check if email already exists
+    // Verification email existe deja
     if ($repo->emailExists($email)) {
-        echo json_encode(['success' => false, 'message' => 'Cet email est déjà utilisé']);
+        echo json_encode(['success' => false, 'message' => 'Cet email est deja utilise']);
         exit;
     }
     
-    $userData = [
+    // Hashage du mot de passe
+    $hash = password_hash($password, PASSWORD_DEFAULT);
+    
+    // Creation utilisateur
+    if ($repo->create([
         'nom' => $nom,
         'prenom' => $prenom,
         'email' => $email,
         'numero' => $numero,
-        'mot_de_passe' => password_hash($password, PASSWORD_DEFAULT)
-    ];
+        'mot_de_passe' => $hash
+    ])) {
+        echo json_encode(['success' => true, 'message' => 'Compte cree avec succes']);
+        exit;
+    }
     
-    $repo->create($userData);
-    
-    echo json_encode([
-        'success' => true,
-        'message' => 'Compte créé avec succès ! Redirection vers la connexion...'
-    ]);
+    echo json_encode(['success' => false, 'message' => 'Erreur lors de la creation du compte']);
     
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => 'Erreur serveur: ' . $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'Erreur lors de l\'inscription: ' . $e->getMessage()]);
 }

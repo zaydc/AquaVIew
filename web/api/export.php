@@ -1,11 +1,17 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * API d'export des donnees oceaniques
+ * BUT2 - S3 - AquaView Project
+ * Endpoint qui gere les exports dans differents formats
+ */
+
 // ==========================
-// Error handling
+// Gestionnaire d'erreurs
 // ==========================
 error_reporting(E_ALL);
-ini_set('display_errors', '0');
+ini_set('display_errors', '0'); // En production, ne pas afficher les erreurs
 
 // ==========================
 // Autoloader PSR-4
@@ -17,14 +23,14 @@ $loader->register();
 $loader->addNamespace('App', __DIR__ . '/../../src');
 
 // ==========================
-// Error handler
+// Gestionnaire d'erreurs centralise pour l'API
 // ==========================
 function handleApiError(string $message, array $details = [], int $statusCode = 500) {
     http_response_code($statusCode);
     echo json_encode([
         'error' => $message,
         'details' => $details,
-        'timestamp' => date('c')
+        'timestamp' => date('c') // Format ISO 8601
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     exit;
 }

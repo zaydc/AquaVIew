@@ -1,24 +1,29 @@
 <?php
 /**
- * Helper functions for the application
+ * Fonctions utilitaires pour l'application AquaView
+ * BUT2 - S3 - AquaVIew Project
+ * Helper functions pour les tâches courantes (auth, redirections, etc.)
  */
 
 /**
- * Check if user is logged in
+ * Vérifie si un utilisateur est connecté
+ * @return bool True si l'utilisateur est authentifié, false sinon
  */
 function isLoggedIn(): bool {
     return isset($_SESSION['user']) && !empty($_SESSION['user']);
 }
 
 /**
- * Get current logged in user
+ * Récupère les informations de l'utilisateur connecté
+ * @return array|null Données de l'utilisateur ou null si non connecté
  */
 function getUser(): ?array {
     return $_SESSION['user'] ?? null;
 }
 
 /**
- * Redirect to a URL
+ * Effectue une redirection HTTP sécurisée
+ * @param string $url URL de destination
  */
 function redirect(string $url): void {
     header("Location: $url");
@@ -26,7 +31,10 @@ function redirect(string $url): void {
 }
 
 /**
- * Check if current page matches action
+ * Vérifie si la page actuelle correspond à l'action spécifiée
+ * Utile pour les classes CSS actives dans la navigation
+ * @param string $action Action à comparer
+ * @return bool True si la page actuelle correspond à l'action
  */
 function isCurrentPage(string $action): bool {
     $currentAction = $_GET['action'] ?? 'home';

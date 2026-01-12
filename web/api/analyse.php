@@ -1,32 +1,42 @@
 <?php
+/**
+ * API d'analyse des donnees oceaniques
+ * BUT2 - S3 - AquaView Project
+ * Endpoint REST pour recuperer les donnees d'analyse en temps reel
+ */
+
 declare(strict_types=1);
 
 // ==========================
-// Error handling
+// Configuration du gestionnaire d'erreurs
 // ==========================
 error_reporting(E_ALL);
-ini_set('display_errors', '0');
+ini_set('display_errors', '0'); // En production, ne pas afficher les erreurs
 
 // ==========================
-// Autoloader PSR-4
+// Autoloader PSR-4 pour le chargement auto des classes
 // ==========================
 require_once __DIR__ . '/../../src/Lib/Psr4AutoloaderClass.php';
 
+// Configuration de l'autoloader avec le namespace App
 $loader = new App\Lib\Psr4AutoloaderClass();
 $loader->register();
 $loader->addNamespace('App', __DIR__ . '/../../src');
 
+// Definition de l'en-tete pour les reponses JSON
 header('Content-Type: application/json; charset=utf-8');
 
 // ==========================
-// Error handler
+// Gestionnaire d'erreurs centralise pour l'API
 // ==========================
 function handleApiError(string $message, array $details = [], int $statusCode = 500) {
+    // Definition du code de statut HTTP
     http_response_code($statusCode);
+    // Generation de la reponse d'erreur structuree
     echo json_encode([
         'error' => $message,
         'details' => $details,
-        'timestamp' => date('c')
+        'timestamp' => date('c') // Format ISO 8601
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     exit;
 }

@@ -28,13 +28,6 @@
 
 ---
 
-## 📸 Aperçu
-
-<div align="center">
-  <img src="web/assets/image.png" alt="AquaView Dashboard" width="800" style="border-radius: 10px; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);">
-  <br><br>
-</div>
-
 **AquaView** est une application web conçue pour visualiser les données relatives à la baisse des niveaux d'oxygène dans les océans. Le projet combine une approche scientifique rigoureuse avec une interface utilisateur moderne et immersive.
 
 ## ✨ Fonctionnalités

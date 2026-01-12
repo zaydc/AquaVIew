@@ -3,7 +3,7 @@ session_start();
 require_once __DIR__ . '/../../src/Lib/Psr4AutoloaderClass.php';
 require_once __DIR__ . '/../../src/Config/Conf.php';
 
-$loader = new \App\Lib\Psr4AutoloaderClass();
+$loader = new App\Lib\Psr4AutoloaderClass();
 $loader->register();
 $loader->addNamespace('App', __DIR__ . '/../../src');
 
@@ -42,10 +42,13 @@ foreach ($requiredFields as $field) {
     }
 }
 
+use App\Model\Repository\UserAnalysisRepository;
+
 try {
-    $analysisRepository = new \App\Model\Repository\UserAnalysisRepository();
+    $repo = new UserAnalysisRepository();
     
-    $analysisData = [
+    // Sauvegarder l'analyse
+    $analysisId = $repo->create([
         'user_id' => $_SESSION['user']['id'],
         'metric' => $data['metric'],
         'start_date' => $data['start_date'],
@@ -54,22 +57,20 @@ try {
         'min_value' => $data['min_value'],
         'max_value' => $data['max_value'],
         'count_measures' => $data['count_measures'],
-        'analysis_data' => $data['analysis_data'] ?? []
-    ];
+        'created_at' => date('Y-m-d H:i:s')
+    ]);
     
-    if ($analysisRepository->create($analysisData)) {
-        echo json_encode([
-            'success' => true,
-            'message' => 'Analyse enregistrée avec succès'
-        ]);
-    } else {
-        http_response_code(500);
-        echo json_encode(['error' => 'Erreur lors de l\'enregistrement de l\'analyse']);
-    }
+    echo json_encode([
+        'success' => true,
+        'message' => 'Analyse sauvegardée avec succès',
+        'analysis_id' => $analysisId
+    ]);
     
 } catch (Exception $e) {
-    error_log('Erreur dans save-analysis.php: ' . $e->getMessage());
     http_response_code(500);
-    echo json_encode(['error' => 'Erreur serveur']);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Erreur lors de la sauvegarde: ' . $e->getMessage()
+    ]);
 }
 ?>

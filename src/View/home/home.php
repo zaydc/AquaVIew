@@ -1,15 +1,24 @@
+<!-- 
+    Page d'accueil principale d'AquaView
+    BUT2 - S3 - AquaView Project
+    Page d'atterrissage avec presentation du projet et acces a l'analyse
+-->
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AquaView - Accueil & Analyse</title>
+    <!-- TailwindCSS pour le design moderne et responsive -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Outfit pour le design moderne -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Styles personnalises pour les animations et le design -->
     <style>
         body { font-family: 'Outfit', sans-serif; }
 
+        /* Animation de revelation au scroll */
         .reveal-on-scroll {
             opacity: 0;
             transform: translateY(30px);
@@ -21,32 +30,44 @@
             transform: translateY(0);
         }
 
+        /* Delais pour les animations en cascade */
         .delay-100 { transition-delay: 0.1s; }
         .delay-200 { transition-delay: 0.2s; }
         .delay-300 { transition-delay: 0.3s; }
     </style>
 </head>
+<!-- Corps de la page avec theme sombre et design moderne -->
 <body class="bg-slate-900 text-slate-200 overflow-x-hidden selection:bg-cyan-500/30 selection:text-cyan-200">
 
+    <!-- Inclusion de la barre de navigation -->
     <?php include __DIR__ . '/../components/navbar.php'; ?>
     
+    <!-- Arriere-plan avec image oceanique et overlay -->
     <div class="fixed inset-0 z-0">
         <div id="global-bg" class="absolute inset-0 transition-all duration-[2500ms] ease-out opacity-0 scale-110">
-            <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1920&q=80" alt="Océan" class="w-full h-full object-cover" />
+            <!-- Image d'ocean depuis Unsplash -->
+            <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1920&q=80" alt="Ocean" class="w-full h-full object-cover" />
         </div>
+        <!-- Overlay sombre pour la lisibilite du texte -->
         <div id="global-overlay" class="absolute inset-0 bg-slate-900/40 transition-opacity duration-[1500ms] opacity-0"></div>
     </div>
 
+    <!-- Contenu principal au-dessus de l'arriere-plan -->
     <main class="relative z-10">
 
+        <!-- Section hero avec presentation du projet -->
         <div class="relative min-h-screen flex flex-col items-center justify-center pt-32 pb-40">
             
+            <!-- Degradé pour ameliorer la lisibilite -->
             <div class="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-transparent to-slate-900/90 pointer-events-none"></div>
 
+            <!-- Conteneur centre avec grille responsive -->
             <section class="container mx-auto px-6 w-full relative z-10">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                     
+                    <!-- Colonne de gauche : texte et presentation -->
                     <div class="space-y-8">
+                        <!-- Titre principal avec animation -->
                         <h1 id="hero-title" class="text-5xl md:text-7xl font-bold tracking-tight leading-tight transition-all duration-700 ease-out opacity-0 translate-y-8 text-white drop-shadow-lg">
                             <span class="block font-light text-slate-200">Comprendre la</span>
                             <span class="block bg-gradient-to-r from-cyan-300 via-blue-300 to-teal-300 bg-clip-text text-transparent filter drop-shadow-lg leading-normal">

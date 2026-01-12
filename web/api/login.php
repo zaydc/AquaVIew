@@ -31,16 +31,12 @@ try {
     $repo = new UtilisateurRepository();
     $user = $repo->findByEmail($email);
     
-    if (!$user) {
+    if (!$user || !password_verify($password, $user['mot_de_passe'])) {
         echo json_encode(['success' => false, 'message' => 'Email ou mot de passe incorrect']);
         exit;
     }
     
-    if (!password_verify($password, $user['mot_de_passe'])) {
-        echo json_encode(['success' => false, 'message' => 'Email ou mot de passe incorrect']);
-        exit;
-    }
-    
+    // Creation de la session utilisateur
     $_SESSION['user'] = [
         'id' => $user['id'],
         'email' => $user['email'],
@@ -50,10 +46,10 @@ try {
     
     echo json_encode([
         'success' => true,
-        'message' => 'Connexion réussie',
+        'message' => 'Connexion reussie',
         'user' => $_SESSION['user']
     ]);
     
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => 'Erreur serveur: ' . $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'Erreur lors de la connexion: ' . $e->getMessage()]);
 }

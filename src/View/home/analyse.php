@@ -1083,7 +1083,7 @@
     let availableDateRange = { min_date: null, max_date: null };
     let autoRefreshInterval = null;
     
-    // Metric labels, units, and quality thresholds
+    // Configuration des métriques avec leurs unités et seuils de qualité
     const metricConfig = {
         'dissoxygen': { 
             label: "Niveau d'oxygène", 
@@ -1127,7 +1127,7 @@
         }
     };
 
-    // Function to determine quality based on metric value
+    // Fonction pour déterminer la qualité selon la valeur de la métrique
     function getQualityLevel(metric, value) {
         const config = metricConfig[metric];
         if (!config || !config.thresholds || value === null) return null;
@@ -1151,7 +1151,7 @@
             if (data.min_date && data.max_date) {
                 availableDateRange = data;
                 
-                // Configurer les inputs de date
+                // Configurer les champs de date
                 const startDateInput = document.getElementById('startDate');
                 const endDateInput = document.getElementById('endDate');
                 
@@ -1174,7 +1174,7 @@
                 startDateInput.value = defaultStartDate.toISOString().split('T')[0];
                 endDateInput.value = data.max_date;
                 
-                // Afficher les informations sur les dates
+                // Afficher les infos sur les dates disponibles
                 const minFormatted = new Date(data.min_date).toLocaleDateString('fr-FR');
                 const maxFormatted = new Date(data.max_date).toLocaleDateString('fr-FR');
                 
@@ -1205,18 +1205,18 @@
         const ctx = document.getElementById('evolutionChart').getContext('2d');
         const config = metricConfig[metric] || metricConfig['dissoxygen'];
         
-        // Destroy existing chart
+        // Détruire le graphique existant
         if (evolutionChart) {
             evolutionChart.destroy();
         }
         
-        // Hide empty state, show chart
+        // Cacher l'état vide, afficher le graphique
         document.getElementById('chartEmpty').classList.add('hidden');
         document.getElementById('chartLegend').classList.remove('hidden');
         document.getElementById('legendMetric').textContent = config.label;
         document.getElementById('chartSubtitle').textContent = `Évolution de ${config.label.toLowerCase()} sur la période sélectionnée`;
         
-        // Create gradient
+        // Créer le dégradé
         const gradient = ctx.createLinearGradient(0, 0, 0, 350);
         gradient.addColorStop(0, config.color.replace('rgb', 'rgba').replace(')', ', 0.3)'));
         gradient.addColorStop(1, config.color.replace('rgb', 'rgba').replace(')', ', 0.0)'));
@@ -1352,7 +1352,7 @@
             url += `&end_date=${encodeURIComponent(endDate)}`;
         }
 
-        // Show loading state
+        // Afficher l'état de chargement
         document.getElementById('chartLoading').classList.remove('hidden');
         document.getElementById('chartEmpty').classList.add('hidden');
 
@@ -1361,7 +1361,7 @@
             .then(data => {
                 console.log('Réponse API:', data);
 
-                // Update stats cards
+                // Mettre à jour les cartes de statistiques
                 if (data.stats) {
                     document.getElementById('avgValue').textContent =
                         data.stats.avg_value !== null
@@ -1387,7 +1387,7 @@
                     saveAnalysis(metric, startDate, endDate, data.stats, data.nb_mesures);
                 }
                 
-                // Handle chart view
+                // Gérer la vue graphique
                 if (data.evolution && data.evolution.length > 0) {
                     const chartData = processEvolutionData(data.evolution);
                     createChart(chartData, metric);
@@ -1399,19 +1399,19 @@
                     document.getElementById('chartLegend').classList.add('hidden');
                 }
                 
-                // Handle map view - add markers for measurement points
+                // Gérer la vue carte - ajouter les marqueurs pour les points de mesure
                 if (currentView === 'map' && map) {
                     document.getElementById('mapEmpty').classList.add('hidden');
                     addMarkers(data.evolution || [], metric);
                 }
                 
-                // Handle table view - populate with data
+                // Gérer la vue tableau - remplir avec les données
                 if (currentView === 'table') {
                     document.getElementById('tableEmpty').classList.add('hidden');
                     populateTable(data.evolution || []);
                 }
                 
-                // Hide loading state for all views
+                // Cacher tous les états de chargement
                 document.getElementById('chartLoading').classList.add('hidden');
                 document.getElementById('mapLoading').classList.add('hidden');
                 document.getElementById('tableLoading').classList.add('hidden');
@@ -1479,21 +1479,21 @@
         }, 3000);
     }
 
-    // View switching functions
+    // Fonctions pour changer de vue
     function switchView(view) {
         currentView = view;
         
-        // Hide all views
+        // Cacher toutes les vues
         document.getElementById('chartView').classList.add('hidden');
         document.getElementById('mapView').classList.add('hidden');
         document.getElementById('tableView').classList.add('hidden');
         
-        // Reset button styles
+        // Réinitialiser les styles des boutons
         document.getElementById('btnMapView').className = 'px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300';
         document.getElementById('btnChartView').className = 'px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300';
         document.getElementById('btnTableView').className = 'px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300';
         
-        // Show selected view and highlight button
+        // Afficher la vue sélectionnée et mettre en évidence le bouton
         switch(view) {
             case 'map':
                 document.getElementById('mapView').classList.remove('hidden');
@@ -1529,12 +1529,12 @@
     
     function initializeMap() {
         if (!map) {
-            // Initialize the map
+        // Initialiser la carte
             map = L.map('mapContainer').setView([20, 0], 2);
             
-            // Add beautiful dark tile layer
+            // Ajouter une couche de tuiles sombres et belles
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                attribution: '© OpenStreetMap contributors © CARTO',
+                
                 subdomains: 'abcd',
                 maxZoom: 19
             }).addTo(map);
@@ -1542,7 +1542,7 @@
     }
     
     function addMarkers(data, metric) {
-        // Clear existing markers and heatmap
+        // Supprimer les marqueurs existants et la carte de chaleur
         markers.forEach(marker => map.removeLayer(marker));
         markers = [];
         if (heatmapLayer) {
@@ -1550,10 +1550,10 @@
             heatmapLayer = null;
         }
         
-        // Get display type
+        // Récupérer le type d'affichage
         const displayType = document.getElementById('mapDisplayType')?.value || 'markers';
         
-        // Update legend with metric-specific labels
+        // Mettre à jour la légende avec les étiquettes spécifiques à la métrique
         const config = metricConfig[metric];
         if (config && config.thresholds) {
             document.getElementById('legendGood').textContent = config.thresholds.good.label;
@@ -1566,12 +1566,12 @@
             const bounds = [];
             
             if (displayType === 'heatmap') {
-                // Create heatmap data
+                // Créer les données de la carte de chaleur
                 const heatData = [];
                 data.forEach(item => {
                     if (item.latitude && item.longitude && item.value !== null) {
                         const quality = getQualityLevel(metric, parseFloat(item.value));
-                        // Use intensity based on quality: good = 1.0, moderate = 0.6, poor = 0.3
+                        // Utiliser l'intensité basée sur la qualité : bon = 1.0, modéré = 0.6, mauvais = 0.3
                         let intensity = 0.3;
                         if (quality) {
                             if (quality.level === 'good') intensity = 1.0;
@@ -1584,7 +1584,7 @@
                     }
                 });
                 
-                // Create and add heatmap layer
+                // Créer et ajouter la couche de carte de chaleur
                 if (heatData.length > 0) {
                     heatmapLayer = L.heatLayer(heatData, {
                         radius: 25,
@@ -1592,18 +1592,18 @@
                         maxZoom: 17,
                         max: 1.0,
                         gradient: {
-                            0.0: '#3b82f6',    // Blue for low intensity
-                            0.3: '#f59e0b',    // Amber for moderate
-                            0.6: '#ef4444',    // Red for high intensity
-                            1.0: '#dc2626'     // Dark red for very high
+                            0.0: '#3b82f6',    
+                            0.3: '#f59e0b',    
+                            0.6: '#ef4444',    
+                            1.0: '#dc2626'     
                         }
                     }).addTo(map);
                 }
             } else {
-                // Display as markers (original behavior)
+                // Afficher sous forme de marqueurs (comportement original)
                 data.forEach(item => {
                     if (item.latitude && item.longitude && item.value !== null) {
-                        // Determine quality level and color
+                        // Déterminer le niveau de qualité et la couleur
                         const quality = getQualityLevel(metric, parseFloat(item.value));
                         const color = quality ? quality.color : '#6b7280';
                         const qualityLabel = quality ? quality.label : 'Inconnu';
@@ -1617,7 +1617,7 @@
                             fillOpacity: 0.8
                         }).addTo(map);
                         
-                        // Add popup with measurement info and quality
+                        // Ajouter une popup avec les infos de mesure et la qualité
                         const popupContent = `
                             <div style="color: white; min-width: 200px;">
                                 <div style="margin-bottom: 8px;">
@@ -1631,7 +1631,7 @@
                         `;
                         marker.bindPopup(popupContent);
                         
-                        // Add tooltip on hover
+                        // Ajouter une infobulle au survol
                         marker.bindTooltip(`${qualityLabel}: ${parseFloat(item.value).toFixed(2)} ${metricConfig[metric]?.unit || ''}`, {
                             permanent: false,
                             direction: 'top',
@@ -1645,12 +1645,12 @@
                 });
             }
             
-            // Fit map to show all data points
+            // Ajuster la carte pour montrer tous les points de données
             if (bounds.length > 0) {
                 map.fitBounds(bounds, { padding: [20, 20] });
             }
         } else {
-            // Hide legend if no data
+            // Cacher la légende s'il n'y a pas de données
             document.getElementById('mapLegendContainer').classList.add('hidden');
         }
     }
@@ -1760,19 +1760,19 @@
         currentMetricSpan.textContent = metricNames[metricSelect.value] || metricSelect.value;
     }
     
-    // Event listeners for view buttons
+    // Écouteurs d'événements pour les boutons de vue
     document.getElementById('btnMapView').addEventListener('click', () => switchView('map'));
     document.getElementById('btnChartView').addEventListener('click', () => switchView('chart'));
     document.getElementById('btnTableView').addEventListener('click', () => switchView('table'));
 
-    // Event listener for map display type
+    // Écouteur d'événement pour le type d'affichage de la carte
     document.getElementById('mapDisplayType')?.addEventListener('change', () => {
         if (window.currentData && window.currentMetric && currentView === 'map') {
             addMarkers(window.currentData.evolution || [], window.currentMetric);
         }
     });
 
-    // Event listeners for comparison charts
+    // Écouteurs d'événements pour les graphiques de comparaison
     document.getElementById('metric1')?.addEventListener('change', () => {
         updateMetric2Options();
         updateComparisonExplanation();
@@ -1795,13 +1795,13 @@
         }
     });
 
-    // Event listeners for dynamic filters
+    // Écouteurs d'événements pour les filtres dynamiques
     document.getElementById('metric').addEventListener('change', () => {
         updateCurrentMetricDisplay();
         // Plus de lancement automatique - uniquement avec le bouton
     });
 
-    // Event listeners for chart filters
+    // Écouteurs d'événements pour les filtres de graphiques
     document.getElementById('pieChartSort')?.addEventListener('change', () => {
         if (window.currentData) {
             updateQualityPieChart(window.currentData, window.currentMetric);
@@ -1814,7 +1814,7 @@
         }
     });
 
-    // Manual analysis button
+    // Bouton d'analyse manuelle
     document.getElementById('btnAnalyse').addEventListener('click', () => {
         launchAnalysis();
         showNotification('Analyse lancée manuellement', 'success');
@@ -1850,7 +1850,7 @@
             url += `&end_date=${encodeURIComponent(endDate)}`;
         }
 
-        // Show loading states
+        // Afficher les états de chargement
         showAllLoadingStates();
 
         fetch(url)
@@ -1995,19 +1995,19 @@
 
     // Fonction pour mettre à jour tout le dashboard
     function updateDashboard(data, metric) {
-        // Update stats cards
+        // Mettre à jour les cartes de statistiques
         updateStatsCards(data);
         
-        // Update main chart
+        // Mettre à jour le graphique principal
         updateMainChart(data, metric);
         
-        // Update pie chart
+        // Mettre à jour le graphique camembert
         updateQualityPieChart(data, metric);
         
-        // Update monthly bar chart
+        // Mettre à jour l'histogramme mensuel
         updateMonthlyBarChart(data, metric);
         
-        // Update map and table if visible
+        // Mettre à jour la carte et le tableau si visibles
         if (currentView === 'map' && map) {
             addMarkers(data.evolution || [], metric);
         }
@@ -2015,10 +2015,10 @@
             populateTable(data.evolution || []);
         }
         
-        // Hide loading states
+        // Cacher les états de chargement
         hideAllLoadingStates();
         
-        // Save analysis if user is logged in
+        // Enregistrer l'analyse si l'utilisateur est connecté
         if (data.stats && data.nb_mesures > 0) {
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;

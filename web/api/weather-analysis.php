@@ -1,8 +1,14 @@
 <?php
 declare(strict_types=1);
-ini_set('display_errors', 0);
+ini_set('display_errors', '0');
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__ . '/../php_error.log');
+
+/**
+ * API pour les donnees meteo oceaniques
+ * BUT2 - S3 - AquaView Project
+ * Endpoint pour recuperer les donnees de temperature et meteo
+ */
 
 // ==========================
 // Autoloader PSR-4
@@ -23,7 +29,7 @@ header('Content-Type: application/json; charset=utf-8');
 
 try {
     // ==========================
-    // Paramètres reçus
+    // Parametres recus
     // ==========================
     $metric = $_GET['metric'] ?? 'dissoxygen';
     $startDate = $_GET['start_date'] ?? null;
@@ -31,7 +37,7 @@ try {
     $years = isset($_GET['periode']) ? (int)$_GET['periode'] : null;
 
     // ==========================
-    // Construction des filtres
+    // Construction des filtres temporels
     // ==========================
     if ($startDate || $endDate) {
         $wherePeriod = TimeHelper::getDateRangeCondition($startDate, $endDate);
@@ -40,7 +46,7 @@ try {
     }
 
     // ==========================
-    // Repository
+    // Repository et requetes
     // ==========================
     $repo = new OceanDataRepository();
 
