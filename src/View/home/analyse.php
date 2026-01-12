@@ -145,6 +145,31 @@
         * {
             transition: opacity 0.2s ease-out, transform 0.2s ease-out;
         }
+        
+        /* Correction du débordement des graphiques météo */
+        #weatherAnalysisContainer {
+            max-width: 100%;
+            overflow: hidden;
+        }
+        
+        #weatherBarChart, #weatherPieChart {
+            max-width: 100% !important;
+            height: auto !important;
+            max-height: 300px !important;
+        }
+        
+        .weather-chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        /* Conteneur principal pour éviter le débordement */
+        .weather-results-grid {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
     </style>
 </head>
 <body class="bg-slate-900">
@@ -389,6 +414,157 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Section Analyse Météo (INDÉPENDANTE) -->
+            <div class="mb-8 p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-r from-blue-500/5 to-purple-500/5 border border-blue-500/20 slide-up slide-up-4">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-2xl font-medium flex items-center gap-3">
+                            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
+                            </svg>
+                            Analyse par conditions météo
+                        </h2>
+                        <p class="text-white/50 text-sm mt-1">Impact des conditions météorologiques sur les niveaux d'oxygène</p>
+                    </div>
+                    
+             
+                    <button id="btnWeatherAnalysis" class="px-4 py-2 rounded-lg text-sm bg-blue-500/10 border border-blue-500/30 hover:bg-blue-500/20 transition-all duration-300 text-blue-300">
+                        <span class="flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
+                            Actualiser
+                        </span>
+                    </button>
+                </div>
+
+                <!-- Conteneur pour l'analyse météo -->
+                <div id="weatherAnalysisContainer">
+                    <!-- État de chargement -->
+                    <div id="weatherLoading" class="hidden">
+                        <div class="flex items-center justify-center py-12">
+                            <div class="flex flex-col items-center gap-3">
+                                <div class="w-10 h-10 border-2 border-blue-400/30 border-t-blue-400 rounded-full animate-spin"></div>
+                                <p class="text-white/50 text-sm">Analyse des conditions météo...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- État vide -->
+                    <div id="weatherEmpty" class="">
+                        <div class="text-center py-12">
+                            <svg class="w-16 h-16 mx-auto mb-4 text-blue-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
+                            </svg>
+                            <p class="text-white/50 text-lg">Analyse météo</p>
+                            <p class="text-white/30 text-sm mt-2">Cliquez sur "Actualiser" pour lancer l'analyse</p>
+                        </div>
+                    </div>
+
+                    <!-- Résultats de l'analyse -->
+                    <div id="weatherResults" class="hidden">
+                        <!-- Cartes de résumé météo -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div class="p-4 rounded-xl bg-white/5 border border-white/10">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-white/60">Météo dominante</span>
+                                    <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1z"/>
+                                    </svg>
+                                </div>
+                                <div id="dominantWeather" class="text-xl font-semibold text-white">–</div>
+                            </div>
+                            
+                            <div class="p-4 rounded-xl bg-white/5 border border-white/10">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-white/60">Types de météo</span>
+                                    <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                                    </svg>
+                                </div>
+                                <div id="weatherTypesCount" class="text-xl font-semibold text-white">–</div>
+                            </div>
+                            
+                            <div class="p-4 rounded-xl bg-white/5 border border-white/10">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-white/60">Impact météo</span>
+                                    <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                    </svg>
+                                </div>
+                                <div id="weatherImpact" class="text-xl font-semibold text-white">–</div>
+                            </div>
+                        </div>
+
+                        <!-- Graphique des données météo -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 weather-results-grid">
+                            <!-- Graphique barres : moyennes par météo -->
+                            <div class="p-4 rounded-xl bg-slate-900/50 border border-white/10">
+                                <h3 class="text-lg font-medium text-white mb-4">Valeurs moyennes par condition météo</h3>
+                                <div class="weather-chart-container">
+                                    <canvas id="weatherBarChart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <!-- Graphique camembert : distribution météo -->
+                            <div class="p-4 rounded-xl bg-slate-900/50 border border-white/10">
+                                <h3 class="text-lg font-medium text-white mb-4">Distribution des mesures par météo</h3>
+                                <div class="weather-chart-container">
+                                    <canvas id="weatherPieChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tableau détaillé -->
+                        <div class="mt-6 p-4 rounded-xl bg-slate-900/50 border border-white/10">
+                            <h3 class="text-lg font-medium text-white mb-4">Détails par condition météo</h3>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm text-white">
+                                    <thead class="text-white/70 border-b border-white/10">
+                                        <tr>
+                                            <th class="px-4 py-2 text-left">Condition météo</th>
+                                            <th class="px-4 py-2 text-left">Nombre de mesures</th>
+                                            <th class="px-4 py-2 text-left">Valeur moyenne</th>
+                                            <th class="px-4 py-2 text-left">Min</th>
+                                            <th class="px-4 py-2 text-left">Max</th>
+                                            <th class="px-4 py-2 text-left">Écart-type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="weatherTableBody" class="text-white/50">
+                                        <tr>
+                                            <td colspan="6" class="text-center py-4 text-white/30">
+                                                Sélectionnez une métrique pour voir les détails
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                               <!-- Texte explicatif sur l'influence des indicateurs météo -->
+                    <div class="mt-4 p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <div class="text-sm text-white/80 leading-relaxed">
+                                <p class="font-medium text-blue-300 mb-2">Pourquoi la météo influence-t-elle les indicateurs ?</p>
+                                <p class="mb-2">
+                                    Les conditions météorologiques affectent directement les paramètres océaniques mesurés :
+                                </p>
+                                <ul class="space-y-1 text-white/70 ml-4">
+                                    <li><span class="text-cyan-300">•</span> <strong>Niveau d'oxygène</strong> : Le soleil et la température influencent la photosynthèse et la dissolution de l'oxygène</li>
+                                    <li><span class="text-cyan-300">•</span> <strong>Température</strong> : Directement liée à l'ensoleillement et à la couverture nuageuse</li>
+                                    <li><span class="text-cyan-300">•</span> <strong>Salinité</strong> : Les précipitations diluent l'eau de mer, modifiant sa salinité</li>
+                                    <li><span class="text-cyan-300">•</span> <strong>pH</strong> : Le CO2 atmosphérique et les conditions météo affectent l'acidité de l'océan</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            
 
             <!-- Zone de visualisation principale -->
             <div class="mb-8 p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 slide-up slide-up-5">
@@ -898,6 +1074,8 @@
     let monthlyBarChart = null;
     let correlationChart = null;
     let comparisonScatterChart = null;
+    let weatherBarChart = null;
+    let weatherPieChart = null;
     let map = null;
     let markers = [];
     let heatmapLayer = null;
@@ -2649,6 +2827,308 @@
         }
         
         return [];
+    }
+
+    // ==========================
+    // FONCTIONS D'ANALYSE MÉTÉO (INDÉPENDANTES)
+    // ==========================
+    
+    function loadWeatherAnalysis() {
+        const metric = document.getElementById('metric').value;
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        
+        // Afficher le chargement
+        document.getElementById('weatherLoading').classList.remove('hidden');
+        document.getElementById('weatherEmpty').classList.add('hidden');
+        document.getElementById('weatherResults').classList.add('hidden');
+        
+        // Construire l'URL de l'API
+        const params = new URLSearchParams({ metric });
+        if (startDate) params.append('start_date', startDate);
+        if (endDate) params.append('end_date', endDate);
+        
+        const url = `/web/api/weather-analysis.php?${params}`;
+        console.log('Calling weather API URL:', url);
+        
+        fetch(url)
+            .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Received data:', data);
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                // Utiliser la fonction displayWeatherResults pour les données complètes
+                displayWeatherResults(data);
+            })
+            .catch(error => {
+                console.error('Erreur lors de l\'analyse météo:', error);
+                document.getElementById('weatherLoading').classList.add('hidden');
+                document.getElementById('weatherEmpty').classList.remove('hidden');
+            });
+    }
+    
+    function displayWeatherResults(data) {
+        const weatherData = data.weather_analysis;
+        
+        if (!weatherData || !weatherData.by_weather_type || weatherData.by_weather_type.length === 0) {
+            document.getElementById('weatherLoading').classList.add('hidden');
+            document.getElementById('weatherEmpty').classList.remove('hidden');
+            return;
+        }
+        
+        // Récupérer la configuration de la métrique actuelle
+        const metric = data.metric || 'dissoxygen';
+        const metricInfo = metricConfig[metric];
+        
+        // Mettre à jour les cartes de résumé
+        const summary = weatherData.analysis_summary;
+        document.getElementById('dominantWeather').textContent = summary.dominant_weather || 'N/A';
+        document.getElementById('weatherTypesCount').textContent = summary.total_weather_types || 0;
+        
+        // Traduire le niveau d'impact
+        const impactLabels = {
+            'low': 'Faible',
+            'medium': 'Modéré', 
+            'high': 'Élevé'
+        };
+        document.getElementById('weatherImpact').textContent = impactLabels[summary.weather_impact_level] || 'Inconnu';
+        
+        // Créer les graphiques avec les couleurs de la métrique
+        createWeatherBarChart(weatherData.by_weather_type, metricInfo);
+        createWeatherPieChart(weatherData.distribution, metricInfo);
+        
+        // Remplir le tableau avec les unités
+        populateWeatherTable(weatherData.by_weather_type, metricInfo);
+        
+        // Afficher les résultats
+        document.getElementById('weatherLoading').classList.add('hidden');
+        document.getElementById('weatherResults').classList.remove('hidden');
+    }
+    
+    function createWeatherBarChart(weatherData, metricInfo = null) {
+        const ctx = document.getElementById('weatherBarChart').getContext('2d');
+        
+        // Détruire le graphique existant
+        if (weatherBarChart) {
+            weatherBarChart.destroy();
+        }
+        
+        const labels = weatherData.map(d => d.weather || 'Inconnu');
+        const avgValues = weatherData.map(d => parseFloat(d.avg_value || 0));
+        const minValues = weatherData.map(d => parseFloat(d.min_value || 0));
+        const maxValues = weatherData.map(d => parseFloat(d.max_value || 0));
+        
+        // Utiliser les couleurs de la métrique ou les couleurs par défaut
+        const metricColor = metricInfo ? metricInfo.color : 'rgb(34, 211, 238)';
+        
+        weatherBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Moyenne',
+                        data: avgValues,
+                        backgroundColor: metricColor.replace('rgb', 'rgba').replace(')', ', 0.6)'),
+                        borderColor: metricColor,
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Minimum',
+                        data: minValues,
+                        backgroundColor: 'rgba(239, 68, 68, 0.6)',
+                        borderColor: 'rgba(239, 68, 68, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Maximum',
+                        data: maxValues,
+                        backgroundColor: 'rgba(16, 185, 129, 0.6)',
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'white'
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.dataset.label || '';
+                                const value = context.parsed.y || 0;
+                                const unit = metricInfo ? metricInfo.unit : '';
+                                return `${label}: ${value.toFixed(2)} ${unit}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: 'white',
+                            maxRotation: 45,
+                            minRotation: 0
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: 'white',
+                            callback: function(value) {
+                                const unit = metricInfo ? metricInfo.unit : '';
+                                return value + ' ' + unit;
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    function createWeatherPieChart(distribution) {
+        const ctx = document.getElementById('weatherPieChart').getContext('2d');
+        
+        // Détruire le graphique existant
+        if (weatherPieChart) {
+            weatherPieChart.destroy();
+        }
+        
+        const labels = distribution.map(d => d.weather || 'Inconnu');
+        const percentages = distribution.map(d => parseFloat(d.percentage || 0));
+        
+        // Couleurs différentes pour chaque type de météo
+        const colors = [
+            'rgba(59, 130, 246, 0.6)',
+            'rgba(16, 185, 129, 0.6)', 
+            'rgba(251, 146, 60, 0.6)',
+            'rgba(239, 68, 68, 0.6)',
+            'rgba(147, 51, 234, 0.6)',
+            'rgba(34, 211, 238, 0.6)'
+        ];
+        
+        weatherPieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: percentages,
+                    backgroundColor: colors.slice(0, labels.length),
+                    borderColor: colors.slice(0, labels.length).map(c => c.replace('0.6', '1')),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            color: 'white',
+                            boxWidth: 12,
+                            padding: 10
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.parsed + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    function populateWeatherTable(weatherData, metricInfo = null) {
+        const tbody = document.getElementById('weatherTableBody');
+        tbody.innerHTML = '';
+        
+        const unit = metricInfo ? metricInfo.unit : '';
+        
+        weatherData.forEach(data => {
+            const row = document.createElement('tr');
+            row.className = 'border-b border-white/5 hover:bg-white/5 transition-colors';
+            
+            row.innerHTML = `
+                <td class="px-4 py-2 font-medium">${data.weather || 'Inconnu'}</td>
+                <td class="px-4 py-2">${data.count_measures || 0}</td>
+                <td class="px-4 py-2">${parseFloat(data.avg_value || 0).toFixed(2)} ${unit}</td>
+                <td class="px-4 py-2">${parseFloat(data.min_value || 0).toFixed(2)} ${unit}</td>
+                <td class="px-4 py-2">${parseFloat(data.max_value || 0).toFixed(2)} ${unit}</td>
+                <td class="px-4 py-2">${parseFloat(data.std_deviation || 0).toFixed(2)} ${unit}</td>
+            `;
+            
+            tbody.appendChild(row);
+        });
+    }
+    
+    // Écouteur d'événement pour le bouton d'analyse météo
+    document.addEventListener('DOMContentLoaded', function() {
+        const btnWeatherAnalysis = document.getElementById('btnWeatherAnalysis');
+        if (btnWeatherAnalysis) {
+            btnWeatherAnalysis.addEventListener('click', loadWeatherAnalysis);
+        }
+        
+        // Écouteur pour le changement de métrique principale
+        const metricSelect = document.getElementById('metric');
+        if (metricSelect) {
+            metricSelect.addEventListener('change', function() {
+                // Mettre à jour les graphiques météo automatiquement
+                loadWeatherAnalysis();
+                
+                // Mettre à jour l'affichage de la métrique actuelle
+                updateMetricDisplay();
+            });
+        }
+        
+        // Initialiser l'affichage de la métrique au chargement
+        updateMetricDisplay();
+    });
+    
+    // Fonction pour mettre à jour l'affichage de la métrique actuelle
+    function updateMetricDisplay() {
+        const metric = document.getElementById('metric').value;
+        const metricInfo = metricConfig[metric];
+        
+        // Mettre à jour le titre de la section météo
+        const weatherSectionTitle = document.querySelector('#weatherAnalysisContainer h2');
+        if (weatherSectionTitle && metricInfo) {
+            weatherSectionTitle.innerHTML = `
+                Analyse par conditions météo
+                <span class="text-sm text-white/60 ml-2">(${metricInfo.label})</span>
+            `;
+        }
+        
+        // Mettre à jour les sous-titres des graphiques
+        const barChartTitle = document.querySelector('#weatherAnalysisContainer h3');
+        if (barChartTitle && metricInfo) {
+            barChartTitle.textContent = `${metricInfo.label} - Valeurs moyennes par condition météo`;
+        }
     }
     </script>
 </body>
