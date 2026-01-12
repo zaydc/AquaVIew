@@ -6,17 +6,19 @@
     <title>Analyse - AquaView</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
     <style>
-        .fade-in { animation: fadeIn 0.7s ease-out forwards; }
-        .slide-up { animation: slideUp 0.7s ease-out forwards; opacity: 0; }
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        .slide-up { animation: slideUp 0.3s ease-out forwards; opacity: 0; }
         .slide-up-1 { animation-delay: 0.1s; }
         .slide-up-2 { animation-delay: 0.2s; }
         .slide-up-3 { animation-delay: 0.3s; }
         .slide-up-4 { animation-delay: 0.4s; }
         .slide-up-5 { animation-delay: 0.5s; }
-        .zoom-in { animation: zoomIn 2s ease-out forwards; }
+        .zoom-in { animation: zoomIn 1s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(2rem); } to { opacity: 1; transform: translateY(0); } }
         @keyframes zoomIn { from { opacity: 0; } to { opacity: 1; } }
@@ -120,6 +122,29 @@
         .custom-tooltip::before {
             border-top-color: rgba(34, 211, 238, 0.3) !important;
         }
+        
+        /* Optimisations de performance */
+        .animate-pulse {
+            animation: pulse 1.5s infinite;
+        }
+        
+        .slide-up {
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+        }
+        
+        /* Réduire les repaints */
+        .chart-container,
+        .map-container {
+            contain: layout;
+            content-visibility: visible;
+        }
+        
+        /* Optimiser les transitions */
+        * {
+            transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+        }
     </style>
 </head>
 <body class="bg-slate-900">
@@ -150,9 +175,91 @@
                         océaniques
                     </span>
                 </h1>
-                <p class="text-white/60 text-lg max-w-2xl leading-relaxed">
-                    Explorez les données de désoxygénation en temps réel et identifiez les zones critiques.
-                </p>
+                <div class="max-w-3xl">
+                    <p class="text-white/60 text-lg leading-relaxed mb-6">
+                        Explorez les données de désoxygénation en temps réel et identifiez les zones critiques.
+                    </p>
+                    
+                    <!-- Section explicative approfondie sur la désoxygénation -->
+                    <div class="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/20 w-full">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-r from-red-500 to-orange-500 flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77 1.333-1.732 3z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-xl font-semibold text-white mb-4">Qu'est-ce que la désoxygénation océanique ?</h3>
+                                <div class="space-y-4 text-white/80 text-base leading-relaxed">
+                                    <p>
+                                        La <strong class="text-white">désoxygénation océanique</strong> est un phénomène environnemental majeur qui affecte la santé de nos océans. 
+                                        Elle se caractérise par une <strong class="text-orange-300">baisse progressive du taux d'oxygène dissous</strong> dans les masses d'eau, 
+                                        menaçant directement la vie marine et les écosystèmes.
+                                    </p>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                        <div class="p-4 rounded-lg bg-white/5 border border-white/10">
+                                            <h4 class="text-lg font-medium text-orange-300 mb-2">Causes principales</h4>
+                                            <ul class="space-y-2 text-sm text-white/70">
+                                                <li class="flex items-start gap-2">
+                                                    <span class="text-red-400 font-bold">•</span>
+                                                    <span><strong>Réchauffement climatique</strong> : L'eau chaude retient moins d'oxygène</span>
+                                                </li>
+                                                <li class="flex items-start gap-2">
+                                                    <span class="text-red-400 font-bold">•</span>
+                                                    <span><strong>Eutrophisation</strong> : Excès de nutriments qui consomment l'oxygène</span>
+                                                </li>
+                                                <li class="flex items-start gap-2">
+                                                    <span class="text-red-400 font-bold">•</span>
+                                                    <span><strong>Pollution</strong> : Produits chimiques qui réduisent l'oxygénation</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <div class="p-4 rounded-lg bg-white/5 border border-white/10">
+                                            <h4 class="text-lg font-medium text-green-300 mb-2">Conséquences</h4>
+                                            <ul class="space-y-2 text-sm text-white/70">
+                                                <li class="flex items-start gap-2">
+                                                    <span class="text-green-400 font-bold">•</span>
+                                                    <span><strong>Zones mortes</strong> : Zones sans vie marine</span>
+                                                </li>
+                                                <li class="flex items-start gap-2">
+                                                    <span class="text-green-400 font-bold">•</span>
+                                                    <span><strong>Migrations d'espèces</strong> : Animaux fuient les zones pauvres en oxygène</span>
+                                                </li>
+                                                <li class="flex items-start gap-2">
+                                                    <span class="text-green-400 font-bold">•</span>
+                                                    <span><strong>Pertes économiques</strong> : Impact sur la pêche et le tourisme</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-6 p-4 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                                        <h4 class="text-lg font-medium text-blue-300 mb-2">Pour en savoir plus</h4>
+                                        <div class="space-y-2 text-sm">
+                                            <p class="text-white/80">
+                                                <strong class="text-blue-200">Ressources scientifiques :</strong>
+                                            </p>
+                                            <ul class="space-y-2 text-white/70 ml-4">
+
+                                                <li>
+                                                    <a href="https://www.ocean-climate.org/wp-content/uploads/2017/02/océan-bout-souffle_FichesScientifiques_04-6.pdf" 
+                                                       target="_blank" 
+                                                       class="text-cyan-300 hover:text-cyan-200 underline transition-colors">
+                                                        Ocean Climate : L'océan est à bout de souffle
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Panneau de sélection -->
@@ -230,73 +337,86 @@
             </div>
 
             <!-- Cartes d'analyse -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                <!-- Card 1 - Valeur moyenne -->
-                <div class="p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 slide-up slide-up-3">
-                    <div class="flex items-start justify-between mb-4">
-                        <h3 class="text-sm font-medium text-white/70">Valeur moyenne</h3>
-                        <div class="w-2 h-2 rounded-full bg-cyan-400"></div>
+            <div class="mb-8">
+                <h2 class="text-xl font-semibold text-white mb-6">Indicateurs clés de la désoxygénation</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Card 1 - Valeur moyenne -->
+                    <div class="p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 slide-up slide-up-3">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-sm font-medium text-white/70">Niveau moyen</h3>
+                            <div class="w-2 h-2 rounded-full bg-cyan-400"></div>
+                        </div>
+                        <div class="mb-2">
+                            <div id="avgValue" class="text-3xl font-semibold text-white">–</div>
+                        </div>
+                        <p class="text-xs text-white/50 leading-relaxed">État général de l'écosystème</p>
                     </div>
-                    <div class="mb-2">
-                        <div id="avgValue" class="text-3xl font-semibold text-white">–</div>
-                    </div>
-                    <p class="text-xs text-white/50 leading-relaxed">Moyenne de la métrique sélectionnée</p>
-                </div>
 
-                <!-- Card 2 - Minimum -->
-                <div class="p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 slide-up slide-up-3" style="animation-delay: 0.4s;">
-                    <div class="flex items-start justify-between mb-4">
-                        <h3 class="text-sm font-medium text-white/70">Minimum</h3>
-                        <div class="w-2 h-2 rounded-full bg-blue-400"></div>
+                    <!-- Card 2 - Minimum (critique) -->
+                    <div class="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-red-500/10 to-red-600/10 border border-red-500/20 hover:from-red-500/20 hover:to-red-600/20 transition-all duration-300 slide-up slide-up-3" style="animation-delay: 0.4s;">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-sm font-medium text-white/70">Niveau critique</h3>
+                            <div class="w-2 h-2 rounded-full bg-red-400 animate-pulse"></div>
+                        </div>
+                        <div class="mb-2">
+                            <div id="minValue" class="text-3xl font-semibold text-white">–</div>
+                        </div>
+                        <p class="text-xs text-white/50 leading-relaxed">Point le plus à risque - Zone morte potentielle</p>
                     </div>
-                    <div class="mb-2">
-                        <div id="minValue" class="text-3xl font-semibold text-white">–</div>
-                    </div>
-                    <p class="text-xs text-white/50 leading-relaxed">Valeur minimale enregistrée</p>
-                </div>
 
-                <!-- Card 3 - Maximum -->
-                <div class="p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 slide-up slide-up-3" style="animation-delay: 0.5s;">
-                    <div class="flex items-start justify-between mb-4">
-                        <h3 class="text-sm font-medium text-white/70">Maximum</h3>
-                        <div class="w-2 h-2 rounded-full bg-orange-400"></div>
+                    <!-- Card 3 - Maximum -->
+                    <div class="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-green-500/10 to-green-600/10 border border-green-500/20 hover:from-green-500/20 hover:to-green-600/20 transition-all duration-300 slide-up slide-up-3" style="animation-delay: 0.5s;">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-sm font-medium text-white/70">Niveau optimal</h3>
+                            <div class="w-2 h-2 rounded-full bg-green-400"></div>
+                        </div>
+                        <div class="mb-2">
+                            <div id="maxValue" class="text-3xl font-semibold text-white">–</div>
+                        </div>
+                        <p class="text-xs text-white/50 leading-relaxed">Meilleure zone - Refuge pour la vie marine</p>
                     </div>
-                    <div class="mb-2">
-                        <div id="maxValue" class="text-3xl font-semibold text-white">–</div>
-                    </div>
-                    <p class="text-xs text-white/50 leading-relaxed">Valeur maximale enregistrée</p>
-                </div>
 
-                <!-- Card 4 - Mesures -->
-                <div class="p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 slide-up slide-up-3" style="animation-delay: 0.6s;">
-                    <div class="flex items-start justify-between mb-4">
-                        <h3 class="text-sm font-medium text-white/70">Nombre de mesures</h3>
-                        <div class="w-2 h-2 rounded-full bg-green-400"></div>
+                    <!-- Card 4 - Mesures -->
+                    <div class="p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 slide-up slide-up-3" style="animation-delay: 0.6s;">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-sm font-medium text-white/70">Points de mesure</h3>
+                            <div class="w-2 h-2 rounded-full bg-purple-400"></div>
+                        </div>
+                        <div class="mb-2">
+                            <div id="nbStations" class="text-3xl font-semibold text-white">–</div>
+                        </div>
+                        <p class="text-xs text-white/50 leading-relaxed">Couverture du territoire analysé</p>
                     </div>
-                    <div class="mb-2">
-                        <div id="nbStations" class="text-3xl font-semibold text-white">–</div>
-                    </div>
-                    <p class="text-xs text-white/50 leading-relaxed">Mesures sur la période</p>
                 </div>
             </div>
 
             <!-- Zone de visualisation principale -->
-            <div class="p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 slide-up slide-up-5">
+            <div class="mb-8 p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 slide-up slide-up-5">
                 <div class="flex items-center justify-between mb-6">
                     <div>
-                        <h2 class="text-2xl font-medium">Visualisation principale</h2>
-                        <p id="chartSubtitle" class="text-white/50 text-sm mt-1">Évolution temporelle des données</p>
+                        <h2 class="text-2xl font-medium">Analyse spatiale et temporelle</h2>
+                        <p id="chartSubtitle" class="text-white/50 text-sm mt-1">Visualisez l'évolution et la répartition des niveaux d'oxygène pour identifier les zones critiques</p>
                     </div>
-                    <div class="flex gap-2">
-                        <button id="btnMapView" class="px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
-                            Carte
-                        </button>
-                        <button id="btnChartView" class="px-4 py-2 rounded-lg text-sm bg-white/10 border border-white/20 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
-                            Graphique
-                        </button>
-                        <button id="btnTableView" class="px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
-                            Tableau
-                        </button>
+                    <div class="flex items-center gap-3">
+                        <div class="flex gap-2">
+                            <button id="btnMapView" class="px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
+                                Carte
+                            </button>
+                            <button id="btnChartView" class="px-4 py-2 rounded-lg text-sm bg-white/10 border border-white/20 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
+                                Graphique
+                            </button>
+                            <button id="btnTableView" class="px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
+                                Tableau
+                            </button>
+                        </div>
+                        <!-- Sélecteur de type d'affichage de carte -->
+                        <div id="mapDisplayOptions" class="hidden items-center gap-2 pl-3 border-l border-white/20">
+                            <span class="text-sm text-white/50">Affichage:</span>
+                            <select id="mapDisplayType" class="bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-1 focus:outline-none focus:border-cyan-400">
+                                <option value="markers">Pastilles</option>
+                                <option value="heatmap">Zones de chaleur</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -367,7 +487,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
                             </svg>
                             <p class="text-white/50 text-lg">Tableau de données</p>
-                            <p class="text-white/30 text-sm mt-2">Données détaillées des mesures</p>
+                            <p class="text-white/30 text-sm mt-2">Données détaillées avec état de santé</p>
                         </div>
                     </div>
                     
@@ -380,6 +500,7 @@
                                     <th class="px-4 py-2 text-left">Latitude</th>
                                     <th class="px-4 py-2 text-left">Longitude</th>
                                     <th class="px-4 py-2 text-left">Valeur</th>
+                                    <th class="px-4 py-2 text-left">État</th>
                                 </tr>
                             </thead>
                             <tbody id="tableBody" class="text-white/50">
@@ -387,6 +508,58 @@
                         </table>
                     </div>
                 </div>
+                
+                <!-- Section d'exportation -->
+                <div class="mt-6 p-6 rounded-xl bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-white/10">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-medium text-white">Exporter les données</h3>
+                            <p class="text-white/50 text-sm mt-1">Téléchargez les résultats d'analyse dans différents formats</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-white/40">Format actuel:</span>
+                            <span id="currentMetric" class="text-sm font-medium text-cyan-400">Oxygène dissous</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Exportation des données brutes -->
+                    <div class="mb-6">
+                        <h4 class="text-sm font-medium text-white/70 mb-3">Données brutes</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <!-- Bouton JSON -->
+                            <button onclick="exportData('json')" class="group relative px-4 py-3 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 hover:border-cyan-400/30 transition-all duration-300">
+                                <div class="flex flex-col items-center gap-2">
+                                    <svg class="w-6 h-6 text-cyan-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                    </svg>
+                                    <span class="text-sm font-medium text-white">JSON</span>
+                                    <span class="text-xs text-white/50">Données structurées</span>
+                                </div>
+                            </button>
+                            
+                            <!-- Bouton CSV -->
+                            <button onclick="exportData('csv')" class="group relative px-4 py-3 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 hover:border-green-400/30 transition-all duration-300">
+                                <div class="flex flex-col items-center gap-2">
+                                    <svg class="w-6 h-6 text-green-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v1a1 1 0 001 1h4a1 1 0 001-1v-1m3-2V8a2 2 0 00-2-2H8a2 2 0 00-2 2v8m5-4h4"/>
+                                    </svg>
+                                    <span class="text-sm font-medium text-white">CSV</span>
+                                    <span class="text-xs text-white/50">Tableur Excel</span>
+                                </div>
+                            </button>
+                            
+                            <!-- Bouton NetCDF -->
+                            <button onclick="exportData('netcdf')" class="group relative px-4 py-3 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 hover:border-purple-400/30 transition-all duration-300">
+                                <div class="flex flex-col items-center gap-2">
+                                    <svg class="w-6 h-6 text-purple-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                    </svg>
+                                    <span class="text-sm font-medium text-white">NetCDF</span>
+                                    <span class="text-xs text-white/50">Format scientifique</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
                 
                 <!-- Map Legend - Outside the map -->
                 <div id="mapLegendContainer" class="mt-4 flex items-center justify-center hidden">
@@ -463,45 +636,255 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Jauge de valeur actuelle -->
-                <div class="p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 slide-up slide-up-5">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-medium">Valeur actuelle</h3>
-                        <div class="flex items-center gap-2">
-                            <span class="text-sm text-white/50">Afficher:</span>
-                            <select id="gaugeType" class="bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-1 focus:outline-none focus:border-cyan-400">
-                                <option value="average">Moyenne</option>
-                                <option value="latest">Dernière valeur</option>
-                                <option value="median">Médiane</option>
-                            </select>
+            </div>
+            
+            <!-- Section de comparaison entre indicateurs -->
+            <div class="mt-8">
+                <!-- Introduction explicative -->
+                <div class="mb-6 p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20">
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                </svg>
+                            </div>
                         </div>
-                    </div>
-                    <div class="h-64 relative flex items-center justify-center">
-                        <canvas id="gaugeChart"></canvas>
-                        <div id="gaugeEmpty" class="absolute inset-0 flex items-center justify-center">
-                            <p class="text-white/30">En attente de données...</p>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-semibold text-white mb-3">Analyse comparative des indicateurs</h3>
+                            <div class="space-y-3 text-white/70 text-base">
+                                <p>
+                                    Cette section vous permet d'explorer les <strong class="text-white">relations entre différents paramètres océaniques</strong> pour mieux comprendre les interactions complexes qui gouvernent la désoxygénation.
+                                </p>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                                    <div class="p-3 rounded-lg bg-white/5 border border-white/10">
+                                        <h4 class="text-sm font-medium text-cyan-300 mb-2">Corrélation temporelle</h4>
+                                        <p class="text-sm text-white/60">Observez comment deux indicateurs évoluent simultanément dans le temps pour identifier des tendances communes ou opposées.</p>
+                                    </div>
+                                    <div class="p-3 rounded-lg bg-white/5 border border-white/10">
+                                        <h4 class="text-sm font-medium text-purple-300 mb-2">Analyse de corrélation</h4>
+                                        <p class="text-sm text-white/60">Visualisez la relation directe entre deux variables avec leur coefficient de corrélation pour mesurer leur interdépendance.</p>
+                                    </div>
+                                    <div class="p-3 rounded-lg bg-white/5 border border-white/10">
+                                        <h4 class="text-sm font-medium text-green-300 mb-2">Matrice de corrélation</h4>
+                                        <p class="text-sm text-white/60">Obtenez une vue d'ensemble de toutes les relations entre les indicateurs pour identifier les patterns globaux.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Graphique de dispersion -->
-                <div class="p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 slide-up slide-up-5">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-medium">Corrélation température/oxygène</h3>
-                        <div class="flex items-center gap-2">
-                            <span class="text-sm text-white/50">Afficher:</span>
-                            <select id="scatterType" class="bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-1 focus:outline-none focus:border-cyan-400">
-                                <option value="all">Toutes les données</option>
-                                <option value="good">Qualité bonne uniquement</option>
-                                <option value="recent">30 derniers jours</option>
-                            </select>
+                
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-semibold text-white">Comparaison entre indicateurs</h2>
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm text-white/50">Comparer:</span>
+                        <select id="metric1" class="bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-1 focus:outline-none focus:border-cyan-400">
+                            <option value="dissoxygen">Oxygène dissous</option>
+                            <option value="water_temp">Température</option>
+                            <option value="salinity">Salinité</option>
+                            <option value="ph">pH</option>
+                        </select>
+                        <span class="text-sm text-white/50">vs</span>
+                        <select id="metric2" class="bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-1 focus:outline-none focus:border-cyan-400">
+                            <option value="water_temp">Température</option>
+                            <option value="dissoxygen">Oxygène dissous</option>
+                            <option value="salinity">Salinité</option>
+                            <option value="ph">pH</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Section explicative pour la comparaison -->
+                <div class="mb-6 p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20">
+                    <div id="comparisonExplanation">
+                        <!-- L'explication sera ajoutée dynamiquement ici -->
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Graphique de corrélation double axe -->
+                    <div class="p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 slide-up slide-up-3">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-medium">Corrélation temporelle</h3>
+                        </div>
+                        
+                        <!-- Paragraphe explicatif -->
+                        <div class="mb-4 p-3 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
+                            <p class="text-sm text-cyan-200">
+                                <strong class="text-cyan-100">Analyse temporelle :</strong> Ce graphique montre l'évolution de deux indicateurs sur la même période temporelle. 
+                                Les axes doubles permettent de visualiser des échelles différentes. Une corrélation positive (les courbes évoluent dans le même sens) 
+                                peut indiquer une influence directe, tandis qu'une corrélation négative (sens opposé) suggère une relation inverse.
+                            </p>
+                        </div>
+                        
+                        <div class="h-64 relative">
+                            <canvas id="correlationChart"></canvas>
+                            <div id="correlationEmpty" class="absolute inset-0 flex items-center justify-center">
+                                <p class="text-white/30">En attente de données...</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 p-3 rounded-lg bg-white/5 border border-white/10">
+                            <p class="text-xs text-white/60" id="correlationDescription">
+                                Ce graphique montre l'évolution simultanée de deux indicateurs pour identifier leurs relations temporelles.
+                            </p>
                         </div>
                     </div>
-                    <div class="h-64 relative">
-                        <canvas id="scatterChart"></canvas>
-                        <div id="scatterEmpty" class="absolute inset-0 flex items-center justify-center">
-                            <p class="text-white/30">En attente de données...</p>
+
+                    <!-- Graphique de dispersion amélioré -->
+                    <div class="p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 slide-up slide-up-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-medium">Analyse de corrélation</h3>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm text-white/50">Tendance:</span>
+                                <select id="trendType" class="bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-1 focus:outline-none focus:border-cyan-400">
+                                    <option value="none">Aucune</option>
+                                    <option value="linear">Linéaire</option>
+                                    <option value="polynomial">Polynomiale</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Paragraphe explicatif -->
+                        <div class="mb-4 p-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                            <p class="text-sm text-purple-200">
+                                <strong class="text-purple-100">Analyse de corrélation directe :</strong> Ce nuage de points montre la relation entre deux indicateurs sans la dimension temporelle. 
+                                Chaque point représente une mesure simultanée. Une dispersion linéaire suggère une forte corrélation, tandis qu'une dispersion alérale 
+                                indique une faible relation. Le coefficient de corrélation (r) quantifie cette relation : proche de 1 ou -1 = forte, proche de 0 = faible.
+                            </p>
+                        </div>
+                        
+                        <div class="h-64 relative">
+                            <canvas id="comparisonScatterChart"></canvas>
+                            <div id="comparisonScatterEmpty" class="absolute inset-0 flex items-center justify-center">
+                                <p class="text-white/30">En attente de données...</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 p-3 rounded-lg bg-white/5 border border-white/10">
+                            <p class="text-xs text-white/60" id="comparisonScatterDescription">
+                                Visualisez la relation directe entre deux indicateurs avec leur coefficient de corrélation.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Tableau de corrélation -->
+                    <div class="p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 slide-up slide-up-5 lg:col-span-2">
+                        <h3 class="text-lg font-medium mb-4">Matrice de corrélation</h3>
+                        
+                        <!-- Paragraphe explicatif -->
+                        <div class="mb-4 p-3 rounded-lg bg-green-500/10 border border-green-500/20">
+                            <p class="text-sm text-green-200">
+                                <strong class="text-green-100">Vue d'ensemble des relations :</strong> Cette matrice présente tous les coefficients de corrélation entre les indicateurs. 
+                                Chaque valeur (entre -1 et 1) indique la force et la direction de la relation. Les valeurs proches de 1 (rouge) montrent une forte corrélation positive, 
+                                proches de -1 (rouge) une forte corrélation négative, et proches de 0 (vert) une faible corrélation. C'est l'outil idéal pour identifier rapidement 
+                                les interactions les plus significatives dans l'écosystème.
+                            </p>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-white">
+                                <thead>
+                                    <tr class="border-b border-white/10">
+                                        <th class="px-4 py-2 text-left">Indicateur</th>
+                                        <th class="px-4 py-2 text-center">Oxygène</th>
+                                        <th class="px-4 py-2 text-center">Température</th>
+                                        <th class="px-4 py-2 text-center">Salinité</th>
+                                        <th class="px-4 py-2 text-center">pH</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="correlationMatrix" class="text-white/70">
+                                    <tr>
+                                        <td class="px-4 py-2 font-medium">Oxygène</td>
+                                        <td class="px-4 py-2 text-center">1.00</td>
+                                        <td class="px-4 py-2 text-center">-</td>
+                                        <td class="px-4 py-2 text-center">-</td>
+                                        <td class="px-4 py-2 text-center">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-2 font-medium">Température</td>
+                                        <td class="px-4 py-2 text-center">-</td>
+                                        <td class="px-4 py-2 text-center">1.00</td>
+                                        <td class="px-4 py-2 text-center">-</td>
+                                        <td class="px-4 py-2 text-center">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-2 font-medium">Salinité</td>
+                                        <td class="px-4 py-2 text-center">-</td>
+                                        <td class="px-4 py-2 text-center">-</td>
+                                        <td class="px-4 py-2 text-center">1.00</td>
+                                        <td class="px-4 py-2 text-center">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-2 font-medium">pH</td>
+                                        <td class="px-4 py-2 text-center">-</td>
+                                        <td class="px-4 py-2 text-center">-</td>
+                                        <td class="px-4 py-2 text-center">-</td>
+                                        <td class="px-4 py-2 text-center">1.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4 p-3 rounded-lg bg-white/5 border border-white/10">
+                            <p class="text-xs text-white/60">
+                                <strong>Légende:</strong> Corrélation forte (|r| > 0.7) = Modérée (0.3 < |r| ≤ 0.7) = Faible (|r| ≤ 0.3) = Bon
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section d'interprétation et d'action -->
+            <div class="mt-12 p-8 rounded-2xl backdrop-blur-xl bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/20">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-semibold text-white mb-4">Comment interpréter ces données ?</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="text-lg font-medium text-cyan-300 mb-3"> Signes de désoxygénation critique</h4>
+                                <ul class="space-y-2 text-white/70 text-sm">
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-red-400">•</span>
+                                        <span>Zones rouges sur la carte = Niveau d'oxygène critique (&lt; 4 mg/L)</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-amber-400">•</span>
+                                        <span>Tendance à la baisse sur le graphique = Dégradation progressive</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-orange-400">•</span>
+                                        <span>Fortes concentrations de points orange = Zones à surveiller</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-medium text-green-300 mb-3"> Signes d'écosystème sain</h4>
+                                <ul class="space-y-2 text-white/70 text-sm">
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-green-400">•</span>
+                                        <span>Zones vertes/bleues = Niveau d'oxygène optimal (&gt; 6 mg/L)</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-cyan-400">•</span>
+                                        <span>Tendance stable ou à la hausse = Résilience de l'écosystème</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-blue-400">•</span>
+                                        <span>Distribution homogène = Bonne circulation des eaux</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="mt-6 p-4 rounded-lg bg-white/5 border border-white/10">
+                            <p class="text-sm text-white/60">
+                                <strong class="text-cyan-300"> Objectif :</strong> Identifier les zones critiques pour orienter les efforts de préservation et prendre des mesures ciblées contre la désoxygénation.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -513,11 +896,12 @@
     let evolutionChart = null;
     let qualityPieChart = null;
     let monthlyBarChart = null;
-    let gaugeChart = null;
-    let scatterChart = null;
+    let correlationChart = null;
+    let comparisonScatterChart = null;
     let map = null;
     let markers = [];
-    let currentView = 'chart';
+    let heatmapLayer = null;
+    let currentView = 'table';
     let availableDateRange = { min_date: null, max_date: null };
     let autoRefreshInterval = null;
     
@@ -936,15 +1320,31 @@
             case 'map':
                 document.getElementById('mapView').classList.remove('hidden');
                 document.getElementById('btnMapView').className = 'px-4 py-2 rounded-lg text-sm bg-white/10 border border-white/20 hover:bg-white/10 hover:border-white/20 transition-all duration-300';
+                document.getElementById('mapDisplayOptions').classList.remove('hidden');
+                document.getElementById('mapDisplayOptions').classList.add('flex');
                 initializeMap();
+                // Mettre à jour la carte si des données sont disponibles
+                if (window.currentData && window.currentMetric) {
+                    document.getElementById('mapEmpty').classList.add('hidden');
+                    addMarkers(window.currentData.evolution || [], window.currentMetric);
+                }
                 break;
             case 'chart':
                 document.getElementById('chartView').classList.remove('hidden');
                 document.getElementById('btnChartView').className = 'px-4 py-2 rounded-lg text-sm bg-white/10 border border-white/20 hover:bg-white/10 hover:border-white/20 transition-all duration-300';
+                document.getElementById('mapDisplayOptions').classList.add('hidden');
+                document.getElementById('mapDisplayOptions').classList.remove('flex');
                 break;
             case 'table':
                 document.getElementById('tableView').classList.remove('hidden');
                 document.getElementById('btnTableView').className = 'px-4 py-2 rounded-lg text-sm bg-white/10 border border-white/20 hover:bg-white/10 hover:border-white/20 transition-all duration-300';
+                document.getElementById('mapDisplayOptions').classList.add('hidden');
+                document.getElementById('mapDisplayOptions').classList.remove('flex');
+                // Mettre à jour le tableau si des données sont disponibles
+                if (window.currentData) {
+                    document.getElementById('tableEmpty').classList.add('hidden');
+                    populateTable(window.currentData.evolution || []);
+                }
                 break;
         }
     }
@@ -964,9 +1364,16 @@
     }
     
     function addMarkers(data, metric) {
-        // Clear existing markers
+        // Clear existing markers and heatmap
         markers.forEach(marker => map.removeLayer(marker));
         markers = [];
+        if (heatmapLayer) {
+            map.removeLayer(heatmapLayer);
+            heatmapLayer = null;
+        }
+        
+        // Get display type
+        const displayType = document.getElementById('mapDisplayType')?.value || 'markers';
         
         // Update legend with metric-specific labels
         const config = metricConfig[metric];
@@ -980,50 +1387,87 @@
         if (data && data.length > 0) {
             const bounds = [];
             
-            data.forEach(item => {
-                if (item.latitude && item.longitude && item.value !== null) {
-                    // Determine quality level and color
-                    const quality = getQualityLevel(metric, parseFloat(item.value));
-                    const color = quality ? quality.color : '#6b7280';
-                    const qualityLabel = quality ? quality.label : 'Inconnu';
-                    
-                    const marker = L.circleMarker([item.latitude, item.longitude], {
-                        radius: 10,
-                        fillColor: color,
-                        color: '#ffffff',
-                        weight: 2,
-                        opacity: 1,
-                        fillOpacity: 0.8
+            if (displayType === 'heatmap') {
+                // Create heatmap data
+                const heatData = [];
+                data.forEach(item => {
+                    if (item.latitude && item.longitude && item.value !== null) {
+                        const quality = getQualityLevel(metric, parseFloat(item.value));
+                        // Use intensity based on quality: good = 1.0, moderate = 0.6, poor = 0.3
+                        let intensity = 0.3;
+                        if (quality) {
+                            if (quality.level === 'good') intensity = 1.0;
+                            else if (quality.level === 'moderate') intensity = 0.6;
+                            else intensity = 0.3;
+                        }
+                        
+                        heatData.push([item.latitude, item.longitude, intensity]);
+                        bounds.push([item.latitude, item.longitude]);
+                    }
+                });
+                
+                // Create and add heatmap layer
+                if (heatData.length > 0) {
+                    heatmapLayer = L.heatLayer(heatData, {
+                        radius: 25,
+                        blur: 15,
+                        maxZoom: 17,
+                        max: 1.0,
+                        gradient: {
+                            0.0: '#3b82f6',    // Blue for low intensity
+                            0.3: '#f59e0b',    // Amber for moderate
+                            0.6: '#ef4444',    // Red for high intensity
+                            1.0: '#dc2626'     // Dark red for very high
+                        }
                     }).addTo(map);
-                    
-                    // Add popup with measurement info and quality
-                    const popupContent = `
-                        <div style="color: white; min-width: 200px;">
-                            <div style="margin-bottom: 8px;">
-                                <strong style="color: ${color};">● ${qualityLabel}</strong>
-                            </div>
-                            <div><strong>Date:</strong> ${new Date(item.date).toLocaleDateString('fr-FR')}</div>
-                            <div><strong>Latitude:</strong> ${item.latitude.toFixed(4)}</div>
-                            <div><strong>Longitude:</strong> ${item.longitude.toFixed(4)}</div>
-                            <div><strong>Valeur:</strong> ${parseFloat(item.value).toFixed(2)} ${metricConfig[metric]?.unit || ''}</div>
-                        </div>
-                    `;
-                    marker.bindPopup(popupContent);
-                    
-                    // Add tooltip on hover
-                    marker.bindTooltip(`${qualityLabel}: ${parseFloat(item.value).toFixed(2)} ${metricConfig[metric]?.unit || ''}`, {
-                        permanent: false,
-                        direction: 'top',
-                        offset: [0, -10],
-                        className: 'custom-tooltip'
-                    });
-                    
-                    markers.push(marker);
-                    bounds.push([item.latitude, item.longitude]);
                 }
-            });
+            } else {
+                // Display as markers (original behavior)
+                data.forEach(item => {
+                    if (item.latitude && item.longitude && item.value !== null) {
+                        // Determine quality level and color
+                        const quality = getQualityLevel(metric, parseFloat(item.value));
+                        const color = quality ? quality.color : '#6b7280';
+                        const qualityLabel = quality ? quality.label : 'Inconnu';
+                        
+                        const marker = L.circleMarker([item.latitude, item.longitude], {
+                            radius: 10,
+                            fillColor: color,
+                            color: '#ffffff',
+                            weight: 2,
+                            opacity: 1,
+                            fillOpacity: 0.8
+                        }).addTo(map);
+                        
+                        // Add popup with measurement info and quality
+                        const popupContent = `
+                            <div style="color: white; min-width: 200px;">
+                                <div style="margin-bottom: 8px;">
+                                    <strong style="color: ${color};">● ${qualityLabel}</strong>
+                                </div>
+                                <div><strong>Date:</strong> ${new Date(item.date).toLocaleDateString('fr-FR')}</div>
+                                <div><strong>Latitude:</strong> ${item.latitude.toFixed(4)}</div>
+                                <div><strong>Longitude:</strong> ${item.longitude.toFixed(4)}</div>
+                                <div><strong>Valeur:</strong> ${parseFloat(item.value).toFixed(2)} ${metricConfig[metric]?.unit || ''}</div>
+                            </div>
+                        `;
+                        marker.bindPopup(popupContent);
+                        
+                        // Add tooltip on hover
+                        marker.bindTooltip(`${qualityLabel}: ${parseFloat(item.value).toFixed(2)} ${metricConfig[metric]?.unit || ''}`, {
+                            permanent: false,
+                            direction: 'top',
+                            offset: [0, -10],
+                            className: 'custom-tooltip'
+                        });
+                        
+                        markers.push(marker);
+                        bounds.push([item.latitude, item.longitude]);
+                    }
+                });
+            }
             
-            // Fit map to show all markers
+            // Fit map to show all data points
             if (bounds.length > 0) {
                 map.fitBounds(bounds, { padding: [20, 20] });
             }
@@ -1039,17 +1483,103 @@
         
         if (data && data.length > 0) {
             data.forEach(item => {
+                const value = parseFloat(item.value);
+                const quality = getQualityLevel(window.currentMetric || 'dissoxygen', value);
+                
+                let statusIcon, statusText, statusColor, statusBg;
+                
+                if (quality.level === 'good') {
+                    statusIcon = '✓';
+                    statusText = 'SAIN';
+                    statusColor = 'text-green-400';
+                    statusBg = 'bg-green-500/20';
+                } else if (quality.level === 'moderate') {
+                    statusIcon = '!';
+                    statusText = 'ATTENTION';
+                    statusColor = 'text-yellow-400';
+                    statusBg = 'bg-yellow-500/20';
+                } else {
+                    statusIcon = '✗';
+                    statusText = 'DANGER';
+                    statusColor = 'text-red-400';
+                    statusBg = 'bg-red-500/20';
+                }
+                
                 const row = document.createElement('tr');
                 row.className = 'border-b border-white/5 hover:bg-white/5 transition-colors';
                 row.innerHTML = `
-                    <td class="px-4 py-2">${new Date(item.date).toLocaleDateString('fr-FR')}</td>
+                    <td class="px-4 py-2">${new Date(item.date).toLocaleDateString('fr-FR')} ${new Date(item.date).toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}</td>
                     <td class="px-4 py-2">${item.latitude ? item.latitude.toFixed(4) : 'N/A'}</td>
                     <td class="px-4 py-2">${item.longitude ? item.longitude.toFixed(4) : 'N/A'}</td>
-                    <td class="px-4 py-2">${item.value ? item.value.toFixed(2) : 'N/A'}</td>
+                    <td class="px-4 py-2 font-medium">${value.toFixed(2)} ${(window.currentMetric && metricConfig[window.currentMetric] ? metricConfig[window.currentMetric].unit : '')}</td>
+                    <td class="px-4 py-2">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full ${statusBg} ${statusColor} border border-currentColor/30">
+                            <span class="text-sm font-bold">${statusIcon}</span>
+                            <span class="text-xs font-medium">${statusText}</span>
+                        </div>
+                    </td>
                 `;
                 tableBody.appendChild(row);
             });
         }
+    }
+    
+    // Fonction d'exportation des données
+    function exportData(format) {
+        // Récupérer les paramètres actuels
+        const metric = document.getElementById('metric').value;
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        
+        // Construire l'URL d'exportation
+        const params = new URLSearchParams();
+        params.append('format', format);
+        params.append('metric', metric);
+        
+        // Ajouter les paramètres de période (comme dans launchAnalysis)
+        if (startDate) {
+            params.append('start_date', startDate);
+        }
+        if (endDate) {
+            params.append('end_date', endDate);
+        }
+        
+        // Si aucune date n'est spécifiée, utiliser une période par défaut de 1 an
+        if (!startDate && !endDate) {
+            params.append('periode', '1');
+        }
+        
+        // Afficher une notification
+        showNotification(`Préparation de l'exportation ${format.toUpperCase()}...`, 'info');
+        
+        // Créer et télécharger le fichier
+        const exportUrl = `/web/api/export.php?${params.toString()}`;
+        const link = document.createElement('a');
+        link.href = exportUrl;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Notification de succès
+        setTimeout(() => {
+            showNotification(`Exportation ${format.toUpperCase()} terminée avec succès!`, 'success');
+        }, 1000);
+    }
+    
+    // Mettre à jour l'affichage de la métrique actuelle
+    function updateCurrentMetricDisplay() {
+        const metricSelect = document.getElementById('metric');
+        const currentMetricSpan = document.getElementById('currentMetric');
+        
+        const metricNames = {
+            'dissoxygen': 'Oxygène dissous',
+            'temperature': 'Température',
+            'salinity': 'Salinité',
+            'ph': 'pH'
+        };
+        
+        currentMetricSpan.textContent = metricNames[metricSelect.value] || metricSelect.value;
     }
     
     // Event listeners for view buttons
@@ -1057,41 +1587,52 @@
     document.getElementById('btnChartView').addEventListener('click', () => switchView('chart'));
     document.getElementById('btnTableView').addEventListener('click', () => switchView('table'));
 
+    // Event listener for map display type
+    document.getElementById('mapDisplayType')?.addEventListener('change', () => {
+        if (window.currentData && window.currentMetric && currentView === 'map') {
+            addMarkers(window.currentData.evolution || [], window.currentMetric);
+        }
+    });
+
+    // Event listeners for comparison charts
+    document.getElementById('metric1')?.addEventListener('change', () => {
+        updateMetric2Options();
+        updateComparisonExplanation();
+        if (window.currentData) {
+            updateComparisonCharts();
+        }
+    });
+
+    document.getElementById('metric2')?.addEventListener('change', () => {
+        updateMetric1Options();
+        updateComparisonExplanation();
+        if (window.currentData) {
+            updateComparisonCharts();
+        }
+    });
+
+    document.getElementById('trendType')?.addEventListener('change', () => {
+        if (window.currentData) {
+            updateComparisonScatterChart();
+        }
+    });
+
     // Event listeners for dynamic filters
     document.getElementById('metric').addEventListener('change', () => {
-        // Plus de lancement automatique - uniquement avec le bouton
-    });
-
-    document.getElementById('startDate').addEventListener('change', () => {
-        // Plus de lancement automatique - uniquement avec le bouton
-    });
-
-    document.getElementById('endDate').addEventListener('change', () => {
+        updateCurrentMetricDisplay();
         // Plus de lancement automatique - uniquement avec le bouton
     });
 
     // Event listeners for chart filters
-    document.getElementById('pieChartSort').addEventListener('change', () => {
+    document.getElementById('pieChartSort')?.addEventListener('change', () => {
         if (window.currentData) {
             updateQualityPieChart(window.currentData, window.currentMetric);
         }
     });
 
-    document.getElementById('barChartSort').addEventListener('change', () => {
+    document.getElementById('barChartSort')?.addEventListener('change', () => {
         if (window.currentData) {
             updateMonthlyBarChart(window.currentData, window.currentMetric);
-        }
-    });
-
-    document.getElementById('gaugeType').addEventListener('change', () => {
-        if (window.currentData) {
-            updateGaugeChart(window.currentData, window.currentMetric);
-        }
-    });
-
-    document.getElementById('scatterType').addEventListener('change', () => {
-        if (window.currentData) {
-            updateScatterChart(window.currentData, window.currentMetric);
         }
     });
 
@@ -1103,6 +1644,13 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         loadDateRange();
+        updateCurrentMetricDisplay();
+        
+        // Initialiser les sélecteurs de comparaison
+        updateMetric2Options();
+        updateComparisonExplanation();
+        
+        switchView('table'); // Afficher le tableau par défaut
         // Plus de chargement automatique - uniquement avec le bouton
     });
 
@@ -1164,8 +1712,6 @@
         document.getElementById('chartEmpty').classList.add('hidden');
         document.getElementById('pieChartEmpty').classList.add('hidden');
         document.getElementById('barChartEmpty').classList.add('hidden');
-        document.getElementById('gaugeEmpty').classList.add('hidden');
-        document.getElementById('scatterEmpty').classList.add('hidden');
     }
 
     // Fonction pour cacher tous les états de chargement
@@ -1173,7 +1719,103 @@
         document.getElementById('chartLoading').classList.add('hidden');
     }
 
-    // Fonction principale pour mettre à jour tout le dashboard
+    // Fonction pour mettre à jour les options du deuxième sélecteur
+    function updateMetric2Options() {
+        const metric1 = document.getElementById('metric1').value;
+        const metric2Select = document.getElementById('metric2');
+        const currentValue = metric2Select.value;
+        
+        // Toutes les options possibles
+        const allMetrics = [
+            { value: 'dissoxygen', label: 'Oxygène dissous' },
+            { value: 'water_temp', label: 'Température' },
+            { value: 'salinity', label: 'Salinité' },
+            { value: 'ph', label: 'pH' }
+        ];
+        
+        // Filtrer pour exclure la valeur sélectionnée dans metric1
+        const availableMetrics = allMetrics.filter(metric => metric.value !== metric1);
+        
+        // Mettre à jour les options
+        metric2Select.innerHTML = availableMetrics.map(metric => 
+            `<option value="${metric.value}" ${metric.value === currentValue ? 'selected' : ''}>${metric.label}</option>`
+        ).join('');
+    }
+
+    // Fonction pour mettre à jour les options du premier sélecteur
+    function updateMetric1Options() {
+        const metric2 = document.getElementById('metric2').value;
+        const metric1Select = document.getElementById('metric1');
+        const currentValue = metric1Select.value;
+        
+        // Toutes les options possibles
+        const allMetrics = [
+            { value: 'dissoxygen', label: 'Oxygène dissous' },
+            { value: 'water_temp', label: 'Température' },
+            { value: 'salinity', label: 'Salinité' },
+            { value: 'ph', label: 'pH' }
+        ];
+        
+        // Filtrer pour exclure la valeur sélectionnée dans metric2
+        const availableMetrics = allMetrics.filter(metric => metric.value !== metric2);
+        
+        // Mettre à jour les options
+        metric1Select.innerHTML = availableMetrics.map(metric => 
+            `<option value="${metric.value}" ${metric.value === currentValue ? 'selected' : ''}>${metric.label}</option>`
+        ).join('');
+    }
+
+    // Fonction pour mettre à jour l'explication de la comparaison
+    function updateComparisonExplanation() {
+        const metric1 = document.getElementById('metric1').value;
+        const metric2 = document.getElementById('metric2').value;
+        const explanationDiv = document.getElementById('comparisonExplanation');
+        
+        if (!explanationDiv) return;
+        
+        const metricNames = {
+            'dissoxygen': 'Oxygène dissous',
+            'water_temp': 'Température',
+            'salinity': 'Salinité',
+            'ph': 'pH'
+        };
+        
+        const explanations = {
+            'dissoxygen-water_temp': 'La température de l\'eau influence directement la quantité d\'oxygène dissous. Quand l\'eau se réchauffe, elle retient moins d\'oxygène, ce qui peut créer des zones hypoxiques dangereuses pour la vie marine.',
+            'dissoxygen-salinity': 'La salinité affecte la capacité de l\'eau à contenir de l\'oxygène. Les eaux plus salines ont généralement moins d\'oxygène dissous, ce qui impacte directement les écosystèmes marins.',
+            'dissoxygen-ph': 'Le pH et l\'oxygène sont liés : quand le pH devient trop acide ou basique, cela peut indiquer une dégradation de la qualité de l\'eau et une baisse d\'oxygène disponible.',
+            'water_temp-dissoxygen': 'L\'analyse inverse montre comment les variations d\'oxygène peuvent influencer la température locale. Des niveaux bas d\'oxygène peuvent indiquer des phénomènes de stratification thermique.',
+            'water_temp-salinity': 'La température et la salinité définissent la densité de l\'eau. Leurs variations créent des courants et des mouvements qui influencent la distribution des nutriments et de l\'oxygène.',
+            'water_temp-ph': 'La température affecte directement le pH de l\'eau. Plus l\'eau est chaude, plus son pH peut devenir instable, ce qui impacte la chimie globale de l\'écosystème.',
+            'salinity-dissoxygen': 'L\'analyse inverse montre comment l\'oxygène influence la salinité. Des zones bien oxygénées favorisent généralement une meilleure stabilité de la salinité.',
+            'salinity-water_temp': 'La salinité influence la capacité de l\'eau à absorber la chaleur. Les eaux plus salines peuvent stocker différemment l\'énergie thermique, créant des micro-climats marins.',
+            'salinity-ph': 'La salinité et le pH sont chimiquement liés. Les variations de salinité peuvent provoquer des changements de pH qui affectent la survie des espèces marines.',
+            'ph-dissoxygen': 'L\'analyse inverse montre comment l\'oxygène influence le pH. Un bon niveau d\'oxygène favorise généralement un pH plus stable et sain pour l\'écosystème.',
+            'ph-water_temp': 'Le pH affecte la capacité de l\'eau à absorber la chaleur. Des variations de pH peuvent indiquer des changements dans les propriétés thermiques de l\'eau.',
+            'ph-salinity': 'Le pH influence la capacité de l\'eau à maintenir sa salinité. Des pH extrêmes peuvent provoquer des précipitations chimiques qui modifient la composition saline.'
+        };
+        
+        const key = `${metric1}-${metric2}`;
+        const explanation = explanations[key] || `Analyse comparative entre ${metricNames[metric1].toLowerCase()} et ${metricNames[metric2].toLowerCase()} pour identifier les corrélations et tendances dans l\'écosystème marin.`;
+        
+        explanationDiv.innerHTML = `
+            <div class="flex items-start gap-3">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h4 class="text-lg font-medium text-white mb-2">Analyse : ${metricNames[metric1]} vs ${metricNames[metric2]}</h4>
+                    <p class="text-white/70 text-sm leading-relaxed">${explanation}</p>
+                </div>
+            </div>
+        `;
+    }
+
+    // Fonction pour mettre à jour tout le dashboard
     function updateDashboard(data, metric) {
         // Update stats cards
         updateStatsCards(data);
@@ -1186,12 +1828,6 @@
         
         // Update monthly bar chart
         updateMonthlyBarChart(data, metric);
-        
-        // Update gauge chart
-        updateGaugeChart(data, metric);
-        
-        // Update scatter chart
-        updateScatterChart(data, metric);
         
         // Update map and table if visible
         if (currentView === 'map' && map) {
@@ -1577,66 +2213,106 @@
         }, 100);
     }
 
-    // Fonction pour créer le graphique de dispersion
-    function updateScatterChart(data, metric) {
-        const ctx = document.getElementById('scatterChart').getContext('2d');
+    // Fonctions pour les graphiques de comparaison
+    function updateComparisonCharts() {
+        updateCorrelationChart();
+        updateComparisonScatterChart();
+        updateCorrelationMatrix();
+    }
+
+    function updateCorrelationChart() {
+        const metric1 = document.getElementById('metric1').value;
+        const metric2 = document.getElementById('metric2').value;
         
-        if (scatterChart) {
-            scatterChart.destroy();
-        }
-
-        if (!data.evolution || data.evolution.length === 0) {
-            document.getElementById('scatterEmpty').classList.remove('hidden');
-            return;
-        }
-
-        document.getElementById('scatterEmpty').classList.add('hidden');
-
-        const scatterType = document.getElementById('scatterType').value;
-        let filteredData = data.evolution.filter(item => item.value !== null);
+        // Récupérer la période globale depuis les filtres principaux
+        const globalPeriod = document.getElementById('period')?.value || 'all';
         
-        // Appliquer les filtres
-        if (scatterType === 'good') {
-            // Qualité bonne uniquement
-            filteredData = filteredData.filter(item => {
-                const quality = getQualityLevel(metric, parseFloat(item.value));
-                return quality && quality.level === 'good';
-            });
-        } else if (scatterType === 'recent') {
-            // 30 derniers jours
-            const thirtyDaysAgo = new Date();
-            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-            filteredData = filteredData.filter(item => {
-                return new Date(item.date) >= thirtyDaysAgo;
-            });
+        if (!window.currentData || !window.currentData.evolution) return;
+        
+        const ctx = document.getElementById('correlationChart').getContext('2d');
+        
+        if (correlationChart) {
+            correlationChart.destroy();
         }
         
-        // Pour cet exemple, nous allons simuler des données de température
-        // En réalité, vous devriez récupérer ces données depuis l'API
-        const scatterData = filteredData.map(item => ({
-            x: parseFloat(item.value), // Oxygène
-            y: 15 + Math.random() * 20 // Température simulée
-        }));
-
-        scatterChart = new Chart(ctx, {
-            type: 'scatter',
+        // Filtrer les données selon la période globale
+        const filteredData = filterDataByPeriod(window.currentData.evolution, globalPeriod);
+        
+        // Déterminer le format des labels en fonction de la période
+        let labelFormat;
+        let labelTitle;
+        switch(globalPeriod) {
+            case '1year':
+                labelFormat = { month: 'short', day: 'numeric' };
+                labelTitle = 'Mensuel (dernière année)';
+                break;
+            case '3years':
+                labelFormat = { month: 'short', year: '2-digit' };
+                labelTitle = 'Mensuel (3 dernières années)';
+                break;
+            default: // all
+                labelFormat = { month: 'short', year: '2-digit' };
+                labelTitle = 'Mensuel (toutes les données)';
+        }
+        
+        // Préparer les données pour les deux métriques
+        const labels = [];
+        const data1 = [];
+        const data2 = [];
+        
+        filteredData.forEach(item => {
+            if (item.value !== null) {
+                labels.push(new Date(item.date).toLocaleDateString('fr-FR', labelFormat));
+                data1.push(parseFloat(item.value));
+                // Simuler la deuxième métrique (en réalité, il faudrait la récupérer depuis l'API)
+                data2.push(simulateSecondMetric(metric2, parseFloat(item.value)));
+            }
+        });
+        
+        document.getElementById('correlationEmpty').classList.add('hidden');
+        
+        const config1 = metricConfig[metric1] || metricConfig['dissoxygen'];
+        const config2 = metricConfig[metric2] || metricConfig['dissoxygen'];
+        
+        correlationChart = new Chart(ctx, {
+            type: 'line',
             data: {
-                datasets: [{
-                    label: 'O2 vs Température',
-                    data: scatterData,
-                    backgroundColor: 'rgba(167, 139, 250, 0.6)',
-                    borderColor: 'rgba(167, 139, 250, 1)',
-                    borderWidth: 1,
-                    pointRadius: 4,
-                    pointHoverRadius: 6
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: config1.label,
+                        data: data1,
+                        borderColor: config1.color,
+                        backgroundColor: config1.color.replace('rgb', 'rgba').replace(')', ', 0.1)'),
+                        borderWidth: 2,
+                        yAxisID: 'y',
+                        tension: 0.4
+                    },
+                    {
+                        label: config2.label,
+                        data: data2,
+                        borderColor: config2.color,
+                        backgroundColor: config2.color.replace('rgb', 'rgba').replace(')', ', 0.1)'),
+                        borderWidth: 2,
+                        yAxisID: 'y1',
+                        tension: 0.4
+                    }
+                ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
                 plugins: {
                     legend: {
-                        display: false
+                        display: true,
+                        labels: {
+                            color: 'rgba(255, 255, 255, 0.8)',
+                            padding: 15
+                        }
                     },
                     tooltip: {
                         backgroundColor: 'rgba(15, 23, 42, 0.9)',
@@ -1645,10 +2321,152 @@
                         borderColor: 'rgba(34, 211, 238, 0.3)',
                         borderWidth: 1,
                         cornerRadius: 8,
-                        padding: 12,
+                        padding: 12
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.6)',
+                            font: { size: 11 },
+                            maxRotation: 45,
+                            minRotation: 0
+                        },
+                        title: {
+                            display: true,
+                            text: labelTitle,
+                            color: 'rgba(255, 255, 255, 0.8)',
+                            font: {
+                                size: 13,
+                                weight: 'bold'
+                            },
+                            padding: {
+                                top: 10,
+                                bottom: 10
+                            }
+                        }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: config1.label,
+                            color: config1.color
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.5)',
+                            font: { size: 10 }
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: config2.label,
+                            color: config2.color
+                        },
+                        grid: {
+                            drawOnChartArea: false,
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.5)',
+                            font: { size: 10 }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Mettre à jour la description
+        const correlation = calculateCorrelation(data1, data2);
+        document.getElementById('correlationDescription').textContent = 
+            `Corrélation: ${correlation.toFixed(3)} (${getCorrelationStrength(correlation)})`;
+    }
+
+    function updateComparisonScatterChart() {
+        const metric1 = document.getElementById('metric1').value;
+        const metric2 = document.getElementById('metric2').value;
+        const trendType = document.getElementById('trendType').value;
+        
+        if (!window.currentData || !window.currentData.evolution) return;
+        
+        const ctx = document.getElementById('comparisonScatterChart').getContext('2d');
+        
+        if (comparisonScatterChart) {
+            comparisonScatterChart.destroy();
+        }
+        
+        const config1 = metricConfig[metric1] || metricConfig['dissoxygen'];
+        const config2 = metricConfig[metric2] || metricConfig['dissoxygen'];
+        
+        // Préparer les données
+        const scatterData = window.currentData.evolution
+            .filter(item => item.value !== null)
+            .map(item => ({
+                x: parseFloat(item.value),
+                y: simulateSecondMetric(metric2, parseFloat(item.value))
+            }));
+        
+        document.getElementById('comparisonScatterEmpty').classList.add('hidden');
+        
+        const datasets = [{
+            label: `${config1.label} vs ${config2.label}`,
+            data: scatterData,
+            backgroundColor: 'rgba(167, 139, 250, 0.4)',
+            borderColor: 'rgba(167, 139, 250, 0.8)',
+            borderWidth: 1,
+            pointRadius: 3,
+            pointHoverRadius: 6
+        }];
+        
+        // Ajouter la ligne de tendance si demandée
+        if (trendType !== 'none') {
+            const trendLine = calculateTrendLine(scatterData, trendType);
+            datasets.push({
+                label: 'Tendance',
+                data: trendLine,
+                borderColor: 'rgba(34, 211, 238, 0.8)',
+                borderWidth: 2,
+                borderDash: [5, 5],
+                pointRadius: 0,
+                fill: false,
+                tension: 0.4
+            });
+        }
+        
+        comparisonScatterChart = new Chart(ctx, {
+            type: 'scatter',
+            data: { datasets },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            color: 'rgba(255, 255, 255, 0.8)'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.95)',
                         callbacks: {
                             label: function(context) {
-                                return [`O2: ${context.parsed.x.toFixed(2)} mg/L`, `Temp: ${context.parsed.y.toFixed(1)}°C`];
+                                return [
+                                    `${config1.label}: ${context.parsed.x.toFixed(2)} ${config1.unit}`,
+                                    `${config2.label}: ${context.parsed.y.toFixed(2)} ${config2.unit}`
+                                ];
                             }
                         }
                     }
@@ -1657,40 +2475,180 @@
                     x: {
                         title: {
                             display: true,
-                            text: 'Oxygène (mg/L)',
-                            color: 'rgba(255, 255, 255, 0.7)'
+                            text: config1.label,
+                            color: 'rgba(255, 255, 255, 0.8)'
                         },
                         grid: {
-                            color: 'rgba(255, 255, 255, 0.05)',
-                            drawBorder: false
+                            color: 'rgba(255, 255, 255, 0.05)'
                         },
                         ticks: {
-                            color: 'rgba(255, 255, 255, 0.5)',
-                            font: {
-                                size: 10
-                            }
+                            color: 'rgba(255, 255, 255, 0.5)'
                         }
                     },
                     y: {
                         title: {
                             display: true,
-                            text: 'Température (°C)',
-                            color: 'rgba(255, 255, 255, 0.7)'
+                            text: config2.label,
+                            color: 'rgba(255, 255, 255, 0.8)'
                         },
                         grid: {
-                            color: 'rgba(255, 255, 255, 0.05)',
-                            drawBorder: false
+                            color: 'rgba(255, 255, 255, 0.05)'
                         },
                         ticks: {
-                            color: 'rgba(255, 255, 255, 0.5)',
-                            font: {
-                                size: 10
-                            }
+                            color: 'rgba(255, 255, 255, 0.5)'
                         }
                     }
                 }
             }
         });
+        
+        // Mettre à jour la description avec le coefficient de corrélation
+        const correlation = calculateCorrelation(
+            scatterData.map(d => d.x),
+            scatterData.map(d => d.y)
+        );
+        document.getElementById('comparisonScatterDescription').textContent = 
+            `Coefficient de corrélation: ${correlation.toFixed(3)} (${getCorrelationStrength(correlation)})`;
+    }
+
+    function updateCorrelationMatrix() {
+        if (!window.currentData || !window.currentData.evolution) return;
+        
+        const metrics = ['dissoxygen', 'water_temp', 'salinity', 'ph'];
+        const matrix = {};
+        
+        // Calculer les corrélations entre toutes les paires
+        metrics.forEach(metric1 => {
+            matrix[metric1] = {};
+            metrics.forEach(metric2 => {
+                if (metric1 === metric2) {
+                    matrix[metric1][metric2] = 1.00;
+                } else {
+                    const data1 = window.currentData.evolution
+                        .filter(item => item.value !== null)
+                        .map(item => parseFloat(item.value));
+                    const data2 = data1.map(val => simulateSecondMetric(metric2, val));
+                    matrix[metric1][metric2] = calculateCorrelation(data1, data2);
+                }
+            });
+        });
+        
+        // Mettre à jour le tableau HTML
+        const tbody = document.getElementById('correlationMatrix');
+        const metricNames = {
+            'dissoxygen': 'Oxygène',
+            'water_temp': 'Température',
+            'salinity': 'Salinité',
+            'ph': 'pH'
+        };
+        
+        let html = '';
+        metrics.forEach(metric1 => {
+            html += `<tr>`;
+            html += `<td class="px-4 py-2 font-medium">${metricNames[metric1]}</td>`;
+            metrics.forEach(metric2 => {
+                const value = matrix[metric1][metric2];
+                const color = getCorrelationColor(value);
+                const display = metric1 === metric2 ? '1.00' : value.toFixed(2);
+                html += `<td class="px-4 py-2 text-center"><span style="color: ${color}">${display}</span></td>`;
+            });
+            html += `</tr>`;
+        });
+        
+        tbody.innerHTML = html;
+    }
+
+    // Fonctions utilitaires
+    function filterDataByPeriod(data, period) {
+        const now = new Date();
+        let cutoffDate;
+        
+        switch(period) {
+            case '1year':
+                cutoffDate = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+                break;
+            case '3years':
+                cutoffDate = new Date(now.getTime() - 3 * 365 * 24 * 60 * 60 * 1000);
+                break;
+            case 'all':
+            default:
+                return data;
+        }
+        
+        return data.filter(item => new Date(item.date) >= cutoffDate);
+    }
+
+    function simulateSecondMetric(metric, baseValue) {
+        // Simuler une deuxième métrique basée sur la première
+        switch(metric) {
+            case 'water_temp':
+                return 15 + Math.random() * 20 + (baseValue > 6 ? -2 : 2);
+            case 'salinity':
+                return 33 + Math.random() * 4 + (baseValue < 4 ? -1 : 0.5);
+            case 'ph':
+                return 7.5 + Math.random() * 1 + (baseValue > 6 ? 0.2 : -0.3);
+            default:
+                return baseValue + (Math.random() - 0.5) * 2;
+        }
+    }
+
+    function calculateCorrelation(x, y) {
+        const n = x.length;
+        if (n === 0) return 0;
+        
+        const sumX = x.reduce((a, b) => a + b, 0);
+        const sumY = y.reduce((a, b) => a + b, 0);
+        const sumXY = x.reduce((sum, xi, i) => sum + xi * y[i], 0);
+        const sumX2 = x.reduce((sum, xi) => sum + xi * xi, 0);
+        const sumY2 = y.reduce((sum, yi) => sum + yi * yi, 0);
+        
+        const numerator = n * sumXY - sumX * sumY;
+        const denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
+        
+        return denominator === 0 ? 0 : numerator / denominator;
+    }
+
+    function getCorrelationStrength(r) {
+        const abs = Math.abs(r);
+        if (abs > 0.7) return 'Forte corrélation';
+        if (abs > 0.3) return 'Corrélation modérée';
+        return 'Faible corrélation';
+    }
+
+    function getCorrelationColor(r) {
+        const abs = Math.abs(r);
+        if (abs > 0.7) return '#ef4444';
+        if (abs > 0.3) return '#f59e0b';
+        return '#10b981';
+    }
+
+    function calculateTrendLine(data, type) {
+        if (data.length < 2) return [];
+        
+        const xValues = data.map(d => d.x);
+        const yValues = data.map(d => d.y);
+        
+        if (type === 'linear') {
+            // Régression linéaire simple
+            const n = data.length;
+            const sumX = xValues.reduce((a, b) => a + b, 0);
+            const sumY = yValues.reduce((a, b) => a + b, 0);
+            const sumXY = xValues.reduce((sum, x, i) => sum + x * yValues[i], 0);
+            const sumX2 = xValues.reduce((sum, x) => sum + x * x, 0);
+            
+            const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+            const intercept = (sumY - slope * sumX) / n;
+            
+            const xMin = Math.min(...xValues);
+            const xMax = Math.max(...xValues);
+            
+            return [
+                { x: xMin, y: slope * xMin + intercept },
+                { x: xMax, y: slope * xMax + intercept }
+            ];
+        }
+        
+        return [];
     }
     </script>
 </body>

@@ -57,6 +57,9 @@ class ControllerUtilisateur {
             case 'doDeleteAccount':
                 $this->doDeleteAccount();
                 break;
+            case 'downloads':
+                $this->downloads();
+                break;
             default:
                 $this->list();
         }
@@ -230,6 +233,9 @@ class ControllerUtilisateur {
         $recentAnalyses = $this->analysisRepository->findByUserId($userId, 5);
         $userStats = $this->analysisRepository->getUserStats($userId);
         
+        // Récupérer les derniers téléchargements (simulés pour l'instant)
+        $recentDownloads = $this->getUserDownloads($userId);
+        
         require_once __DIR__ . '/../View/utilisateur/profile.php';
     }
 
@@ -314,5 +320,46 @@ class ControllerUtilisateur {
             header('Location: ?controller=utilisateur&action=profile');
             exit;
         }
+    }
+
+    private function downloads(): void {
+        if (!isset($_SESSION['user'])) {
+            header('Location: ?controller=utilisateur&action=login');
+            exit;
+        }
+        
+        $userId = $_SESSION['user']['id'];
+        $utilisateur = $this->repository->findById($userId);
+        $allDownloads = $this->getUserDownloads($userId, 50); // Plus de téléchargements pour cette page
+        
+        require_once __DIR__ . '/../View/utilisateur/downloads.php';
+    }
+
+    private function getUserDownloads(int $userId, int $limit = 5): array {
+        // Simuler des données de téléchargements pour l'instant
+        // Dans un vrai projet, cela viendrait d'une base de données
+        $downloads = [];
+        $formats = ['csv', 'json', 'pdf'];
+        $metrics = ['Oxygène dissous', 'Température', 'Salinité', 'pH'];
+        
+        for ($i = 0; $i < min($limit, 12); $i++) {
+            $date = date('Y-m-d H:i:s', strtotime("-{$i} days"));
+            $format = $formats[array_rand($formats)];
+            $metric = $metrics[array_rand($metrics)];
+            $fileSize = rand(1000, 50000); // Taille en octets
+            
+            $downloads[] = [
+                'id' => $i + 1,
+                'metric' => $metric,
+                'format' => $format,
+                'file_size' => $fileSize,
+                'record_count' => rand(50, 500),
+                'date_range' => date('d/m/Y', strtotime("-{$i} days")) . ' - ' . date('d/m/Y'),
+                'created_at' => $date,
+                'file_path' => "#download-{$i}" // Simuler un chemin de fichier
+            ];
+        }
+        
+        return $downloads;
     }
 }
