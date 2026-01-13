@@ -72,7 +72,7 @@
                     <div class="relative mb-6">
                         <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
                             <img 
-                                src="assets/team/zayd.jpeg" 
+                                src="web/assets/team/zayd.jpeg" 
                                 alt="Zayd"
                                 class="w-full h-full rounded-full object-cover bg-slate-700"
                             />
@@ -92,7 +92,7 @@
                     <div class="relative mb-6">
                         <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
                             <img 
-                                src="assets/team/ryan.jpeg" 
+                                src="web/assets/team/ryan.jpeg" 
                                 alt="Ryan"
                                 class="w-full h-full rounded-full object-cover bg-slate-700"
                             />
@@ -112,7 +112,7 @@
                     <div class="relative mb-6">
                         <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
                             <img 
-                                src="assets/team/adam.png" 
+                                src="web/assets/team/adam.png" 
                                 alt="Adam"
                                 class="w-full h-full rounded-full object-cover bg-slate-700"
                             />
@@ -132,7 +132,7 @@
                     <div class="relative mb-6">
                         <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
                             <img 
-                                src="assets/team/fiona.JPG"  
+                                src="web/assets/team/fiona.JPG"  
                                 alt="Fiona"
                                 class="w-full h-full rounded-full object-cover bg-slate-700"
                             />

@@ -173,6 +173,87 @@
                         <p class="text-cyan-200/60 text-xs mt-2">Analyses historiques</p>
                     </div>
 
+                    <!-- Section explicative approfondie sur la désoxygénation -->
+                    <div class="md:col-span-12 reveal-on-scroll delay-200">
+                        <div class="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 w-full">
+                            <div class="flex items-start gap-4">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-xl font-semibold text-white mb-4">Qu'est-ce que la désoxygénation océanique ?</h3>
+                                    <div class="space-y-4 text-white/80 text-base leading-relaxed">
+                                        <p>
+                                            La <strong class="text-white">désoxygénation océanique</strong> est un phénomène environnemental majeur qui affecte la santé de nos océans. 
+                                            Elle se caractérise par une <strong class="text-cyan-300">baisse progressive du taux d'oxygène dissous</strong> dans les masses d'eau, 
+                                            menaçant directement la vie marine et les écosystèmes.
+                                        </p>
+                                        
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                            <div class="p-4 rounded-lg bg-white/5 border border-white/10">
+                                                <h4 class="text-lg font-medium text-cyan-300 mb-2">Causes principales</h4>
+                                                <ul class="space-y-2 text-sm text-white/70">
+                                                    <li class="flex items-start gap-2">
+                                                        <span class="text-cyan-400 font-bold">•</span>
+                                                        <span><strong>Réchauffement climatique</strong> : L'eau chaude retient moins d'oxygène</span>
+                                                    </li>
+                                                    <li class="flex items-start gap-2">
+                                                        <span class="text-cyan-400 font-bold">•</span>
+                                                        <span><strong>Eutrophisation</strong> : Excès de nutriments qui consomment l'oxygène</span>
+                                                    </li>
+                                                    <li class="flex items-start gap-2">
+                                                        <span class="text-cyan-400 font-bold">•</span>
+                                                        <span><strong>Pollution</strong> : Produits chimiques qui réduisent l'oxygénation</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            
+                                            <div class="p-4 rounded-lg bg-white/5 border border-white/10">
+                                                <h4 class="text-lg font-medium text-blue-300 mb-2">Conséquences</h4>
+                                                <ul class="space-y-2 text-sm text-white/70">
+                                                    <li class="flex items-start gap-2">
+                                                        <span class="text-blue-400 font-bold">•</span>
+                                                        <span><strong>Zones mortes</strong> : Zones sans vie marine</span>
+                                                    </li>
+                                                    <li class="flex items-start gap-2">
+                                                        <span class="text-blue-400 font-bold">•</span>
+                                                        <span><strong>Migrations d'espèces</strong> : Animaux fuient les zones pauvres en oxygène</span>
+                                                    </li>
+                                                    <li class="flex items-start gap-2">
+                                                        <span class="text-blue-400 font-bold">•</span>
+                                                        <span><strong>Pertes économiques</strong> : Impact sur la pêche et le tourisme</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mt-6 p-4 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
+                                            <h4 class="text-lg font-medium text-cyan-300 mb-2">Pour en savoir plus</h4>
+                                            <div class="space-y-2 text-sm">
+                                                <p class="text-white/80">
+                                                    <strong class="text-cyan-200">Ressources scientifiques :</strong>
+                                                </p>
+                                                <ul class="space-y-2 text-white/70 ml-4">
+                                                    <li>
+                                                        <a href="https://www.ocean-climate.org/wp-content/uploads/2017/02/océan-bout-souffle_FichesScientifiques_04-6.pdf" 
+                                                           target="_blank" 
+                                                           class="text-cyan-300 hover:text-cyan-200 underline transition-colors">
+                                                            Ocean Climate : L'océan est à bout de souffle
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="md:col-span-6 bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:bg-slate-800/70 hover:border-cyan-400/30 transition-all duration-300 reveal-on-scroll delay-200 shadow-lg">
                         <h3 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
                             <span class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.5)]"></span>

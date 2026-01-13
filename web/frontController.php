@@ -64,8 +64,6 @@ try {
                 case 'equipe':
                     // Page de presentation de l'equipe
                     require_once __DIR__ . '/../src/View/home/equipe.php';
-                case 'ensavoirplus':
-                    require_once __DIR__ . '/../src/View/home/ensavoirplus.php';
                     break;
                 case 'logout':
                     session_destroy();
