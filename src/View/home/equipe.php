@@ -44,15 +44,15 @@
                 </p>
             </div>
 
-            <!-- Team Grid -->
+            <!-- Grille de l'équipe -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto slide-up slide-up-2">
                 
-                <!-- Team Member 1 - Ahmed -->
+                <!-- Membre de l'équipe 1 - Ahmed -->
                 <div class="group bg-slate-800/40 backdrop-blur-sm rounded-2xl p-6 border border-blue-500/20 hover:border-cyan-400/50 transition-all duration-300 hover:transform hover:scale-105">
                     <div class="relative mb-6">
                         <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
                             <img 
-                                src="/placeholder.svg?height=128&width=128" 
+                                src="/web/assets/team/ahmed.jpg" 
                                 alt="Ahmed"
                                 class="w-full h-full rounded-full object-cover bg-slate-700"
                             />
@@ -67,12 +67,12 @@
                     </div>
                 </div>
 
-                <!-- Team Member 2 - Zayd -->
+                <!-- Membre de l'équipe 2 - Zayd -->
                 <div class="group bg-slate-800/40 backdrop-blur-sm rounded-2xl p-6 border border-blue-500/20 hover:border-cyan-400/50 transition-all duration-300 hover:transform hover:scale-105">
                     <div class="relative mb-6">
                         <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
                             <img 
-                                src="web/assets/team/zayd.jpeg" 
+                                src="/web/assets/team/zayd.jpeg" 
                                 alt="Zayd"
                                 class="w-full h-full rounded-full object-cover bg-slate-700"
                             />
@@ -87,12 +87,12 @@
                     </div>
                 </div>
 
-                <!-- Team Member 3 - Ryan -->
+                <!-- Membre de l'équipe 3 - Ryan -->
                 <div class="group bg-slate-800/40 backdrop-blur-sm rounded-2xl p-6 border border-blue-500/20 hover:border-cyan-400/50 transition-all duration-300 hover:transform hover:scale-105">
                     <div class="relative mb-6">
                         <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
                             <img 
-                                src="web/assets/team/ryan.jpeg" 
+                                src="/web/assets/team/ryan.jpeg" 
                                 alt="Ryan"
                                 class="w-full h-full rounded-full object-cover bg-slate-700"
                             />
@@ -107,12 +107,12 @@
                     </div>
                 </div>
 
-                <!-- Team Member 4 - Adam -->
+                <!-- Membre de l'équipe 4 - Adam -->
                 <div class="group bg-slate-800/40 backdrop-blur-sm rounded-2xl p-6 border border-blue-500/20 hover:border-cyan-400/50 transition-all duration-300 hover:transform hover:scale-105">
                     <div class="relative mb-6">
                         <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
                             <img 
-                                src="web/assets/team/adam.png" 
+                                src="/web/assets/team/adam.png" 
                                 alt="Adam"
                                 class="w-full h-full rounded-full object-cover bg-slate-700"
                             />
@@ -127,12 +127,12 @@
                     </div>
                 </div>
 
-                <!-- Team Member 5 - Fiona -->
+                <!-- Membre de l'équipe 5 - Fiona -->
                 <div class="group bg-slate-800/40 backdrop-blur-sm rounded-2xl p-6 border border-blue-500/20 hover:border-cyan-400/50 transition-all duration-300 hover:transform hover:scale-105">
                     <div class="relative mb-6">
                         <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
                             <img 
-                                src="web/assets/team/fiona.JPG"  
+                                src="/web/assets/team/fiona.JPG"  
                                 alt="Fiona"
                                 class="w-full h-full rounded-full object-cover bg-slate-700"
                             />
@@ -147,7 +147,7 @@
                     </div>
                 </div>
 
-                <!-- Team Member 6 - Selmane -->
+                <!-- Membre de l'équipe 6 - Selmane -->
                 <div class="group bg-slate-800/40 backdrop-blur-sm rounded-2xl p-6 border border-blue-500/20 hover:border-cyan-400/50 transition-all duration-300 hover:transform hover:scale-105">
                     <div class="relative mb-6">
                         <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">

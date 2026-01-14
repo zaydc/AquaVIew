@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../src/Lib/Psr4AutoloaderClass.php';
-require_once __DIR__ . '/../../src/Config/Conf.php';
 
 $loader = new App\Lib\Psr4AutoloaderClass();
 $loader->register();
@@ -23,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Récupérer les données POST
 $data = json_decode(file_get_contents('php://input'), true);
 
 if (!$data) {
@@ -44,33 +42,24 @@ foreach ($requiredFields as $field) {
 
 use App\Model\Repository\UserAnalysisRepository;
 
-try {
-    $repo = new UserAnalysisRepository();
-    
-    // Sauvegarder l'analyse
-    $analysisId = $repo->create([
-        'user_id' => $_SESSION['user']['id'],
-        'metric' => $data['metric'],
-        'start_date' => $data['start_date'],
-        'end_date' => $data['end_date'],
-        'avg_value' => $data['avg_value'],
-        'min_value' => $data['min_value'],
-        'max_value' => $data['max_value'],
-        'count_measures' => $data['count_measures'],
-        'created_at' => date('Y-m-d H:i:s')
-    ]);
-    
-    echo json_encode([
-        'success' => true,
-        'message' => 'Analyse sauvegardée avec succès',
-        'analysis_id' => $analysisId
-    ]);
-    
-} catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'error' => 'Erreur lors de la sauvegarde: ' . $e->getMessage()
-    ]);
-}
+$repo = new UserAnalysisRepository();
+
+// Sauvegarder l'analyse
+$analysisId = $repo->create([
+    'user_id' => $_SESSION['user']['id'],
+    'metric' => $data['metric'],
+    'start_date' => $data['start_date'],
+    'end_date' => $data['end_date'],
+    'avg_value' => $data['avg_value'],
+    'min_value' => $data['min_value'],
+    'max_value' => $data['max_value'],
+    'count_measures' => $data['count_measures'],
+    'created_at' => date('Y-m-d H:i:s')
+]);
+
+echo json_encode([
+    'success' => true,
+    'message' => 'Analyse sauvegardée avec succès',
+    'analysis_id' => $analysisId
+]);
 ?>
