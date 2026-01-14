@@ -29,14 +29,22 @@ class OceanDataRepository
     public function countMeasures(
         string $wherePeriod
     ): int {
-        $sql = "
-            SELECT COUNT(*)
-            FROM mesures m
-            WHERE
-                $wherePeriod
-        ";
+        try {
+            $sql = "
+                SELECT COUNT(*)
+                FROM mesures m
+                WHERE
+                    $wherePeriod
+            ";
 
-        return (int) $this->pdo->query($sql)->fetchColumn();
+            return (int) $this->pdo->query($sql)->fetchColumn();
+        } catch (PDOException $e) {
+            error_log("Erreur SQL dans countMeasures: " . $e->getMessage());
+            return 0;
+        } catch (Exception $e) {
+            error_log("Erreur dans countMeasures: " . $e->getMessage());
+            return 0;
+        }
     }
 
     /**
@@ -46,27 +54,38 @@ class OceanDataRepository
         string $metric,
         string $wherePeriod
     ): array {
-        $metricCondition = MetricHelper::getMetricColumn($metric);
+        try {
+            $metricCondition = MetricHelper::getMetricColumn($metric);
 
-        $sql = "
-            SELECT 
-                AVG(v.valeur) AS avg_value,
-                MIN(v.valeur) AS min_value,
-                MAX(v.valeur) AS max_value,
-                COUNT(*)      AS count_measures
-            FROM mesures m
-            JOIN variables v ON m.id = v.mesure_id
-            WHERE
-                $wherePeriod
-            AND
-                $metricCondition
-            AND
-                v.qa_flag = 1
-            AND
-                v.valeur IS NOT NULL
-        ";
+            $sql = "
+                SELECT 
+                    AVG(v.valeur) as avg_value,
+                    MIN(v.valeur) as min_value,
+                    MAX(v.valeur) as max_value,
+                    COUNT(*) as count_measures,
+                    STDDEV(v.valeur) as std_deviation
+                FROM mesures m
+                JOIN variables v ON m.id = v.mesure_id
+                WHERE
+                    $wherePeriod
+                AND
+                    $metricCondition
+                AND
+                    v.qa_flag = 1
+                AND
+                    v.valeur IS NOT NULL
+            ";
 
-        return $this->pdo->query($sql)->fetch() ?: [];
+            $result = $this->pdo->query($sql)->fetch();
+            return $result ?: [];
+            
+        } catch (PDOException $e) {
+            error_log("Erreur SQL dans getMetricStats: " . $e->getMessage());
+            return [];
+        } catch (Exception $e) {
+            error_log("Erreur dans getMetricStats: " . $e->getMessage());
+            return [];
+        }
     }
 
     /**
@@ -76,31 +95,40 @@ class OceanDataRepository
         string $metric,
         string $wherePeriod
     ): array {
-        $metricCondition = MetricHelper::getMetricColumn($metric);
-        
-        $sql = "
-            SELECT 
-                DATE(m.date_mesure) as date,
-                AVG(v.valeur) as value,
-                COUNT(*) as count_measures,
-                m.latitude,
-                m.longitude
-            FROM mesures m
-            JOIN variables v ON m.id = v.mesure_id
-            WHERE
-                $wherePeriod
-            AND
-                $metricCondition
-            AND
-                v.qa_flag = 1
-            AND
-                v.valeur IS NOT NULL
-            GROUP BY DATE(m.date_mesure), m.latitude, m.longitude
-            ORDER BY m.date_mesure ASC
-        ";
+        try {
+            $metricCondition = MetricHelper::getMetricColumn($metric);
+            
+            $sql = "
+                SELECT 
+                    DATE(m.date_mesure) as date,
+                    AVG(v.valeur) as value,
+                    COUNT(*) as count_measures,
+                    m.latitude,
+                    m.longitude
+                FROM mesures m
+                JOIN variables v ON m.id = v.mesure_id
+                WHERE
+                    $wherePeriod
+                AND
+                    $metricCondition
+                AND
+                    v.qa_flag = 1
+                AND
+                    v.valeur IS NOT NULL
+                GROUP BY DATE(m.date_mesure), m.latitude, m.longitude
+                ORDER BY m.date_mesure ASC
+            ";
 
-        $stmt = $this->pdo->query($sql);
-        return $stmt->fetchAll() ?: [];
+            $stmt = $this->pdo->query($sql);
+            return $stmt->fetchAll() ?: [];
+            
+        } catch (PDOException $e) {
+            error_log("Erreur SQL dans getMetricEvolution: " . $e->getMessage());
+            return [];
+        } catch (Exception $e) {
+            error_log("Erreur dans getMetricEvolution: " . $e->getMessage());
+            return [];
+        }
     }
 
     /**
@@ -130,81 +158,110 @@ class OceanDataRepository
         string $metric,
         string $wherePeriod
     ): array {
-        $metricCondition = MetricHelper::getMetricColumn($metric);
+        try {
+            $metricCondition = MetricHelper::getMetricColumn($metric);
 
-        $sql = "
-            SELECT 
-                m.weather,
-                COUNT(*) as count_measures,
-                AVG(v.valeur) as avg_value,
-                MIN(v.valeur) as min_value,
-                MAX(v.valeur) as max_value,
-                STDDEV(v.valeur) as std_deviation,
-                SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT DATE(m.date_mesure) ORDER BY m.date_mesure SEPARATOR ','), ',', 10) as sample_dates
-            FROM mesures m
-            JOIN variables v ON m.id = v.mesure_id
-            WHERE
-                $wherePeriod
-            AND
-                m.weather IS NOT NULL
-            AND
-                m.weather != ''
-            AND
-                $metricCondition
-            AND
-                v.qa_flag = 1
-            AND
-                v.valeur IS NOT NULL
-            GROUP BY m.weather
-            ORDER BY count_measures DESC
-        ";
+            $sql = "
+                SELECT 
+                    m.weather,
+                    COUNT(*) as count_measures,
+                    AVG(v.valeur) as avg_value,
+                    MIN(v.valeur) as min_value,
+                    MAX(v.valeur) as max_value,
+                    STDDEV(v.valeur) as std_deviation,
+                    SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT DATE(m.date_mesure) ORDER BY m.date_mesure SEPARATOR ','), ',', 10) as sample_dates
+                FROM mesures m
+                JOIN variables v ON m.id = v.mesure_id
+                WHERE
+                    $wherePeriod
+                AND
+                    m.weather IS NOT NULL
+                AND
+                    m.weather != ''
+                AND
+                    $metricCondition
+                AND
+                    v.qa_flag = 1
+                AND
+                    v.valeur IS NOT NULL
+                GROUP BY m.weather
+                ORDER BY count_measures DESC
+            ";
 
-        $stmt = $this->pdo->query($sql);
-        $results = $stmt->fetchAll() ?: [];
+            $stmt = $this->pdo->query($sql);
+            $results = $stmt->fetchAll() ?: [];
 
-        // Analyse complémentaire : répartition par type de météo
-        $distributionSql = "
-            SELECT 
-                m.weather,
-                COUNT(*) as total_count,
-                ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER(), 2) as percentage
-            FROM mesures m
-            WHERE
-                $wherePeriod
-            AND
-                m.weather IS NOT NULL
-            AND
-                m.weather != ''
-            GROUP BY m.weather
-            ORDER BY total_count DESC
-        ";
+            // Analyse complémentaire : répartition par type de météo
+            $distributionSql = "
+                SELECT 
+                    m.weather,
+                    COUNT(*) as total_count,
+                    CASE 
+                        WHEN SUM(COUNT(*)) OVER() > 0 
+                        THEN ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER(), 2)
+                        ELSE 0 
+                    END as percentage
+                FROM mesures m
+                WHERE
+                    $wherePeriod
+                AND
+                    m.weather IS NOT NULL
+                AND
+                    m.weather != ''
+                GROUP BY m.weather
+                ORDER BY total_count DESC
+            ";
 
         $distStmt = $this->pdo->query($distributionSql);
-        $distribution = $distStmt->fetchAll() ?: [];
+            $distribution = $distStmt->fetchAll() ?: [];
 
-        // Statistiques globales
-        $globalStatsSql = "
-            SELECT 
-                COUNT(DISTINCT m.weather) as weather_types_count,
-                COUNT(*) as total_measures_with_weather,
-                ROUND(COUNT(DISTINCT m.weather) * 100.0 / COUNT(*), 2) as weather_coverage
-            FROM mesures m
-            WHERE
-                $wherePeriod
-            AND
-                m.weather IS NOT NULL
-            AND
-                m.weather != ''
-        ";
+            // Statistiques globales
+            $globalStatsSql = "
+                SELECT 
+                    COUNT(DISTINCT m.weather) as weather_types_count,
+                    COUNT(*) as total_measures_with_weather,
+                    CASE 
+                        WHEN COUNT(*) > 0 
+                        THEN ROUND(COUNT(DISTINCT m.weather) * 100.0 / COUNT(*), 2)
+                        ELSE 0 
+                    END as weather_coverage
+                FROM mesures m
+                WHERE
+                    $wherePeriod
+                AND
+                    m.weather IS NOT NULL
+                AND
+                    m.weather != ''
+            ";
 
-        $globalStats = $this->pdo->query($globalStatsSql)->fetch() ?: [];
+            $globalStats = $this->pdo->query($globalStatsSql)->fetch() ?: [];
 
-        return [
-            'by_weather_type' => $results,
-            'distribution' => $distribution,
-            'global_stats' => $globalStats,
-            'analysis_summary' => $this->generateWeatherSummary($results, $globalStats)
-        ];
+            return [
+                'by_weather_type' => $results,
+                'distribution' => $distribution,
+                'global_stats' => $globalStats,
+                'analysis_summary' => $this->generateWeatherSummary($results, $globalStats)
+            ];
+            
+        } catch (PDOException $e) {
+            // En cas d'erreur SQL, retourner des données vides
+            error_log("Erreur SQL dans getWeatherAnalysis: " . $e->getMessage());
+            return [
+                'by_weather_type' => [],
+                'distribution' => [],
+                'global_stats' => [],
+                'analysis_summary' => []
+            ];
+        } catch (Exception $e) {
+            // Autres erreurs
+            error_log("Erreur dans getWeatherAnalysis: " . $e->getMessage());
+            return [
+                'by_weather_type' => [],
+                'distribution' => [],
+                'global_stats' => [],
+                'analysis_summary' => []
+            ];
+        }
     }
 
     /**
@@ -228,7 +285,12 @@ class OceanDataRepository
         $mostVariableWeather = 'N/A';
         
         foreach ($weatherData as $data) {
-            $variability = ($data['max_value'] - $data['min_value']) / ($data['avg_value'] ?? 1);
+            $avgValue = $data['avg_value'] ?? 0;
+            if ($avgValue != 0) {
+                $variability = ($data['max_value'] - $data['min_value']) / $avgValue;
+            } else {
+                $variability = 0;
+            }
             if ($variability > $maxVariability) {
                 $maxVariability = $variability;
                 $mostVariableWeather = $data['weather'];

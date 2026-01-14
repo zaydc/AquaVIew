@@ -1670,23 +1670,47 @@
         showAllLoadingStates();
 
         fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                console.log('Réponse API:', data);
-                // Stocker les données pour les filtres
-                window.currentData = data;
-                window.currentMetric = metric;
-                updateDashboard(data, metric);
-                // Rafraîchissement automatique désactivé
-                // if (!autoRefreshInterval) {
-                //     startAutoRefresh();
-                // }
-            })
-            .catch(error => {
-                console.error('Erreur API:', error);
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Vérifier si l'API a retourné une erreur
+            if (data.error) {
+                console.error('Erreur API:', data);
                 hideAllLoadingStates();
-                showNotification('Erreur lors du chargement des données', 'error');
-            });
+                showNotification(`Erreur: ${data.message}`, 'error');
+                return;
+            }
+            
+            console.log('Réponse API:', data);
+            // Stocker les données pour les filtres
+            window.currentData = data;
+            window.currentMetric = metric;
+            updateDashboard(data, metric);
+            // Rafraîchissement automatique désactivé
+            // if (!autoRefreshInterval) {
+            //     startAutoRefresh();
+            // }
+        })
+        .catch(error => {
+            console.error('Erreur API:', error);
+            hideAllLoadingStates();
+            
+            // Message d'erreur plus spécifique
+            let errorMessage = 'Erreur lors du chargement des données';
+            if (error.message.includes('Unexpected token')) {
+                errorMessage = 'Erreur de format de réponse du serveur - veuillez réessayer';
+            } else if (error.message.includes('HTTP 500')) {
+                errorMessage = 'Erreur interne du serveur - veuillez réessayer plus tard';
+            } else if (error.message.includes('Failed to fetch')) {
+                errorMessage = 'Erreur de connexion - vérifiez votre réseau';
+            }
+            
+            showNotification(errorMessage, 'error');
+        });
     }
 
     // Fonction pour démarrer le rafraîchissement automatique
