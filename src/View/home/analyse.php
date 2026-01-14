@@ -16,6 +16,14 @@
 <body class="bg-slate-900">
     <?php include __DIR__ . '/../components/navbar.php'; ?>
     
+    <!-- Loader global -->
+    <div id="globalLoader" class="fixed bottom-20 right-6 z-[60] opacity-0 transition-all duration-300 ease-in-out">
+        <div class="flex items-center gap-3 bg-slate-800/90 backdrop-blur-xl border border-cyan-500/30 rounded-full px-4 py-3 shadow-lg shadow-cyan-500/20">
+            <div class="w-5 h-5 border-2 border-cyan-400/30 border-t-cyan-400 rounded-full animate-spin"></div>
+            <span class="text-sm text-cyan-300 font-medium">Chargement des données...</span>
+        </div>
+    </div>
+    
     <div class="relative min-h-screen text-white bg-slate-900 pt-20">
         <!-- IMAGE DE FOND -->
         <div class="absolute inset-0 zoom-in">
@@ -188,16 +196,6 @@
                         </h2>
                         <p class="text-white/50 text-sm mt-1">Impact des conditions météorologiques sur les niveaux d'oxygène</p>
                     </div>
-                    
-             
-                    <button id="btnWeatherAnalysis" class="px-4 py-2 rounded-lg text-sm bg-blue-500/10 border border-blue-500/30 hover:bg-blue-500/20 transition-all duration-300 text-blue-300">
-                        <span class="flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                            </svg>
-                            Actualiser
-                        </span>
-                    </button>
                 </div>
 
                 <!-- Conteneur pour l'analyse météo -->
@@ -219,7 +217,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
                             </svg>
                             <p class="text-white/50 text-lg">Analyse météo</p>
-                            <p class="text-white/30 text-sm mt-2">Cliquez sur "Actualiser" pour lancer l'analyse</p>
+                            <p class="text-white/30 text-sm mt-2">Lancez l'analyse pour voir les données météo</p>
                         </div>
                     </div>
 
@@ -290,7 +288,7 @@
                         <!-- Tableau détaillé -->
                         <div class="mt-6 p-4 rounded-xl bg-slate-900/50 border border-white/10">
                             <h3 class="text-lg font-medium text-white mb-4">Détails par condition météo</h3>
-                            <div class="overflow-x-auto">
+                            <div class="overflow-x-auto max-h-64 overflow-y-auto">
                                 <table class="w-full text-sm text-white">
                                     <thead class="text-white/70 border-b border-white/10">
                                         <tr>
@@ -467,6 +465,27 @@
                     </div>
                 </div>
                 
+                <!-- Map Legend - Outside the map -->
+                <div id="mapLegendContainer" class="mt-4 flex items-center justify-center hidden">
+                    <div class="bg-slate-900/90 backdrop-blur-sm border border-white/20 rounded-lg p-4">
+                        <div class="text-sm font-medium text-white/80 mb-3">Qualité de l'eau</div>
+                        <div class="flex items-center gap-6">
+                            <div class="flex items-center gap-2">
+                                <div class="w-4 h-4 rounded-full bg-green-500"></div>
+                                <span class="text-sm text-white/70" id="legendGood">Bon</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-4 h-4 rounded-full bg-amber-500"></div>
+                                <span class="text-sm text-white/70" id="legendModerate">Modéré</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-4 h-4 rounded-full bg-red-500"></div>
+                                <span class="text-sm text-white-70" id="legendPoor">Mauvais</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Section d'exportation -->
                 <div class="mt-6 p-6 rounded-xl bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-white/10">
                     <div class="flex items-center justify-between mb-4">
@@ -519,37 +538,7 @@
                         </div>
                     </div>
                 
-                <!-- Map Legend - Outside the map -->
-                <div id="mapLegendContainer" class="mt-4 flex items-center justify-center hidden">
-                    <div class="bg-slate-900/90 backdrop-blur-sm border border-white/20 rounded-lg p-4">
-                        <div class="text-sm font-medium text-white/80 mb-3">Qualité de l'eau</div>
-                        <div class="flex items-center gap-6">
-                            <div class="flex items-center gap-2">
-                                <div class="w-4 h-4 rounded-full bg-green-500"></div>
-                                <span class="text-sm text-white/70" id="legendGood">Bon</span>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <div class="w-4 h-4 rounded-full bg-amber-500"></div>
-                                <span class="text-sm text-white/70" id="legendModerate">Modéré</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="w-4 h-4 rounded-full bg-red-500"></div>
-                                <span class="text-sm text-white-70" id="legendPoor">Mauvais</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="chartLegend" class="mt-4 flex items-center justify-center gap-6 text-sm text-white/60 hidden">
-                    <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-full bg-cyan-400"></span>
-                        <span id="legendMetric">Valeur mesurée</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-full bg-cyan-400/30"></span>
-                        <span>Moyenne journalière</span>
-                    </div>
-                </div>
-            </div>
 
             <!-- Dashboard additionnel -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
@@ -558,12 +547,7 @@
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-medium">Répartition de la qualité</h3>
                         <div class="flex items-center gap-2">
-                            <span class="text-sm text-white/50">Trié par:</span>
-                            <select id="pieChartSort" class="bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-1 focus:outline-none focus:border-cyan-400">
-                                <option value="default">Par défaut</option>
-                                <option value="count">Par nombre</option>
-                                <option value="name">Par nom</option>
-                            </select>
+                    
                         </div>
                     </div>
                     <div class="h-64 relative chart-container">
@@ -587,8 +571,8 @@
                             <span class="text-sm text-white/50">Trié par:</span>
                             <select id="barChartSort" class="bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-1 focus:outline-none focus:border-cyan-400">
                                 <option value="chronological">Chronologique</option>
-                                <option value="alphabetical">Alphabétique</option>
-                                <option value="value">Par valeur</option>
+                                <option value="value_asc">Croissant</option>
+                                <option value="value_desc">Décroissant</option>
                             </select>
                         </div>
                     </div>
@@ -1005,7 +989,6 @@
         if (!data || !data.labels || !data.values || data.labels.length === 0 || data.values.length === 0) {
             console.error('Données invalides pour le graphique:', data);
             document.getElementById('chartEmpty').classList.remove('hidden');
-            document.getElementById('chartLegend').classList.add('hidden');
             return;
         }
         
@@ -1018,8 +1001,6 @@
         
         // Cacher l'état vide, afficher le graphique
         document.getElementById('chartEmpty').classList.add('hidden');
-        document.getElementById('chartLegend').classList.remove('hidden');
-        document.getElementById('legendMetric').textContent = config.label;
         document.getElementById('chartSubtitle').textContent = `Évolution de ${config.label.toLowerCase()} sur la période sélectionnée`;
         
         // Créer le dégradé
@@ -1032,23 +1013,26 @@
                 type: 'line',
                 data: {
                     labels: validLabels,
-                    datasets: [{
-                        label: config.label,
-                        data: validValues,
-                        borderColor: config.color,
-                        backgroundColor: gradient,
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: validValues.length > 50 ? 0 : 4,
-                        pointHoverRadius: 6,
-                        pointBackgroundColor: config.color,
-                        pointBorderColor: 'rgba(15, 23, 42, 0.8)',
-                        pointBorderWidth: 2,
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: config.color,
-                        pointHoverBorderWidth: 2
-                    }]
+                    datasets: [
+                        // Ligne de données principale uniquement
+                        {
+                            label: config.label,
+                            data: validValues,
+                            borderColor: config.color,
+                            backgroundColor: gradient,
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: validValues.length > 50 ? 0 : 4,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: config.color,
+                            pointBorderColor: 'rgba(15, 23, 42, 0.8)',
+                            pointBorderWidth: 2,
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: config.color,
+                            pointHoverBorderWidth: 2
+                        }
+                    ]
                 },
             options: {
                 responsive: true,
@@ -1062,6 +1046,7 @@
                         display: false
                     },
                     tooltip: {
+                        enabled: true,
                         backgroundColor: 'rgba(15, 23, 42, 0.9)',
                         titleColor: 'rgba(255, 255, 255, 0.9)',
                         bodyColor: 'rgba(255, 255, 255, 0.7)',
@@ -1117,7 +1102,6 @@
         } catch (error) {
             console.error('Erreur lors de la création du graphique:', error);
             document.getElementById('chartEmpty').classList.remove('hidden');
-            document.getElementById('chartLegend').classList.add('hidden');
             // Afficher un message d'erreur plus clair
             const errorMessage = error.message || 'Erreur inconnue';
             if (errorMessage.includes('Expected') && errorMessage.includes('name')) {
@@ -1211,11 +1195,9 @@
                     const chartData = processEvolutionData(data.evolution);
                     createChart(chartData, metric);
                     document.getElementById('chartEmpty').classList.add('hidden');
-                    document.getElementById('chartLegend').classList.remove('hidden');
                 } else {
                     // Aucune donnée d'évolution
                     document.getElementById('chartEmpty').classList.remove('hidden');
-                    document.getElementById('chartLegend').classList.add('hidden');
                 }
                 
                 // Gérer la vue carte - ajouter les marqueurs pour les points de mesure
@@ -1307,6 +1289,9 @@
         document.getElementById('mapView').classList.add('hidden');
         document.getElementById('tableView').classList.add('hidden');
         
+        // Cacher la légende de la carte par défaut
+        document.getElementById('mapLegendContainer').classList.add('hidden');
+        
         // Réinitialiser les styles des boutons
         document.getElementById('btnMapView').className = 'px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300';
         document.getElementById('btnChartView').className = 'px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300';
@@ -1348,14 +1333,27 @@
     
     function initializeMap() {
         if (!map) {
-        // Initialiser la carte
-            map = L.map('mapContainer').setView([20, 0], 2);
+        // Initialiser la carte centrée sur l'Amérique avec restrictions élargies
+            map = L.map('mapContainer', {
+                center: [40, -100],
+                zoom: 4,
+                minZoom: 3, // Permet un peu plus de dézoomage
+                maxZoom: 10, // Limite le zoom maximum
+                maxBounds: [[-70, -190], [90, -20]], // Limites élargies de la carte
+                maxBoundsViscosity: 1.0, // Empêche le débordement des limites
+                worldCopyJump: false // Empêche la duplication de la carte
+            });
             
-            // Ajouter une couche de tuiles sombres et belles
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                
-                subdomains: 'abcd',
-                maxZoom: 19
+            // Ajouter une couche de tuiles plus claire sans wrap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                subdomains: 'abc', // Utiliser seulement 'abc' pour éviter les erreurs
+                maxZoom: 19,
+                minZoom: 3, // Aligner avec le zoom minimum de la carte
+                updateWhenIdle: false, // Améliore le chargement des tuiles
+                updateWhenZooming: false, // Améliore les performances
+                errorTileUrl: '', // Cache les tuiles en erreur
+                tileSize: 256
             }).addTo(map);
         }
     }
@@ -1626,13 +1624,6 @@
         // Plus de lancement automatique - uniquement avec le bouton
     });
 
-    // Écouteurs d'événements pour les filtres de graphiques
-    document.getElementById('pieChartSort')?.addEventListener('change', () => {
-        if (window.currentData) {
-            updateQualityPieChart(window.currentData, window.currentMetric);
-        }
-    });
-
     document.getElementById('barChartSort')?.addEventListener('change', () => {
         if (window.currentData) {
             updateMonthlyBarChart(window.currentData, window.currentMetric);
@@ -1686,10 +1677,10 @@
                 window.currentData = data;
                 window.currentMetric = metric;
                 updateDashboard(data, metric);
-                // Démarrer le rafraîchissement automatique uniquement après le premier lancement manuel
-                if (!autoRefreshInterval) {
-                    startAutoRefresh();
-                }
+                // Rafraîchissement automatique désactivé
+                // if (!autoRefreshInterval) {
+                //     startAutoRefresh();
+                // }
             })
             .catch(error => {
                 console.error('Erreur API:', error);
@@ -1709,17 +1700,36 @@
         }, 30000); // Toutes les 30 secondes
     }
 
+    // Fonctions pour le loader global
+    function showGlobalLoader() {
+        const loader = document.getElementById('globalLoader');
+        loader.classList.remove('opacity-0');
+        loader.classList.add('opacity-100');
+    }
+
+    function hideGlobalLoader() {
+        const loader = document.getElementById('globalLoader');
+        loader.classList.remove('opacity-100');
+        loader.classList.add('opacity-0');
+    }
+
     // Fonction pour afficher tous les états de chargement
     function showAllLoadingStates() {
+        showGlobalLoader(); // Afficher le loader global
         document.getElementById('chartLoading').classList.remove('hidden');
         document.getElementById('chartEmpty').classList.add('hidden');
         document.getElementById('pieChartEmpty').classList.add('hidden');
         document.getElementById('barChartEmpty').classList.add('hidden');
+        document.getElementById('weatherLoading').classList.remove('hidden');
+        document.getElementById('weatherEmpty').classList.add('hidden');
+        document.getElementById('weatherResults').classList.add('hidden');
     }
 
     // Fonction pour cacher tous les états de chargement
     function hideAllLoadingStates() {
+        hideGlobalLoader(); // Cacher le loader global
         document.getElementById('chartLoading').classList.add('hidden');
+        document.getElementById('weatherLoading').classList.add('hidden');
     }
 
     // Fonction pour mettre à jour les options du deuxième sélecteur
@@ -1832,6 +1842,11 @@
         // Mettre à jour l'histogramme mensuel
         updateMonthlyBarChart(data, metric);
         
+        // Mettre à jour l'analyse météo (maintenant intégrée)
+        if (data.weather_analysis) {
+            displayWeatherResults(data);
+        }
+        
         // Mettre à jour la carte et le tableau si visibles
         if (currentView === 'map' && map) {
             addMarkers(data.evolution || [], metric);
@@ -1880,10 +1895,8 @@
             const chartData = processEvolutionData(data.evolution);
             createChart(chartData, metric);
             document.getElementById('chartEmpty').classList.add('hidden');
-            document.getElementById('chartLegend').classList.remove('hidden');
         } else {
             document.getElementById('chartEmpty').classList.remove('hidden');
-            document.getElementById('chartLegend').classList.add('hidden');
         }
     }
 
@@ -1914,7 +1927,13 @@
         });
 
         const config = metricConfig[metric];
-        const sortType = document.getElementById('pieChartSort').value;
+        
+        // Créer les données pour le graphique
+        const chartData = [
+            { label: 'Bon', value: qualityCounts.good, color: '#10b981' },
+            { label: 'Modéré', value: qualityCounts.moderate, color: '#f59e0b' },
+            { label: 'Mauvais', value: qualityCounts.poor, color: '#ef4444' }
+        ];
         
         let labels = [
             config.thresholds.good.label,
@@ -1927,21 +1946,6 @@
             config.thresholds.moderate.color,
             config.thresholds.poor.color
         ];
-
-        // Appliquer le tri
-        if (sortType === 'count') {
-            // Trier par nombre décroissant
-            const indices = [0, 1, 2].sort((a, b) => values[b] - values[a]);
-            labels = indices.map(i => labels[i]);
-            values = indices.map(i => values[i]);
-            colors = indices.map(i => colors[i]);
-        } else if (sortType === 'name') {
-            // Trier par nom alphabétique
-            const indices = [0, 1, 2].sort((a, b) => labels[a].localeCompare(labels[b]));
-            labels = indices.map(i => labels[i]);
-            values = indices.map(i => values[i]);
-            colors = indices.map(i => colors[i]);
-        }
 
         qualityPieChart = new Chart(ctx, {
             type: 'doughnut',
@@ -2025,8 +2029,10 @@
         // Appliquer le tri
         const sortType = document.getElementById('barChartSort').value;
         if (sortType === 'value_asc') {
+            // Croissant (plus petit au plus grand)
             monthlyArray.sort((a, b) => a.average - b.average);
         } else if (sortType === 'value_desc') {
+            // Décroissant (plus grand au plus petit)
             monthlyArray.sort((a, b) => b.average - a.average);
         } else {
             // Chronologique (par défaut)
@@ -2866,18 +2872,10 @@
     
     // Écouteur d'événement pour le bouton d'analyse météo
     document.addEventListener('DOMContentLoaded', function() {
-        const btnWeatherAnalysis = document.getElementById('btnWeatherAnalysis');
-        if (btnWeatherAnalysis) {
-            btnWeatherAnalysis.addEventListener('click', loadWeatherAnalysis);
-        }
-        
         // Écouteur pour le changement de métrique principale
         const metricSelect = document.getElementById('metric');
         if (metricSelect) {
             metricSelect.addEventListener('change', function() {
-                // Mettre à jour les graphiques météo automatiquement
-                loadWeatherAnalysis();
-                
                 // Mettre à jour l'affichage de la métrique actuelle
                 updateMetricDisplay();
             });

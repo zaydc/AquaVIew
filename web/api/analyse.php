@@ -33,6 +33,7 @@ $repo = new OceanDataRepository();
 $stats = $repo->getMetricStats($metric, $wherePeriod);
 $evolution = $repo->getMetricEvolution($metric, $wherePeriod);
 $nbMesures = $repo->countMeasures($wherePeriod);
+$weatherAnalysis = $repo->getWeatherAnalysis($metric, $wherePeriod);
 
 // Réponse JSON
 echo json_encode([
@@ -47,5 +48,6 @@ echo json_encode([
         'max_value' => $stats['max_value'] ?? null,
         'count_measures' => $stats['count_measures'] ?? 0
     ],
-    'evolution' => $evolution
+    'evolution' => $evolution,
+    'weather_analysis' => $weatherAnalysis
 ]);
