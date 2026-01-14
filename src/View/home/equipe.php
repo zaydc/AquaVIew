@@ -119,7 +119,7 @@
                         </div>
                     </div>
                     <div class="text-center">
-                        <h3 class="text-xl font-semibold text-white mb-2">Azirou</h3>
+                        <h3 class="text-xl font-semibold text-white mb-2">Adam</h3>
                         <p class="text-cyan-400 font-medium mb-3">Gestionnaire de Base de Données</p>
                         <p class="text-blue-200/80 text-sm leading-relaxed mb-4">
                             Conception, optimisation et sécurisation des bases de données pour garantir la fiabilité et la cohérence des données
