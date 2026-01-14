@@ -107,7 +107,7 @@
                     </div>
                 </div>
 
-                <!-- Membre de l'équipe 4 - Adam -->
+                <!-- Membre de l'équipe 4 - azirou -->
                 <div class="group bg-slate-800/40 backdrop-blur-sm rounded-2xl p-6 border border-blue-500/20 hover:border-cyan-400/50 transition-all duration-300 hover:transform hover:scale-105">
                     <div class="relative mb-6">
                         <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1">
