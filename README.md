@@ -65,60 +65,6 @@ La structure du code est organisée pour séparer la logique métier de l'affich
 │   ├── 📂 DataObject/  # Objets métiers (User, OceanData)
 │   └── 📂 Repository/  # Requêtes SQL (UtilisateurRepository, OceanDataRepository, etc.)
 └── 📂 View/            # Templates HTML/PHP
-    ├── 📂 components/  # Navbar, Footer, éléments réutilisables
-    ├── 📂 home/        # Pages principales (Accueil, Analyse, Équipe)
-    └── 📂 utilisateur/ # Pages de gestion de compte (Profil, Downloads)
-
-📁 web/
-├── 📂 api/            # Endpoints API REST
-│   ├── analyse.php      # API d'analyse des données
-│   ├── date-range.php  # API des plages de dates
-│   ├── export.php      # API d'exportation
-│   ├── login.php       # API d'authentification
-│   └── register.php   # API d'inscription
-└── frontController.php # Point d'entrée principal de l'application
-
-## 🚀 Dernières Améliorations
-
-### Version Actuelle : v2.0
-
-**Corrections et Optimisations :**
-- ✅ **Redirections améliorées** : Configuration des fichiers `.htaccess` pour un routage propre
-- ✅ **Gestion des erreurs robuste** : Correction des erreurs Chart.js et JavaScript
-- ✅ **Validation des données** : Protection contre les valeurs invalides dans les graphiques
-- ✅ **Expérience utilisateur** : Messages d'erreur clairs et gestion élégante des cas limites
-
-**Nouvelles Fonctionnalités :**
-- 🎯 **Analyse multi-métriques** : Support complet de 4 indicateurs océaniques
-- 📊 **Visualisations avancées** : Graphiques dynamiques et cartes interactives
-- 💾 **Export multi-formats** : CSV, JSON, PDF pour les analyses
-- 👤 **Espace utilisateur** : Profils personnalisés avec historique
-- 🔄 **API RESTful** : Endpoints structurés pour les données
-
----
-
-## 🔧 Installation
-
-1. **Cloner le repository**
-   ```bash
-   git clone https://github.com/zaydc/AquaVIew.git
-   cd AquaVIew
-   ```
-
-2. **Configuration de la base de données**
-   - Importer le fichier `aquaview.sql` dans MySQL
-   - Configurer les accès dans `src/Config/Conf.php`
-
-3. **Configuration du serveur web**
-   - Assurez-vous que le module `mod_rewrite` Apache est activé
-   - Pointez le document root vers le dossier du projet
-
-4. **Lancement**
-   ```bash
-   # Serveur de développement PHP
-   php -S localhost:8000 -t web/
-   ```
-
----
-
-**AquaView** - Protégeons nos océans, une donnée à la fois. 🌊🔬
+    ├── 📂 components/  # Navbar, Footer
+    ├── 📂 home/        # Pages principales (Accueil, Analyse)
+    └── 📂 utilisateur/ # Pages de gestion de compte

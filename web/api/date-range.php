@@ -1,38 +1,23 @@
 <?php
-declare(strict_types=1);
-
 /**
  * API pour recuperer l'intervalle de dates disponibles
  * BUT2 - S3 - AquaView Project
- * Retourne les dates min et max des donnees oceaniques
  */
 
-// ==========================
-// Autoloader PSR-4
-// ==========================
+// Autoloader
 require_once __DIR__ . '/../../src/Lib/Psr4AutoloaderClass.php';
-
 $loader = new App\Lib\Psr4AutoloaderClass();
 $loader->register();
 $loader->addNamespace('App', __DIR__ . '/../../src');
 
-header('Content-Type: application/json; charset=utf-8');
+header('Content-Type: application/json');
 
 use App\Model\Repository\OceanDataRepository;
 
-try {
-    $repo = new OceanDataRepository();
-    $dateRange = $repo->getDateRange();
-    
-    echo json_encode([
-        'min_date' => $dateRange['min_date'],
-        'max_date' => $dateRange['max_date']
-    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    
-} catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode([
-        'error' => 'Erreur lors de la recuperation des dates',
-        'message' => $e->getMessage()
-    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-}
+$repo = new OceanDataRepository();
+$dateRange = $repo->getDateRange();
+
+echo json_encode([
+    'min_date' => $dateRange['min_date'],
+    'max_date' => $dateRange['max_date']
+]);

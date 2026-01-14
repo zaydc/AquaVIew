@@ -101,28 +101,4 @@ $navItems = [
     </div>
 </div>
 
-<script>
-// Mobile menu toggle
-const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-const mobileMenu = document.getElementById('mobile-menu');
-const mobileMenuClose = document.getElementById('mobile-menu-close');
-
-mobileMenuBtn?.addEventListener('click', () => mobileMenu.classList.remove('hidden'));
-mobileMenuClose?.addEventListener('click', () => mobileMenu.classList.add('hidden'));
-
-// Navbar hide/show on scroll
-let lastScrollY = window.scrollY;
-const navbar = document.getElementById('navbar');
-
-window.addEventListener('scroll', () => {
-    const currentScrollY = window.scrollY;
-    
-    if (currentScrollY > lastScrollY && currentScrollY > 80) {
-        navbar.style.transform = 'translateY(-150%)';
-    } else {
-        navbar.style.transform = 'translateY(0)';
-    }
-    
-    lastScrollY = currentScrollY;
-});
-</script>
+<script src="/web/assets/js/navbar.js"></script>

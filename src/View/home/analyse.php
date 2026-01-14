@@ -6,171 +6,12 @@
     <title>Analyse - AquaView</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
-    <style>
-        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
-        .slide-up { animation: slideUp 0.3s ease-out forwards; opacity: 0; }
-        .slide-up-1 { animation-delay: 0.1s; }
-        .slide-up-2 { animation-delay: 0.2s; }
-        .slide-up-3 { animation-delay: 0.3s; }
-        .slide-up-4 { animation-delay: 0.4s; }
-        .slide-up-5 { animation-delay: 0.5s; }
-        .zoom-in { animation: zoomIn 1s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(2rem); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes zoomIn { from { opacity: 0; } to { opacity: 1; } }
-        select option { background-color: #0f172a; color: white; }
-        /* Style pour les inputs date */
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(1);
-            cursor: pointer;
-        }
-        
-        /* Leaflet Map Styling */
-        .leaflet-container {
-            background: #0f172a !important;
-            border-radius: 0.5rem;
-        }
-        
-        .leaflet-control-container .leaflet-control {
-            background: rgba(15, 23, 42, 0.9) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            color: white !important;
-            border-radius: 0.5rem !important;
-        }
-        
-        .leaflet-control-container .leaflet-control a {
-            color: white !important;
-            background: transparent !important;
-        }
-        
-        .leaflet-control-container .leaflet-control a:hover {
-            background: rgba(34, 211, 238, 0.2) !important;
-        }
-        
-        .leaflet-popup-content-wrapper {
-            background: rgba(15, 23, 42, 0.95) !important;
-            border: 1px solid rgba(34, 211, 238, 0.3) !important;
-            border-radius: 0.5rem !important;
-            color: white !important;
-        }
-        
-        .leaflet-popup-tip {
-            background: rgba(15, 23, 42, 0.95) !important;
-        }
-        
-        .leaflet-popup-content {
-            color: white !important;
-            margin: 0.5rem !important;
-        }
-        
-        /* Custom marker styling */
-        .custom-marker {
-            background: linear-gradient(135deg, #06b6d4, #3b82f6);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            width: 12px;
-            height: 12px;
-            box-shadow: 0 0 20px rgba(34, 211, 238, 0.6);
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 20px rgba(34, 211, 238, 0.6);
-            }
-            50% {
-                box-shadow: 0 0 30px rgba(34, 211, 238, 0.8);
-            }
-            100% {
-                box-shadow: 0 0 20px rgba(34, 211, 238, 0.6);
-            }
-        }
-        
-        /* Table styling */
-        .table-container::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        .table-container::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 3px;
-        }
-        
-        .table-container::-webkit-scrollbar-thumb {
-            background: rgba(34, 211, 238, 0.3);
-            border-radius: 3px;
-        }
-        
-        .table-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(34, 211, 238, 0.5);
-        }
-        
-        /* Tooltip styling */
-        .custom-tooltip {
-            background: rgba(15, 23, 42, 0.95) !important;
-            border: 1px solid rgba(34, 211, 238, 0.3) !important;
-            border-radius: 0.5rem !important;
-            color: white !important;
-            font-size: 12px !important;
-            padding: 6px 10px !important;
-        }
-        
-        .custom-tooltip::before {
-            border-top-color: rgba(34, 211, 238, 0.3) !important;
-        }
-        
-        /* Optimisations de performance */
-        .animate-pulse {
-            animation: pulse 1.5s infinite;
-        }
-        
-        .slide-up {
-            will-change: transform, opacity;
-            backface-visibility: hidden;
-            transform: translateZ(0);
-        }
-        
-        /* Réduire les repaints */
-        .chart-container,
-        .map-container {
-            contain: layout;
-            content-visibility: visible;
-        }
-        
-        /* Optimiser les transitions */
-        * {
-            transition: opacity 0.2s ease-out, transform 0.2s ease-out;
-        }
-        
-        /* Correction du débordement des graphiques météo */
-        #weatherAnalysisContainer {
-            max-width: 100%;
-            overflow: hidden;
-        }
-        
-        #weatherBarChart, #weatherPieChart {
-            max-width: 100% !important;
-            height: auto !important;
-            max-height: 300px !important;
-        }
-        
-        .weather-chart-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
-            overflow: hidden;
-        }
-        
-        /* Conteneur principal pour éviter le débordement */
-        .weather-results-grid {
-            max-width: 100%;
-            overflow-x: hidden;
-        }
-    </style>
+    <link rel="stylesheet" href="/web/assets/css/analyse.css">
 </head>
 <body class="bg-slate-900">
     <?php include __DIR__ . '/../components/navbar.php'; ?>
@@ -190,7 +31,7 @@
         <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-slate-900/60"></div>
 
         <!-- CONTENU PRINCIPAL -->
-        <main class="relative z-10 max-w-7xl mx-auto px-6 py-12">
+        <main class="relative z-10 max-w-7xl mx-auto px-6 py-12 text-center">
             
             <!-- En-tête de la page -->
             <div class="mb-12 slide-up slide-up-1">
@@ -200,90 +41,10 @@
                         océaniques
                     </span>
                 </h1>
-                <div class="max-w-3xl">
+                <div class="max-w-3xl mx-auto">
                     <p class="text-white/60 text-lg leading-relaxed mb-6">
                         Explorez les données de désoxygénation en temps réel et identifiez les zones critiques.
                     </p>
-                    
-                    <!-- Section explicative approfondie sur la désoxygénation -->
-                    <div class="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/20 w-full">
-                        <div class="flex items-start gap-4">
-                            <div class="flex-shrink-0">
-                                <div class="w-12 h-12 rounded-full bg-gradient-to-r from-red-500 to-orange-500 flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77 1.333-1.732 3z"/>
-                                    </svg>
-                                </div>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="text-xl font-semibold text-white mb-4">Qu'est-ce que la désoxygénation océanique ?</h3>
-                                <div class="space-y-4 text-white/80 text-base leading-relaxed">
-                                    <p>
-                                        La <strong class="text-white">désoxygénation océanique</strong> est un phénomène environnemental majeur qui affecte la santé de nos océans. 
-                                        Elle se caractérise par une <strong class="text-orange-300">baisse progressive du taux d'oxygène dissous</strong> dans les masses d'eau, 
-                                        menaçant directement la vie marine et les écosystèmes.
-                                    </p>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                                        <div class="p-4 rounded-lg bg-white/5 border border-white/10">
-                                            <h4 class="text-lg font-medium text-orange-300 mb-2">Causes principales</h4>
-                                            <ul class="space-y-2 text-sm text-white/70">
-                                                <li class="flex items-start gap-2">
-                                                    <span class="text-red-400 font-bold">•</span>
-                                                    <span><strong>Réchauffement climatique</strong> : L'eau chaude retient moins d'oxygène</span>
-                                                </li>
-                                                <li class="flex items-start gap-2">
-                                                    <span class="text-red-400 font-bold">•</span>
-                                                    <span><strong>Eutrophisation</strong> : Excès de nutriments qui consomment l'oxygène</span>
-                                                </li>
-                                                <li class="flex items-start gap-2">
-                                                    <span class="text-red-400 font-bold">•</span>
-                                                    <span><strong>Pollution</strong> : Produits chimiques qui réduisent l'oxygénation</span>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        
-                                        <div class="p-4 rounded-lg bg-white/5 border border-white/10">
-                                            <h4 class="text-lg font-medium text-green-300 mb-2">Conséquences</h4>
-                                            <ul class="space-y-2 text-sm text-white/70">
-                                                <li class="flex items-start gap-2">
-                                                    <span class="text-green-400 font-bold">•</span>
-                                                    <span><strong>Zones mortes</strong> : Zones sans vie marine</span>
-                                                </li>
-                                                <li class="flex items-start gap-2">
-                                                    <span class="text-green-400 font-bold">•</span>
-                                                    <span><strong>Migrations d'espèces</strong> : Animaux fuient les zones pauvres en oxygène</span>
-                                                </li>
-                                                <li class="flex items-start gap-2">
-                                                    <span class="text-green-400 font-bold">•</span>
-                                                    <span><strong>Pertes économiques</strong> : Impact sur la pêche et le tourisme</span>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="mt-6 p-4 rounded-lg bg-blue-500/10 border border-blue-500/20">
-                                        <h4 class="text-lg font-medium text-blue-300 mb-2">Pour en savoir plus</h4>
-                                        <div class="space-y-2 text-sm">
-                                            <p class="text-white/80">
-                                                <strong class="text-blue-200">Ressources scientifiques :</strong>
-                                            </p>
-                                            <ul class="space-y-2 text-white/70 ml-4">
-
-                                                <li>
-                                                    <a href="https://www.ocean-climate.org/wp-content/uploads/2017/02/océan-bout-souffle_FichesScientifiques_04-6.pdf" 
-                                                       target="_blank" 
-                                                       class="text-cyan-300 hover:text-cyan-200 underline transition-colors">
-                                                        Ocean Climate : L'océan est à bout de souffle
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -362,7 +123,7 @@
             </div>
 
             <!-- Cartes d'analyse -->
-            <div class="mb-8">
+            <div class="mb-8 text-center">
                 <h2 class="text-xl font-semibold text-white mb-6">Indicateurs clés de la désoxygénation</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <!-- Card 1 - Valeur moyenne -->
@@ -503,6 +264,11 @@
                             <div class="p-4 rounded-xl bg-slate-900/50 border border-white/10">
                                 <h3 class="text-lg font-medium text-white mb-4">Valeurs moyennes par condition météo</h3>
                                 <div class="weather-chart-container">
+                                    <button class="chart-expand-btn" onclick="expandChart('weatherBarChart', 'Valeurs moyennes par condition météo')" title="Agrandir">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                                        </svg>
+                                    </button>
                                     <canvas id="weatherBarChart"></canvas>
                                 </div>
                             </div>
@@ -511,6 +277,11 @@
                             <div class="p-4 rounded-xl bg-slate-900/50 border border-white/10">
                                 <h3 class="text-lg font-medium text-white mb-4">Distribution des mesures par météo</h3>
                                 <div class="weather-chart-container">
+                                    <button class="chart-expand-btn" onclick="expandChart('weatherPieChart', 'Distribution des mesures par météo')" title="Agrandir">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                                        </svg>
+                                    </button>
                                     <canvas id="weatherPieChart"></canvas>
                                 </div>
                             </div>
@@ -542,13 +313,16 @@
                             </div>
                         </div>
                                <!-- Texte explicatif sur l'influence des indicateurs météo -->
-                    <div class="mt-4 p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
-                        <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            <div class="text-sm text-white/80 leading-relaxed">
-                                <p class="font-medium text-blue-300 mb-2">Pourquoi la météo influence-t-elle les indicateurs ?</p>
+                  <div class="mt-4 p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <div class="text-sm text-white/80 leading-relaxed text-left">
+                                <p class="font-medium text-blue-300 mb-2">
+                                    Pourquoi la météo influence-t-elle les indicateurs ?
+                                </p>
                                 <p class="mb-2">
                                     Les conditions météorologiques affectent directement les paramètres océaniques mesurés :
                                 </p>
@@ -561,6 +335,7 @@
                             </div>
                         </div>
                     </div>
+
                     </div>
                 </div>
             </div>
@@ -617,8 +392,15 @@
                         </div>
                     </div>
                     
-                    <!-- Chart canvas -->
-                    <canvas id="evolutionChart" class="w-full h-full"></canvas>
+                    <!-- Chart canvas with expand button -->
+                    <div class="chart-container w-full h-full">
+                        <button class="chart-expand-btn" onclick="expandChart('evolutionChart', 'Évolution temporelle')" title="Agrandir">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                            </svg>
+                        </button>
+                        <canvas id="evolutionChart" class="w-full h-full"></canvas>
+                    </div>
                 </div>
 
                 <!-- Map container -->
@@ -784,7 +566,12 @@
                             </select>
                         </div>
                     </div>
-                    <div class="h-64 relative">
+                    <div class="h-64 relative chart-container">
+                        <button class="chart-expand-btn" onclick="expandChart('qualityPieChart', 'Répartition de la qualité')" title="Agrandir">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                            </svg>
+                        </button>
                         <canvas id="qualityPieChart"></canvas>
                         <div id="pieChartEmpty" class="absolute inset-0 flex items-center justify-center">
                             <p class="text-white/30">En attente de données...</p>
@@ -800,12 +587,17 @@
                             <span class="text-sm text-white/50">Trié par:</span>
                             <select id="barChartSort" class="bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-1 focus:outline-none focus:border-cyan-400">
                                 <option value="chronological">Chronologique</option>
-                                <option value="value_asc">Valeur croissante</option>
-                                <option value="value_desc">Valeur décroissante</option>
+                                <option value="alphabetical">Alphabétique</option>
+                                <option value="value">Par valeur</option>
                             </select>
                         </div>
                     </div>
-                    <div class="h-64 relative">
+                    <div class="h-64 relative chart-container">
+                        <button class="chart-expand-btn" onclick="expandChart('monthlyBarChart', 'Moyennes mensuelles')" title="Agrandir">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                            </svg>
+                        </button>
                         <canvas id="monthlyBarChart"></canvas>
                         <div id="barChartEmpty" class="absolute inset-0 flex items-center justify-center">
                             <p class="text-white/30">En attente de données...</p>
@@ -832,7 +624,7 @@
                                 <p>
                                     Cette section vous permet d'explorer les <strong class="text-white">relations entre différents paramètres océaniques</strong> pour mieux comprendre les interactions complexes qui gouvernent la désoxygénation.
                                 </p>
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                                     <div class="p-3 rounded-lg bg-white/5 border border-white/10">
                                         <h4 class="text-sm font-medium text-cyan-300 mb-2">Corrélation temporelle</h4>
                                         <p class="text-sm text-white/60">Observez comment deux indicateurs évoluent simultanément dans le temps pour identifier des tendances communes ou opposées.</p>
@@ -840,10 +632,6 @@
                                     <div class="p-3 rounded-lg bg-white/5 border border-white/10">
                                         <h4 class="text-sm font-medium text-purple-300 mb-2">Analyse de corrélation</h4>
                                         <p class="text-sm text-white/60">Visualisez la relation directe entre deux variables avec leur coefficient de corrélation pour mesurer leur interdépendance.</p>
-                                    </div>
-                                    <div class="p-3 rounded-lg bg-white/5 border border-white/10">
-                                        <h4 class="text-sm font-medium text-green-300 mb-2">Matrice de corrélation</h4>
-                                        <p class="text-sm text-white/60">Obtenez une vue d'ensemble de toutes les relations entre les indicateurs pour identifier les patterns globaux.</p>
                                     </div>
                                 </div>
                             </div>
@@ -894,7 +682,12 @@
                             </p>
                         </div>
                         
-                        <div class="h-64 relative">
+                        <div class="h-64 relative chart-container">
+                            <button class="chart-expand-btn" onclick="expandChart('correlationChart', 'Corrélation temporelle')" title="Agrandir">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                                </svg>
+                            </button>
                             <canvas id="correlationChart"></canvas>
                             <div id="correlationEmpty" class="absolute inset-0 flex items-center justify-center">
                                 <p class="text-white/30">En attente de données...</p>
@@ -930,7 +723,12 @@
                             </p>
                         </div>
                         
-                        <div class="h-64 relative">
+                        <div class="h-64 relative chart-container">
+                            <button class="chart-expand-btn" onclick="expandChart('comparisonScatterChart', 'Analyse de corrélation')" title="Agrandir">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                                </svg>
+                            </button>
                             <canvas id="comparisonScatterChart"></canvas>
                             <div id="comparisonScatterEmpty" class="absolute inset-0 flex items-center justify-center">
                                 <p class="text-white/30">En attente de données...</p>
@@ -939,70 +737,6 @@
                         <div class="mt-3 p-3 rounded-lg bg-white/5 border border-white/10">
                             <p class="text-xs text-white/60" id="comparisonScatterDescription">
                                 Visualisez la relation directe entre deux indicateurs avec leur coefficient de corrélation.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Tableau de corrélation -->
-                    <div class="p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 slide-up slide-up-5 lg:col-span-2">
-                        <h3 class="text-lg font-medium mb-4">Matrice de corrélation</h3>
-                        
-                        <!-- Paragraphe explicatif -->
-                        <div class="mb-4 p-3 rounded-lg bg-green-500/10 border border-green-500/20">
-                            <p class="text-sm text-green-200">
-                                <strong class="text-green-100">Vue d'ensemble des relations :</strong> Cette matrice présente tous les coefficients de corrélation entre les indicateurs. 
-                                Chaque valeur (entre -1 et 1) indique la force et la direction de la relation. Les valeurs proches de 1 (rouge) montrent une forte corrélation positive, 
-                                proches de -1 (rouge) une forte corrélation négative, et proches de 0 (vert) une faible corrélation. C'est l'outil idéal pour identifier rapidement 
-                                les interactions les plus significatives dans l'écosystème.
-                            </p>
-                        </div>
-                        
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-sm text-white">
-                                <thead>
-                                    <tr class="border-b border-white/10">
-                                        <th class="px-4 py-2 text-left">Indicateur</th>
-                                        <th class="px-4 py-2 text-center">Oxygène</th>
-                                        <th class="px-4 py-2 text-center">Température</th>
-                                        <th class="px-4 py-2 text-center">Salinité</th>
-                                        <th class="px-4 py-2 text-center">pH</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="correlationMatrix" class="text-white/70">
-                                    <tr>
-                                        <td class="px-4 py-2 font-medium">Oxygène</td>
-                                        <td class="px-4 py-2 text-center">1.00</td>
-                                        <td class="px-4 py-2 text-center">-</td>
-                                        <td class="px-4 py-2 text-center">-</td>
-                                        <td class="px-4 py-2 text-center">-</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-2 font-medium">Température</td>
-                                        <td class="px-4 py-2 text-center">-</td>
-                                        <td class="px-4 py-2 text-center">1.00</td>
-                                        <td class="px-4 py-2 text-center">-</td>
-                                        <td class="px-4 py-2 text-center">-</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-2 font-medium">Salinité</td>
-                                        <td class="px-4 py-2 text-center">-</td>
-                                        <td class="px-4 py-2 text-center">-</td>
-                                        <td class="px-4 py-2 text-center">1.00</td>
-                                        <td class="px-4 py-2 text-center">-</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-2 font-medium">pH</td>
-                                        <td class="px-4 py-2 text-center">-</td>
-                                        <td class="px-4 py-2 text-center">-</td>
-                                        <td class="px-4 py-2 text-center">-</td>
-                                        <td class="px-4 py-2 text-center">1.00</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="mt-4 p-3 rounded-lg bg-white/5 border border-white/10">
-                            <p class="text-xs text-white/60">
-                                <strong>Légende:</strong> Corrélation forte (|r| > 0.7) = Modérée (0.3 < |r| ≤ 0.7) = Faible (|r| ≤ 0.3) = Bon
                             </p>
                         </div>
                     </div>
@@ -1066,6 +800,63 @@
                 </div>
             </div>
         </main>
+    </div>
+    
+    <!-- Modal pour l'affichage en grand des graphiques -->
+    <div id="chartModal" class="chart-modal">
+        <div class="chart-modal-content">
+            <div class="chart-modal-header">
+                <h3 id="chartModalTitle" class="chart-modal-title">Graphique en grand</h3>
+                <div class="flex items-center gap-3">
+                    <!-- Contrôles de zoom -->
+                    <div class="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-1">
+                        <button onclick="resetZoom()" class="text-white/70 hover:text-white text-sm" title="Réinitialiser le zoom">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
+                        </button>
+                        <span class="text-white/50 text-xs">Zoom</span>
+                        <button onclick="zoomIn()" class="text-white/70 hover:text-white text-sm" title="Zoom avant">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"/>
+                            </svg>
+                        </button>
+                        <button onclick="zoomOut()" class="text-white/70 hover:text-white text-sm" title="Zoom arrière">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"/>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Informations sur le zoom -->
+                    <div id="zoomInfo" class="text-white/50 text-xs hidden">
+                        Utilisez la molette pour zoomer
+                    </div>
+                    
+                    <button class="chart-modal-close" onclick="closeChartModal()">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Instructions d'utilisation -->
+            <div class="mb-4 p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                <div class="flex items-center gap-2 text-sm text-blue-200">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>
+                        <strong>Navigation :</strong> Molette pour zoomer • Clic+glisser pour naviguer • Double-clic pour réinitialiser
+                    </span>
+                </div>
+            </div>
+            
+            <div class="chart-modal-body">
+                <canvas id="chartModalCanvas"></canvas>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -2429,7 +2220,6 @@
     function updateComparisonCharts() {
         updateCorrelationChart();
         updateComparisonScatterChart();
-        updateCorrelationMatrix();
     }
 
     function updateCorrelationChart() {
@@ -2721,53 +2511,6 @@
         );
         document.getElementById('comparisonScatterDescription').textContent = 
             `Coefficient de corrélation: ${correlation.toFixed(3)} (${getCorrelationStrength(correlation)})`;
-    }
-
-    function updateCorrelationMatrix() {
-        if (!window.currentData || !window.currentData.evolution) return;
-        
-        const metrics = ['dissoxygen', 'water_temp', 'salinity', 'ph'];
-        const matrix = {};
-        
-        // Calculer les corrélations entre toutes les paires
-        metrics.forEach(metric1 => {
-            matrix[metric1] = {};
-            metrics.forEach(metric2 => {
-                if (metric1 === metric2) {
-                    matrix[metric1][metric2] = 1.00;
-                } else {
-                    const data1 = window.currentData.evolution
-                        .filter(item => item.value !== null)
-                        .map(item => parseFloat(item.value));
-                    const data2 = data1.map(val => simulateSecondMetric(metric2, val));
-                    matrix[metric1][metric2] = calculateCorrelation(data1, data2);
-                }
-            });
-        });
-        
-        // Mettre à jour le tableau HTML
-        const tbody = document.getElementById('correlationMatrix');
-        const metricNames = {
-            'dissoxygen': 'Oxygène',
-            'water_temp': 'Température',
-            'salinity': 'Salinité',
-            'ph': 'pH'
-        };
-        
-        let html = '';
-        metrics.forEach(metric1 => {
-            html += `<tr>`;
-            html += `<td class="px-4 py-2 font-medium">${metricNames[metric1]}</td>`;
-            metrics.forEach(metric2 => {
-                const value = matrix[metric1][metric2];
-                const color = getCorrelationColor(value);
-                const display = metric1 === metric2 ? '1.00' : value.toFixed(2);
-                html += `<td class="px-4 py-2 text-center"><span style="color: ${color}">${display}</span></td>`;
-            });
-            html += `</tr>`;
-        });
-        
-        tbody.innerHTML = html;
     }
 
     // Fonctions utilitaires
@@ -3162,6 +2905,421 @@
         const barChartTitle = document.querySelector('#weatherAnalysisContainer h3');
         if (barChartTitle && metricInfo) {
             barChartTitle.textContent = `${metricInfo.label} - Valeurs moyennes par condition météo`;
+        }
+    }
+    
+    // Variables pour la modal d'agrandissement
+    let modalChart = null;
+    let originalChart = null;
+    
+    // Fonction pour agrandir un graphique
+    function expandChart(chartId, title) {
+        const modal = document.getElementById('chartModal');
+        const modalTitle = document.getElementById('chartModalTitle');
+        const modalCanvas = document.getElementById('chartModalCanvas');
+        
+        // Définir le titre
+        modalTitle.textContent = title;
+        
+        // Récupérer le graphique original
+        originalChart = getChartById(chartId);
+        
+        if (originalChart) {
+            // Cloner le graphique dans la modal
+            const ctx = modalCanvas.getContext('2d');
+            
+            // Détruire le graphique précédent dans la modal s'il existe
+            if (modalChart) {
+                modalChart.destroy();
+            }
+            
+            // Reconstruire le graphique avec une configuration propre
+            const chartType = originalChart.config.type;
+            const chartData = rebuildChartData(originalChart);
+            const chartOptions = buildModalOptions(chartType);
+            
+            // Créer le nouveau graphique dans la modal
+            modalChart = new Chart(ctx, {
+                type: chartType,
+                data: chartData,
+                options: chartOptions
+            });
+            
+            // Mettre à jour la taille du canvas pour la modal
+            setTimeout(() => {
+                modalChart.resize();
+            }, 100);
+            
+            // Afficher la modal
+            modal.classList.add('active');
+            
+            // Empêcher le scroll du body
+            document.body.style.overflow = 'hidden';
+        }
+    }
+    
+    // Fonction pour reconstruire les données du graphique de manière sécurisée
+    function rebuildChartData(originalChart) {
+        const data = originalChart.config.data;
+        const isDense = data.labels.length > 100; // Détection de graphique dense
+        
+        const rebuiltData = {
+            labels: [...data.labels],
+            datasets: []
+        };
+        
+        // Reconstruire chaque dataset
+        data.datasets.forEach((dataset, index) => {
+            const rebuiltDataset = {
+                label: dataset.label || `Dataset ${index + 1}`,
+                data: [...dataset.data],
+                backgroundColor: dataset.backgroundColor || 'rgba(34, 211, 238, 0.2)',
+                borderColor: dataset.borderColor || 'rgb(34, 211, 238)',
+                borderWidth: dataset.borderWidth || 2,
+                fill: dataset.fill || false,
+                tension: dataset.tension || 0.1
+            };
+            
+            // Optimisation pour les graphiques denses
+            if (isDense) {
+                if (originalChart.config.type === 'line') {
+                    // Réduire la taille des points pour les graphiques denses
+                    rebuiltDataset.pointRadius = 1;
+                    rebuiltDataset.pointHoverRadius = 4;
+                    rebuiltDataset.pointBackgroundColor = dataset.borderColor || 'rgb(34, 211, 238)';
+                    rebuiltDataset.pointBorderColor = '#fff';
+                    rebuiltDataset.pointBorderWidth = 1;
+                    
+                    // Augmenter la tension pour lisser la courbe
+                    rebuiltDataset.tension = 0.4;
+                    
+                    // Optimiser l'affichage des points
+                    if (data.labels.length > 200) {
+                        rebuiltDataset.pointRadius = 0; // Cacher les points si trop dense
+                        rebuiltDataset.showLine = true;
+                    }
+                } else if (originalChart.config.type === 'bar') {
+                    // Optimiser les barres pour les graphiques denses
+                    rebuiltDataset.borderRadius = 2;
+                    rebuiltDataset.barPercentage = 0.8;
+                    rebuiltDataset.categoryPercentage = 0.9;
+                }
+            } else {
+                // Configuration normale pour les graphiques peu denses
+                if (originalChart.config.type === 'line') {
+                    rebuiltDataset.pointRadius = dataset.pointRadius || 3;
+                    rebuiltDataset.pointHoverRadius = dataset.pointHoverRadius || 5;
+                    rebuiltDataset.pointBackgroundColor = dataset.pointBackgroundColor || dataset.borderColor;
+                    rebuiltDataset.pointBorderColor = dataset.pointBorderColor || '#fff';
+                    rebuiltDataset.pointBorderWidth = dataset.pointBorderWidth || 1;
+                } else if (originalChart.config.type === 'bar') {
+                    rebuiltDataset.borderRadius = dataset.borderRadius || 0;
+                }
+            }
+            
+            // Ajouter des propriétés spécifiques selon le type de graphique
+            if (originalChart.config.type === 'pie' || originalChart.config.type === 'doughnut') {
+                rebuiltDataset.hoverOffset = dataset.hoverOffset || 4;
+            }
+            
+            rebuiltData.datasets.push(rebuiltDataset);
+        });
+        
+        return rebuiltData;
+    }
+    
+    // Fonction pour construire les options de la modal
+    function buildModalOptions(chartType) {
+        const baseOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        color: 'white',
+                        font: {
+                            size: 14
+                        },
+                        padding: 20
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                    titleColor: 'white',
+                    bodyColor: 'white',
+                    borderColor: 'rgba(34, 211, 238, 0.5)',
+                    borderWidth: 2,
+                    padding: 12,
+                    displayColors: true,
+                    callbacks: {
+                        title: function(context) {
+                            if (context[0].label) {
+                                return `Date: ${context[0].label}`;
+                            }
+                            return '';
+                        },
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += context.parsed.y.toFixed(2);
+                            }
+                            return label;
+                        }
+                    }
+                },
+                zoom: {
+                    zoom: {
+                        wheel: {
+                            enabled: true,
+                        },
+                        pinch: {
+                            enabled: true
+                        },
+                        mode: 'x',
+                    },
+                    pan: {
+                        enabled: true,
+                        mode: 'x',
+                    }
+                }
+            },
+            animation: {
+                duration: 0
+            }
+        };
+        
+        // Options spécifiques selon le type de graphique
+        if (chartType === 'line' || chartType === 'bar') {
+            baseOptions.scales = {
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)',
+                        borderColor: 'rgba(255, 255, 255, 0.2)'
+                    },
+                    ticks: {
+                        color: 'white',
+                        maxRotation: 45,
+                        minRotation: 45,
+                        autoSkip: true,
+                        maxTicksLimit: 20, // Limite le nombre d'étiquettes
+                        callback: function(value, index, values) {
+                            // Logique intelligente pour réduire les étiquettes
+                            const totalLabels = values.length;
+                            if (totalLabels > 50) {
+                                // Afficher 1 sur 5 étiquettes si très dense
+                                return index % 5 === 0 ? this.getLabelForValue(value) : '';
+                            } else if (totalLabels > 20) {
+                                // Afficher 1 sur 3 étiquettes si dense
+                                return index % 3 === 0 ? this.getLabelForValue(value) : '';
+                            }
+                            return this.getLabelForValue(value);
+                        }
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)',
+                        borderColor: 'rgba(255, 255, 255, 0.2)'
+                    },
+                    ticks: {
+                        color: 'white',
+                        callback: function(value) {
+                            // Formater les nombres sur l'axe Y
+                            if (Math.abs(value) >= 1000) {
+                                return (value / 1000).toFixed(1) + 'k';
+                            }
+                            return value.toFixed(1);
+                        }
+                    }
+                }
+            };
+        } else if (chartType === 'scatter') {
+            baseOptions.scales = {
+                x: {
+                    type: 'linear',
+                    position: 'bottom',
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)',
+                        borderColor: 'rgba(255, 255, 255, 0.2)'
+                    },
+                    ticks: {
+                        color: 'white',
+                        callback: function(value) {
+                            return value.toFixed(1);
+                        }
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)',
+                        borderColor: 'rgba(255, 255, 255, 0.2)'
+                    },
+                    ticks: {
+                        color: 'white',
+                        callback: function(value) {
+                            return value.toFixed(1);
+                        }
+                    }
+                }
+            };
+        }
+        
+        return baseOptions;
+    }
+    
+    // Fonction pour fermer la modal
+    function closeChartModal() {
+        const modal = document.getElementById('chartModal');
+        
+        // Détruire le graphique dans la modal
+        if (modalChart) {
+            modalChart.destroy();
+            modalChart = null;
+        }
+        
+        // Cacher la modal
+        modal.classList.remove('active');
+        
+        // Réactiver le scroll du body
+        document.body.style.overflow = '';
+    }
+    
+    // Fonction pour récupérer un graphique par son ID
+    function getChartById(chartId) {
+        switch(chartId) {
+            case 'evolutionChart':
+                return evolutionChart;
+            case 'weatherBarChart':
+                return weatherBarChart;
+            case 'weatherPieChart':
+                return weatherPieChart;
+            case 'qualityPieChart':
+                return qualityPieChart;
+            case 'monthlyBarChart':
+                return monthlyBarChart;
+            case 'correlationChart':
+                return correlationChart;
+            case 'comparisonScatterChart':
+                return comparisonScatterChart;
+            default:
+                return null;
+        }
+    }
+    
+    // Écouteur d'événement pour fermer la modal avec la touche Échap
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeChartModal();
+        }
+    });
+    
+    // Écouteur d'événement pour fermer la modal en cliquant à l'extérieur
+    document.getElementById('chartModal').addEventListener('click', function(event) {
+        if (event.target === this) {
+            closeChartModal();
+        }
+    });
+    
+    // Fonctions pour le zoom et la navigation
+    function resetZoom() {
+        if (modalChart) {
+            modalChart.resetZoom();
+        }
+    }
+    
+    function zoomIn() {
+        if (modalChart) {
+            modalChart.zoom(1.1);
+        }
+    }
+    
+    function zoomOut() {
+        if (modalChart) {
+            modalChart.zoom(0.9);
+        }
+    }
+    
+    // Amélioration de la fonction expandChart pour activer le zoom
+    function expandChart(chartId, title) {
+        const modal = document.getElementById('chartModal');
+        const modalTitle = document.getElementById('chartModalTitle');
+        const modalCanvas = document.getElementById('chartModalCanvas');
+        const zoomInfo = document.getElementById('zoomInfo');
+        
+        // Définir le titre
+        modalTitle.textContent = title;
+        
+        // Récupérer le graphique original
+        originalChart = getChartById(chartId);
+        
+        if (originalChart) {
+            // Cloner le graphique dans la modal
+            const ctx = modalCanvas.getContext('2d');
+            
+            // Détruire le graphique précédent dans la modal s'il existe
+            if (modalChart) {
+                modalChart.destroy();
+            }
+            
+            // Reconstruire le graphique avec une configuration propre
+            const chartType = originalChart.config.type;
+            const chartData = rebuildChartData(originalChart);
+            const chartOptions = buildModalOptions(chartType);
+            
+            // Activer le zoom pour les graphiques linéaires et à barres
+            if (chartType === 'line' || chartType === 'bar') {
+                chartOptions.plugins.zoom = {
+                    zoom: {
+                        wheel: {
+                            enabled: true,
+                        },
+                        pinch: {
+                            enabled: true
+                        },
+                        mode: 'x',
+                    },
+                    pan: {
+                        enabled: true,
+                        mode: 'x',
+                    },
+                    limits: {
+                        x: {min: 'original', max: 'original'},
+                        y: {min: 'original', max: 'original'}
+                    }
+                };
+                
+                // Afficher les informations de zoom
+                zoomInfo.classList.remove('hidden');
+            } else {
+                zoomInfo.classList.add('hidden');
+            }
+            
+            // Créer le nouveau graphique dans la modal
+            modalChart = new Chart(ctx, {
+                type: chartType,
+                data: chartData,
+                options: chartOptions
+            });
+            
+            // Mettre à jour la taille du canvas pour la modal
+            setTimeout(() => {
+                modalChart.resize();
+            }, 100);
+            
+            // Afficher la modal
+            modal.classList.add('active');
+            
+            // Empêcher le scroll du body
+            document.body.style.overflow = 'hidden';
         }
     }
     </script>
