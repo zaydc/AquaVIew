@@ -610,12 +610,12 @@
                                 </p>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                                     <div class="p-3 rounded-lg bg-white/5 border border-white/10">
-                                        <h4 class="text-sm font-medium text-cyan-300 mb-2">Corrélation temporelle</h4>
-                                        <p class="text-sm text-white/60">Observez comment deux indicateurs évoluent simultanément dans le temps pour identifier des tendances communes ou opposées.</p>
+                                        <h4 class="text-sm font-medium text-cyan-300 mb-2">Comparaison visuelle</h4>
+                                        <p class="text-sm text-white/60">Observez comment deux indicateurs évoluent simultanément dans le temps pour identifier les tendances vous-même.</p>
                                     </div>
                                     <div class="p-3 rounded-lg bg-white/5 border border-white/10">
-                                        <h4 class="text-sm font-medium text-purple-300 mb-2">Analyse de corrélation</h4>
-                                        <p class="text-sm text-white/60">Visualisez la relation directe entre deux variables avec leur coefficient de corrélation pour mesurer leur interdépendance.</p>
+                                        <h4 class="text-sm font-medium text-purple-300 mb-2">Analyse personnelle</h4>
+                                        <p class="text-sm text-white/60">Comparez les courbes et tirez vos propres conclusions sur les relations entre les indicateurs.</p>
                                     </div>
                                 </div>
                             </div>
@@ -650,80 +650,39 @@
                     </div>
                 </div>
                 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Graphique de corrélation double axe -->
+                <div class="grid grid-cols-1 gap-6">
+                    <!-- Graphique de comparaison simple -->
                     <div class="p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 slide-up slide-up-3">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-medium">Corrélation temporelle</h3>
+                            <h3 class="text-lg font-medium">Comparaison d'indicateurs</h3>
                         </div>
                         
                         <!-- Paragraphe explicatif -->
                         <div class="mb-4 p-3 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
                             <p class="text-sm text-cyan-200">
-                                <strong class="text-cyan-100">Analyse temporelle :</strong> Ce graphique montre l'évolution de deux indicateurs sur la même période temporelle. 
-                                Les axes doubles permettent de visualiser des échelles différentes. Une corrélation positive (les courbes évoluent dans le même sens) 
-                                peut indiquer une influence directe, tandis qu'une corrélation négative (sens opposé) suggère une relation inverse.
+                                <strong class="text-cyan-100">Comparaison visuelle :</strong> Ce graphique montre l'évolution de deux indicateurs sur la même période. 
+                                Observez comment les courbes évoluent pour identifier des tendances communes ou opposées selon votre analyse.
                             </p>
                         </div>
                         
-                        <div class="h-64 relative chart-container">
-                            <button class="chart-expand-btn" onclick="expandChart('correlationChart', 'Corrélation temporelle')" title="Agrandir">
+                        <div class="h-80 relative chart-container">
+                            <button class="chart-expand-btn" onclick="expandChart('comparisonChart', 'Comparaison d\'indicateurs')" title="Agrandir">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
                                 </svg>
                             </button>
-                            <canvas id="correlationChart"></canvas>
-                            <div id="correlationEmpty" class="absolute inset-0 flex items-center justify-center">
+                            <canvas id="comparisonChart"></canvas>
+                            <div id="comparisonEmpty" class="absolute inset-0 flex items-center justify-center">
                                 <p class="text-white/30">En attente de données...</p>
                             </div>
                         </div>
                         <div class="mt-3 p-3 rounded-lg bg-white/5 border border-white/10">
-                            <p class="text-xs text-white/60" id="correlationDescription">
-                                Ce graphique montre l'évolution simultanée de deux indicateurs pour identifier leurs relations temporelles.
+                            <p class="text-xs text-white/60" id="comparisonDescription">
+                                Comparez visuellement l'évolution de deux indicateurs pour analyser leurs tendances.
                             </p>
                         </div>
                     </div>
 
-                    <!-- Graphique de dispersion amélioré -->
-                    <div class="p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 slide-up slide-up-4">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-medium">Analyse de corrélation</h3>
-                            <div class="flex items-center gap-2">
-                                <span class="text-sm text-white/50">Tendance:</span>
-                                <select id="trendType" class="bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-1 focus:outline-none focus:border-cyan-400">
-                                    <option value="none">Aucune</option>
-                                    <option value="linear">Linéaire</option>
-                                    <option value="polynomial">Polynomiale</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <!-- Paragraphe explicatif -->
-                        <div class="mb-4 p-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
-                            <p class="text-sm text-purple-200">
-                                <strong class="text-purple-100">Analyse de corrélation directe :</strong> Ce nuage de points montre la relation entre deux indicateurs sans la dimension temporelle. 
-                                Chaque point représente une mesure simultanée. Une dispersion linéaire suggère une forte corrélation, tandis qu'une dispersion alérale 
-                                indique une faible relation. Le coefficient de corrélation (r) quantifie cette relation : proche de 1 ou -1 = forte, proche de 0 = faible.
-                            </p>
-                        </div>
-                        
-                        <div class="h-64 relative chart-container">
-                            <button class="chart-expand-btn" onclick="expandChart('comparisonScatterChart', 'Analyse de corrélation')" title="Agrandir">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
-                                </svg>
-                            </button>
-                            <canvas id="comparisonScatterChart"></canvas>
-                            <div id="comparisonScatterEmpty" class="absolute inset-0 flex items-center justify-center">
-                                <p class="text-white/30">En attente de données...</p>
-                            </div>
-                        </div>
-                        <div class="mt-3 p-3 rounded-lg bg-white/5 border border-white/10">
-                            <p class="text-xs text-white/60" id="comparisonScatterDescription">
-                                Visualisez la relation directe entre deux indicateurs avec leur coefficient de corrélation.
-                            </p>
-                        </div>
-                    </div>
                 </div>
             </div>
             
@@ -847,8 +806,7 @@
     let evolutionChart = null;
     let qualityPieChart = null;
     let monthlyBarChart = null;
-    let correlationChart = null;
-    let comparisonScatterChart = null;
+    let comparisonChart = null;
     let weatherBarChart = null;
     let weatherPieChart = null;
     let map = null;
@@ -883,7 +841,7 @@
         'salinity': { 
             label: 'Salinité', 
             unit: 'PSU', 
-            color: 'rgb(96, 165, 250)',
+            color: 'rgb(168, 85, 247)',
             thresholds: {
                 good: { min: 33, max: 37, color: '#10b981', label: 'Normal' },
                 moderate: { min: 30, max: 40, color: '#f59e0b', label: 'Varié' },
@@ -2248,11 +2206,10 @@
 
     // Fonctions pour les graphiques de comparaison
     function updateComparisonCharts() {
-        updateCorrelationChart();
-        updateComparisonScatterChart();
+        updateComparisonChart();
     }
 
-    function updateCorrelationChart() {
+    function updateComparisonChart() {
         const metric1 = document.getElementById('metric1').value;
         const metric2 = document.getElementById('metric2').value;
         
@@ -2261,10 +2218,10 @@
         
         if (!window.currentData || !window.currentData.evolution) return;
         
-        const ctx = document.getElementById('correlationChart').getContext('2d');
+        const ctx = document.getElementById('comparisonChart').getContext('2d');
         
-        if (correlationChart) {
-            correlationChart.destroy();
+        if (comparisonChart) {
+            comparisonChart.destroy();
         }
         
         // Filtrer les données selon la période globale
@@ -2301,12 +2258,12 @@
             }
         });
         
-        document.getElementById('correlationEmpty').classList.add('hidden');
+        document.getElementById('comparisonEmpty').classList.add('hidden');
         
         const config1 = metricConfig[metric1] || metricConfig['dissoxygen'];
         const config2 = metricConfig[metric2] || metricConfig['dissoxygen'];
         
-        correlationChart = new Chart(ctx, {
+        comparisonChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: labels,
@@ -2316,8 +2273,9 @@
                         data: data1,
                         borderColor: config1.color,
                         backgroundColor: config1.color.replace('rgb', 'rgba').replace(')', ', 0.1)'),
-                        borderWidth: 2,
-                        yAxisID: 'y',
+                        borderWidth: 1.5,
+                        pointRadius: 1,
+                        pointHoverRadius: 4,
                         tension: 0.4
                     },
                     {
@@ -2325,8 +2283,9 @@
                         data: data2,
                         borderColor: config2.color,
                         backgroundColor: config2.color.replace('rgb', 'rgba').replace(')', ', 0.1)'),
-                        borderWidth: 2,
-                        yAxisID: 'y1',
+                        borderWidth: 1.5,
+                        pointRadius: 1,
+                        pointHoverRadius: 4,
                         tension: 0.4
                     }
                 ]
@@ -2383,34 +2342,14 @@
                         }
                     },
                     y: {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
                         title: {
                             display: true,
-                            text: config1.label,
-                            color: config1.color
+                            text: 'Valeurs normalisées',
+                            color: 'rgba(255, 255, 255, 0.8)'
                         },
                         grid: {
                             color: 'rgba(255, 255, 255, 0.05)',
                             drawBorder: false
-                        },
-                        ticks: {
-                            color: 'rgba(255, 255, 255, 0.5)',
-                            font: { size: 10 }
-                        }
-                    },
-                    y1: {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        title: {
-                            display: true,
-                            text: config2.label,
-                            color: config2.color
-                        },
-                        grid: {
-                            drawOnChartArea: false,
                         },
                         ticks: {
                             color: 'rgba(255, 255, 255, 0.5)',
@@ -2422,126 +2361,10 @@
         });
         
         // Mettre à jour la description
-        const correlation = calculateCorrelation(data1, data2);
-        document.getElementById('correlationDescription').textContent = 
-            `Corrélation: ${correlation.toFixed(3)} (${getCorrelationStrength(correlation)})`;
+        document.getElementById('comparisonDescription').textContent = 
+            `Comparaison visuelle de ${config1.label.toLowerCase()} et ${config2.label.toLowerCase()}`;
     }
 
-    function updateComparisonScatterChart() {
-        const metric1 = document.getElementById('metric1').value;
-        const metric2 = document.getElementById('metric2').value;
-        const trendType = document.getElementById('trendType').value;
-        
-        if (!window.currentData || !window.currentData.evolution) return;
-        
-        const ctx = document.getElementById('comparisonScatterChart').getContext('2d');
-        
-        if (comparisonScatterChart) {
-            comparisonScatterChart.destroy();
-        }
-        
-        const config1 = metricConfig[metric1] || metricConfig['dissoxygen'];
-        const config2 = metricConfig[metric2] || metricConfig['dissoxygen'];
-        
-        // Préparer les données
-        const scatterData = window.currentData.evolution
-            .filter(item => item.value !== null)
-            .map(item => ({
-                x: parseFloat(item.value),
-                y: simulateSecondMetric(metric2, parseFloat(item.value))
-            }));
-        
-        document.getElementById('comparisonScatterEmpty').classList.add('hidden');
-        
-        const datasets = [{
-            label: `${config1.label} vs ${config2.label}`,
-            data: scatterData,
-            backgroundColor: 'rgba(167, 139, 250, 0.4)',
-            borderColor: 'rgba(167, 139, 250, 0.8)',
-            borderWidth: 1,
-            pointRadius: 3,
-            pointHoverRadius: 6
-        }];
-        
-        // Ajouter la ligne de tendance si demandée
-        if (trendType !== 'none') {
-            const trendLine = calculateTrendLine(scatterData, trendType);
-            datasets.push({
-                label: 'Tendance',
-                data: trendLine,
-                borderColor: 'rgba(34, 211, 238, 0.8)',
-                borderWidth: 2,
-                borderDash: [5, 5],
-                pointRadius: 0,
-                fill: false,
-                tension: 0.4
-            });
-        }
-        
-        comparisonScatterChart = new Chart(ctx, {
-            type: 'scatter',
-            data: { datasets },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: true,
-                        labels: {
-                            color: 'rgba(255, 255, 255, 0.8)'
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                        callbacks: {
-                            label: function(context) {
-                                return [
-                                    `${config1.label}: ${context.parsed.x.toFixed(2)} ${config1.unit}`,
-                                    `${config2.label}: ${context.parsed.y.toFixed(2)} ${config2.unit}`
-                                ];
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: config1.label,
-                            color: 'rgba(255, 255, 255, 0.8)'
-                        },
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.05)'
-                        },
-                        ticks: {
-                            color: 'rgba(255, 255, 255, 0.5)'
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: config2.label,
-                            color: 'rgba(255, 255, 255, 0.8)'
-                        },
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.05)'
-                        },
-                        ticks: {
-                            color: 'rgba(255, 255, 255, 0.5)'
-                        }
-                    }
-                }
-            }
-        });
-        
-        // Mettre à jour la description avec le coefficient de corrélation
-        const correlation = calculateCorrelation(
-            scatterData.map(d => d.x),
-            scatterData.map(d => d.y)
-        );
-        document.getElementById('comparisonScatterDescription').textContent = 
-            `Coefficient de corrélation: ${correlation.toFixed(3)} (${getCorrelationStrength(correlation)})`;
-    }
 
     // Fonctions utilitaires
     function filterDataByPeriod(data, period) {
@@ -2577,64 +2400,6 @@
         }
     }
 
-    function calculateCorrelation(x, y) {
-        const n = x.length;
-        if (n === 0) return 0;
-        
-        const sumX = x.reduce((a, b) => a + b, 0);
-        const sumY = y.reduce((a, b) => a + b, 0);
-        const sumXY = x.reduce((sum, xi, i) => sum + xi * y[i], 0);
-        const sumX2 = x.reduce((sum, xi) => sum + xi * xi, 0);
-        const sumY2 = y.reduce((sum, yi) => sum + yi * yi, 0);
-        
-        const numerator = n * sumXY - sumX * sumY;
-        const denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
-        
-        return denominator === 0 ? 0 : numerator / denominator;
-    }
-
-    function getCorrelationStrength(r) {
-        const abs = Math.abs(r);
-        if (abs > 0.7) return 'Forte corrélation';
-        if (abs > 0.3) return 'Corrélation modérée';
-        return 'Faible corrélation';
-    }
-
-    function getCorrelationColor(r) {
-        const abs = Math.abs(r);
-        if (abs > 0.7) return '#ef4444';
-        if (abs > 0.3) return '#f59e0b';
-        return '#10b981';
-    }
-
-    function calculateTrendLine(data, type) {
-        if (data.length < 2) return [];
-        
-        const xValues = data.map(d => d.x);
-        const yValues = data.map(d => d.y);
-        
-        if (type === 'linear') {
-            // Régression linéaire simple
-            const n = data.length;
-            const sumX = xValues.reduce((a, b) => a + b, 0);
-            const sumY = yValues.reduce((a, b) => a + b, 0);
-            const sumXY = xValues.reduce((sum, x, i) => sum + x * yValues[i], 0);
-            const sumX2 = xValues.reduce((sum, x) => sum + x * x, 0);
-            
-            const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
-            const intercept = (sumY - slope * sumX) / n;
-            
-            const xMin = Math.min(...xValues);
-            const xMax = Math.max(...xValues);
-            
-            return [
-                { x: xMin, y: slope * xMin + intercept },
-                { x: xMax, y: slope * xMax + intercept }
-            ];
-        }
-        
-        return [];
-    }
 
     // ==========================
     // FONCTIONS D'ANALYSE MÉTÉO (INDÉPENDANTES)
@@ -3228,10 +2993,8 @@
                 return qualityPieChart;
             case 'monthlyBarChart':
                 return monthlyBarChart;
-            case 'correlationChart':
-                return correlationChart;
-            case 'comparisonScatterChart':
-                return comparisonScatterChart;
+            case 'comparisonChart':
+                return comparisonChart;
             default:
                 return null;
         }
