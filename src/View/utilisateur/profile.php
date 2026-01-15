@@ -191,7 +191,7 @@ $success = getSuccess();
                                   onsubmit="return confirm('Êtes-vous absolument certain de vouloir supprimer votre compte ? Cette action ne peut pas être annulée.');"
                                   class="space-y-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-red-300 mb-2">Mot de passe requis</label>
+                                    <label class="block text-xs font-medium text-red-300 mb-2">Mot de passe requis</label>
                                     <input type="password" name="password" required 
                                            placeholder="Entrez votre mot de passe"
                                            class="w-full px-4 py-3 rounded-xl bg-white/5 border border-red-500/30 text-white placeholder-red-400/50 focus:border-red-400 focus:ring-2 focus:ring-red-400/20 transition-all" />
@@ -223,23 +223,44 @@ $success = getSuccess();
                             <h3 class="font-medium text-white mb-4">Modifier le mot de passe</h3>
                             
                             <form action="?controller=utilisateur&action=doUpdatePassword" method="POST" class="space-y-4">
-                                <div>
+                                <div class="relative">
                                     <label class="block text-sm font-medium text-white/70 mb-2">Ancien mot de passe</label>
-                                    <input type="password" name="old_password" required 
+                                    <input type="password" id="old_password" name="old_password" required 
                                            placeholder="Entrez votre ancien mot de passe"
-                                           class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/50 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all" />
+                                           class="w-full px-4 py-3 pr-12 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/50 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all" />
+                                    <button type="button" onclick="togglePassword('old_password')" 
+                                            class="absolute right-3 top-10 text-white/50 hover:text-white/70 transition-colors">
+                                        <svg id="old_password_icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                    </button>
                                 </div>
-                                <div>
+                                <div class="relative">
                                     <label class="block text-sm font-medium text-white/70 mb-2">Nouveau mot de passe</label>
-                                    <input type="password" name="new_password" required 
+                                    <input type="password" id="new_password" name="new_password" required 
                                            placeholder="Entrez votre nouveau mot de passe"
-                                           class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/50 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all" />
+                                           class="w-full px-4 py-3 pr-12 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/50 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all" />
+                                    <button type="button" onclick="togglePassword('new_password')" 
+                                            class="absolute right-3 top-10 text-white/50 hover:text-white/70 transition-colors">
+                                        <svg id="new_password_icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                    </button>
                                 </div>
-                                <div>
+                                <div class="relative">
                                     <label class="block text-sm font-medium text-white/70 mb-2">Confirmer le nouveau mot de passe</label>
-                                    <input type="password" name="confirm_password" required 
+                                    <input type="password" id="confirm_password" name="confirm_password" required 
                                            placeholder="Confirmez votre nouveau mot de passe"
-                                           class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/50 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all" />
+                                           class="w-full px-4 py-3 pr-12 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/50 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all" />
+                                    <button type="button" onclick="togglePassword('confirm_password')" 
+                                            class="absolute right-3 top-10 text-white/50 hover:text-white/70 transition-colors">
+                                        <svg id="confirm_password_icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                    </button>
                                 </div>
                                 <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium hover:from-cyan-600 hover:to-blue-600 transition-all shadow-lg shadow-cyan-500/30">
                                     Mettre à jour le mot de passe
@@ -255,3 +276,25 @@ $success = getSuccess();
 </div>
 
 <?php require_once __DIR__ . '/../components/footer.php'; ?>
+
+<script>
+function togglePassword(fieldId) {
+    const passwordField = document.getElementById(fieldId);
+    const icon = document.getElementById(fieldId + '_icon');
+    
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        // Changer l'icône pour œil barré (masqué)
+        icon.innerHTML = `
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+        `;
+    } else {
+        passwordField.type = 'password';
+        // Remettre l'icône œil (visible)
+        icon.innerHTML = `
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+        `;
+    }
+}
+</script>
