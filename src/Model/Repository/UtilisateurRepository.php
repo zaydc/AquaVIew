@@ -81,4 +81,20 @@ class UtilisateurRepository extends AbstractRepository {
             'numero' => $data['numero']
         ]);
     }
+
+    /**
+     * Met à jour uniquement le mot de passe d'un utilisateur
+     * Séparé de update() pour des raisons de sécurité
+     * @param int $id ID de l'utilisateur
+     * @param string $passwordHash Nouveau mot de passe hashé
+     * @return bool True si la mise à jour a réussi, false sinon
+     */
+    public function updatePassword(int $id, string $passwordHash): bool {
+        $sql = "UPDATE {$this->tableName} SET mot_de_passe = :mot_de_passe WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            'id' => $id,
+            'mot_de_passe' => $passwordHash
+        ]);
+    }
 }

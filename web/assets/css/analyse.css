@@ -173,12 +173,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 #weatherBarChart, #weatherPieChart {
     max-width: 100% !important;
     height: auto !important;
-    max-height: 300px !important;
+    max-height: 320px !important;
 }
 
 .weather-chart-container {
     position: relative;
-    height: 300px;
+    height: 320px;
     width: 100%;
     overflow: hidden;
 }
@@ -298,9 +298,5 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .chart-container {
-    position: relative;
-}
-
-.weather-chart-container {
     position: relative;
 }

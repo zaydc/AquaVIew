@@ -81,11 +81,11 @@ class ControllerUtilisateur {
             case 'doUpdateProfile':
                 $this->doUpdateProfile();
                 break;
+            case 'doUpdatePassword':
+                $this->doUpdatePassword();
+                break;
             case 'doDeleteAccount':
                 $this->doDeleteAccount();
-                break;
-            case 'downloads':
-                $this->downloads();
                 break;
             default:
                 $this->list();
@@ -326,9 +326,6 @@ class ControllerUtilisateur {
         // Statistiques personnelles (nombre d'analyses, etc.)
         $userStats = $this->analysisRepository->getUserStats($userId);
         
-        // Recuperation des derniers telechargements (simules pour l'instant)
-        $recentDownloads = $this->getUserDownloads($userId);
-        
         require_once __DIR__ . '/../View/utilisateur/profile.php';
     }
 
@@ -391,6 +388,73 @@ class ControllerUtilisateur {
     }
 
     /**
+     * Traite la mise à jour du mot de passe utilisateur
+     * Vérifie l'ancien mot de passe avant d'appliquer le nouveau
+     */
+    private function doUpdatePassword(): void {
+        // Vérification authentification
+        if (!isset($_SESSION['user'])) {
+            header('Location: ?controller=utilisateur&action=login');
+            exit;
+        }
+
+        $oldPassword = $_POST['old_password'] ?? '';
+        $newPassword = $_POST['new_password'] ?? '';
+        $confirmPassword = $_POST['confirm_password'] ?? '';
+        $userId = $_SESSION['user']['id'];
+
+        // Validation des champs
+        if (empty($oldPassword) || empty($newPassword) || empty($confirmPassword)) {
+            $_SESSION['error'] = 'Tous les champs sont requis.';
+            header('Location: ?controller=utilisateur&action=profile');
+            exit;
+        }
+
+        // Vérification que les nouveaux mots de passe correspondent
+        if ($newPassword !== $confirmPassword) {
+            $_SESSION['error'] = 'Les nouveaux mots de passe ne correspondent pas.';
+            header('Location: ?controller=utilisateur&action=profile');
+            exit;
+        }
+
+        // Validation du format du nouveau mot de passe
+        if (!preg_match('/^(?=.*[A-Z])(?=.*\d).{8,}$/', $newPassword)) {
+            $_SESSION['error'] = 'Le nouveau mot de passe doit contenir au moins 8 caractères, 1 majuscule et 1 chiffre.';
+            header('Location: ?controller=utilisateur&action=profile');
+            exit;
+        }
+
+        // Vérification que le nouveau mot de passe est différent de l'ancien
+        if ($oldPassword === $newPassword) {
+            $_SESSION['error'] = 'Le nouveau mot de passe doit être différent de l\'ancien.';
+            header('Location: ?controller=utilisateur&action=profile');
+            exit;
+        }
+
+        // Récupération de l'utilisateur pour vérifier l'ancien mot de passe
+        $utilisateur = $this->repository->findById($userId);
+        
+        if (!$utilisateur || !password_verify($oldPassword, $utilisateur['mot_de_passe'])) {
+            $_SESSION['error'] = 'L\'ancien mot de passe est incorrect.';
+            header('Location: ?controller=utilisateur&action=profile');
+            exit;
+        }
+
+        // Hashage du nouveau mot de passe
+        $hash = password_hash($newPassword, PASSWORD_DEFAULT);
+
+        // Mise à jour du mot de passe en base de données
+        if ($this->repository->updatePassword($userId, $hash)) {
+            $_SESSION['success'] = 'Mot de passe mis à jour avec succès !';
+        } else {
+            $_SESSION['error'] = 'Erreur lors de la mise à jour du mot de passe.';
+        }
+
+        header('Location: ?controller=utilisateur&action=profile');
+        exit;
+    }
+
+    /**
      * Suppression du compte utilisateur (avec confirmation mot de passe)
      * Sécurité renforcée : nécessite le mot de passe pour supprimer le compte
      */
@@ -433,57 +497,4 @@ class ControllerUtilisateur {
         }
     }
 
-    /**
-     * Affiche l'historique complet des téléchargements de l'utilisateur
-     * Page dédiée pour voir tous les exports effectués
-     */
-    private function downloads(): void {
-        if (!isset($_SESSION['user'])) {
-            header('Location: ?controller=utilisateur&action=login');
-            exit;
-        }
-        
-        $userId = $_SESSION['user']['id'];
-        $utilisateur = $this->repository->findById($userId);
-        // Récupération de plus de téléchargements pour cette page dédiée
-        $allDownloads = $this->getUserDownloads($userId, 50);
-        
-        require_once __DIR__ . '/../View/utilisateur/downloads.php';
     }
-
-    /**
-     * Génère des données de téléchargements simulées
-     * Dans un vrai projet, ces données viendraient de la base de données
-     * @param int $userId ID de l'utilisateur
-     * @param int $limit Nombre maximum de téléchargements à retourner
-     * @return array Liste des téléchargements simulés
-     */
-    private function getUserDownloads(int $userId, int $limit = 5): array {
-        // Simulation de données de téléchargements
-        // En production, cela viendrait d'une table 'downloads' en BDD
-        $downloads = [];
-        $formats = ['csv', 'json', 'pdf'];
-        $metrics = ['Oxygène dissous', 'Température', 'Salinité', 'pH'];
-        
-        // Génération de données aléatoires réalistes
-        for ($i = 0; $i < min($limit, 12); $i++) {
-            $date = date('Y-m-d H:i:s', strtotime("-{$i} days"));
-            $format = $formats[array_rand($formats)];
-            $metric = $metrics[array_rand($metrics)];
-            $fileSize = rand(1000, 50000); // Taille en octets
-            
-            $downloads[] = [
-                'id' => $i + 1,
-                'metric' => $metric,
-                'format' => $format,
-                'file_size' => $fileSize,
-                'record_count' => rand(50, 500),
-                'date_range' => date('d/m/Y', strtotime("-{$i} days")) . ' - ' . date('d/m/Y'),
-                'created_at' => $date,
-                'file_path' => "#download-{$i}" // Simuler un chemin de fichier
-            ];
-        }
-        
-        return $downloads;
-    }
-}

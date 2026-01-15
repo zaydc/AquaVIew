@@ -13,7 +13,7 @@ $loader->addNamespace('App', __DIR__ . '/../../src');
 use App\Controller\ExportController;
 
 // Validation du format
-$allowedFormats = ['json', 'csv'];
+$allowedFormats = ['json', 'csv', 'netcdf'];
 $format = $_GET['format'] ?? 'json';
 
 if (!in_array(strtolower($format), $allowedFormats)) {

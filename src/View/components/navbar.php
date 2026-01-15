@@ -35,11 +35,11 @@ $navItems = [
         <!-- Right Side Menu -->
         <div class="hidden md:flex items-center gap-4">
             <?php if ($isLoggedIn): ?>
+                <span class="text-white/70 text-sm">Bonjour, <?= htmlspecialchars($user['prenom'] ?? '') ?></span>
                 <a href="?controller=utilisateur&action=profile" 
                    class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/30 transition-colors duration-300 text-sm font-medium">
                     Mon Profil
                 </a>
-                <span class="text-white/70 text-sm"><?= htmlspecialchars($user['email'] ?? '') ?></span>
                 <a href="?controller=utilisateur&action=logout" 
                    class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-red-500/20 to-red-500/20 border border-red-500/30 text-red-300 hover:bg-red-500/30 transition-colors duration-300 text-sm font-medium">
                     Déconnexion

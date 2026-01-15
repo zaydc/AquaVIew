@@ -275,11 +275,6 @@
                             <div class="p-4 rounded-xl bg-slate-900/50 border border-white/10">
                                 <h3 class="text-lg font-medium text-white mb-4">Distribution des mesures par météo</h3>
                                 <div class="weather-chart-container">
-                                    <button class="chart-expand-btn" onclick="expandChart('weatherPieChart', 'Distribution des mesures par météo')" title="Agrandir">
-                                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
-                                        </svg>
-                                    </button>
                                     <canvas id="weatherPieChart"></canvas>
                                 </div>
                             </div>
@@ -551,11 +546,7 @@
                         </div>
                     </div>
                     <div class="h-64 relative chart-container">
-                        <button class="chart-expand-btn" onclick="expandChart('qualityPieChart', 'Répartition de la qualité')" title="Agrandir">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
-                            </svg>
-                        </button>
+                        
                         <canvas id="qualityPieChart"></canvas>
                         <div id="pieChartEmpty" class="absolute inset-0 flex items-center justify-center">
                             <p class="text-white/30">En attente de données...</p>
@@ -628,6 +619,7 @@
                     <div class="flex items-center gap-3">
                         <span class="text-sm text-white/50">Comparer:</span>
                         <select id="metric1" class="bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-1 focus:outline-none focus:border-cyan-400">
+                            <option value="" disabled selected>À choisir</option>
                             <option value="dissoxygen">Oxygène dissous</option>
                             <option value="water_temp">Température</option>
                             <option value="salinity">Salinité</option>
@@ -635,6 +627,7 @@
                         </select>
                         <span class="text-sm text-white/50">vs</span>
                         <select id="metric2" class="bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-1 focus:outline-none focus:border-cyan-400">
+                            <option value="" disabled selected>À choisir</option>
                             <option value="water_temp">Température</option>
                             <option value="dissoxygen">Oxygène dissous</option>
                             <option value="salinity">Salinité</option>
@@ -1603,7 +1596,28 @@
         updateComparisonExplanation();
         
         switchView('table'); // Afficher le tableau par défaut
-        // Plus de chargement automatique - uniquement avec le bouton
+        
+        // Vérifier s'il y a des paramètres dans l'URL pour relancer une analyse
+        const urlParams = new URLSearchParams(window.location.search);
+        const metric = urlParams.get('metric');
+        const startDate = urlParams.get('start_date');
+        const endDate = urlParams.get('end_date');
+        
+        if (metric && startDate && endDate) {
+            // Pré-remplir les champs
+            document.getElementById('metric').value = metric;
+            document.getElementById('startDate').value = startDate;
+            document.getElementById('endDate').value = endDate;
+            
+            // Mettre à jour l'affichage de la métrique
+            updateCurrentMetricDisplay();
+            
+            // Lancer l'analyse automatiquement après un court délai
+            setTimeout(() => {
+                launchAnalysis();
+                showNotification('Analyse précédente relancée', 'info');
+            }, 500);
+        }
     });
 
     // Fonction pour lancer l'analyse automatiquement
@@ -1791,7 +1805,7 @@
         };
         
         const key = `${metric1}-${metric2}`;
-        const explanation = explanations[key] || `Analyse comparative entre ${metricNames[metric1].toLowerCase()} et ${metricNames[metric2].toLowerCase()} pour identifier les corrélations et tendances dans l\'écosystème marin.`;
+        const explanation = explanations[key] || `Analyse comparative entre ${metricNames[metric1]?.toLowerCase() || metric1} et ${metricNames[metric2]?.toLowerCase() || metric2} pour identifier les corrélations et tendances dans l'écosystème marin.`;
         
         explanationDiv.innerHTML = `
             <div class="flex items-start gap-3">
@@ -1803,7 +1817,7 @@
                     </div>
                 </div>
                 <div class="flex-1">
-                    <h4 class="text-lg font-medium text-white mb-2">Analyse : ${metricNames[metric1]} vs ${metricNames[metric2]}</h4>
+                    <h4 class="text-lg font-medium text-white mb-2">Analyse : ${metricNames[metric1] || metric1} vs ${metricNames[metric2] || metric2}</h4>
                     <p class="text-white/70 text-sm leading-relaxed">${explanation}</p>
                 </div>
             </div>
@@ -2615,13 +2629,24 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        top: 10,
+                        bottom: 10,
+                        left: 10,
+                        right: 10
+                    }
+                },
                 plugins: {
                     legend: {
-                        position: 'right',
+                        position: 'bottom',
                         labels: {
                             color: 'white',
                             boxWidth: 12,
-                            padding: 10
+                            padding: 15,
+                            font: {
+                                size: 11
+                            }
                         }
                     },
                     tooltip: {

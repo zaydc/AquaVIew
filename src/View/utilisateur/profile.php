@@ -149,9 +149,15 @@ $success = getSuccess();
                                             <span>Max: <?= number_format($analysis['max_value'], 2) ?></span>
                                             <span><?= $analysis['count_measures'] ?> mesures</span>
                                         </div>
-                                        <span class="text-xs text-white/40">
-                                            <?= date('d/m/Y', strtotime($analysis['start_date'])) ?> - <?= date('d/m/Y', strtotime($analysis['end_date'])) ?>
-                                        </span>
+                                        <div class="flex items-center gap-4">
+                                            <span class="text-xs text-white/40">
+                                                <?= date('d/m/Y', strtotime($analysis['start_date'])) ?> - <?= date('d/m/Y', strtotime($analysis['end_date'])) ?>
+                                            </span>
+                                            <a href="?action=analyse&metric=<?= urlencode($analysis['metric']) ?>&start_date=<?= date('Y-m-d', strtotime($analysis['start_date'])) ?>&end_date=<?= date('Y-m-d', strtotime($analysis['end_date'])) ?>" 
+                                               class="text-cyan-400 hover:text-cyan-300 font-medium text-xs transition-colors">
+                                                Revoir l'analyse →
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -211,93 +217,39 @@ $success = getSuccess();
                                 </a>
                             </div>
                         </div>
+
+                        <!-- Modification du mot de passe -->
+                        <div class="pt-6 border-t border-white/10">
+                            <h3 class="font-medium text-white mb-4">Modifier le mot de passe</h3>
+                            
+                            <form action="?controller=utilisateur&action=doUpdatePassword" method="POST" class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-white/70 mb-2">Ancien mot de passe</label>
+                                    <input type="password" name="old_password" required 
+                                           placeholder="Entrez votre ancien mot de passe"
+                                           class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/50 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-white/70 mb-2">Nouveau mot de passe</label>
+                                    <input type="password" name="new_password" required 
+                                           placeholder="Entrez votre nouveau mot de passe"
+                                           class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/50 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-white/70 mb-2">Confirmer le nouveau mot de passe</label>
+                                    <input type="password" name="confirm_password" required 
+                                           placeholder="Confirmez votre nouveau mot de passe"
+                                           class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/50 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all" />
+                                </div>
+                                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium hover:from-cyan-600 hover:to-blue-600 transition-all shadow-lg shadow-cyan-500/30">
+                                    Mettre à jour le mot de passe
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Derniers téléchargements -->
-                <div class="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8">
-                    <h2 class="text-2xl font-semibold text-purple-300 mb-8">Derniers téléchargements</h2>
-                    
-                    <?php if (empty($recentDownloads)): ?>
-                        <div class="text-center py-8">
-                            <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4 border border-white/10">
-                                <svg class="w-8 h-8 text-purple-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
-                                </svg>
-                            </div>
-                            <h3 class="text-lg font-medium text-white mb-2">Aucun téléchargement</h3>
-                            <p class="text-white/50 text-sm">Vos exports apparaîtront ici</p>
-                        </div>
-                    <?php else: ?>
-                        <div class="space-y-4 max-h-96 overflow-y-auto">
-                            <?php foreach ($recentDownloads as $download): ?>
-                                <div class="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all">
-                                    <div class="flex items-start justify-between mb-3">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-10 h-10 bg-purple-500/20 rounded-xl flex items-center justify-center border border-purple-500/30">
-                                                <?php
-                                                $iconClass = '';
-                                                switch($download['format']) {
-                                                    case 'csv':
-                                                        $iconClass = '📊';
-                                                        break;
-                                                    case 'json':
-                                                        $iconClass = '📄';
-                                                        break;
-                                                    case 'pdf':
-                                                        $iconClass = '📋';
-                                                        break;
-                                                    default:
-                                                        $iconClass = '📁';
-                                                }
-                                                ?>
-                                                <span class="text-lg"><?= $iconClass ?></span>
-                                            </div>
-                                            <div>
-                                                <h4 class="font-medium text-white text-sm">
-                                                    <?= htmlspecialchars($download['metric'] ?? 'Analyse') ?> - <?= strtoupper($download['format']) ?>
-                                                </h4>
-                                                <p class="text-xs text-white/50">
-                                                    <?= date('d/m/Y H:i', strtotime($download['created_at'])) ?>
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="text-right">
-                                            <div class="text-xs text-white/40 mb-1">Taille</div>
-                                            <div class="text-sm font-medium text-white">
-                                                <?= formatFileSize($download['file_size'] ?? 0) ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="flex items-center justify-between text-xs text-white/60">
-                                        <div class="flex items-center gap-4">
-                                            <span><?= $download['record_count'] ?? 0 ?> enregistrements</span>
-                                            <span><?= $download['date_range'] ?? 'Période inconnue' ?></span>
-                                        </div>
-                                        <?php if (!empty($download['file_path'])): ?>
-                                            <a href="<?= htmlspecialchars($download['file_path']) ?>" 
-                                               class="text-purple-400 hover:text-purple-300 font-medium transition-colors"
-                                               download>
-                                                Télécharger →
-                                            </a>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                        
-                        <?php if (count($recentDownloads) > 5): ?>
-                            <div class="mt-4 text-center">
-                                <a href="?controller=utilisateur&action=downloads" 
-                                   class="inline-flex items-center px-4 py-2 rounded-xl bg-purple-500/20 border border-purple-500/30 text-purple-300 hover:bg-purple-500/30 hover:border-purple-500/40 transition-all text-sm font-medium">
-                                    Voir tous les téléchargements
-                                </a>
-                            </div>
-                        <?php endif; ?>
-                    <?php endif; ?>
                 </div>
-            </div>
         </div>
     </main>
 </div>
