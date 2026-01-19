@@ -205,24 +205,10 @@
                         <div class="flex items-center justify-center py-12">
                             <div class="flex flex-col items-center gap-3">
                                 <div class="w-10 h-10 border-2 border-blue-400/30 border-t-blue-400 rounded-full animate-spin"></div>
-                                <p class="text-white/50 text-sm">Analyse des conditions météo...</p>
+                                <p class="text-white/50 text-sm">Chargement des données météo...</p>
                             </div>
                         </div>
                     </div>
-
-                    <!-- État vide -->
-                    <div id="weatherEmpty" class="">
-                        <div class="text-center py-12">
-                            <svg class="w-16 h-16 mx-auto mb-4 text-blue-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
-                            </svg>
-                            <p class="text-white/50 text-lg">Analyse météo</p>
-                            <p class="text-white/30 text-sm mt-2">Lancez l'analyse pour voir les données météo</p>
-                        </div>
-                    </div>
-
-                    <!-- Résultats de l'analyse -->
-                    <div id="weatherResults" class="hidden">
                         <!-- Cartes de résumé météo -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                             <div class="p-4 rounded-xl bg-white/5 border border-white/10">
@@ -385,7 +371,7 @@
                         </div>
                     </div>
                     
-                    <!-- Chart canvas with expand button -->
+                    <!-- Canvas du graphique avec bouton d'agrandissement -->
                     <div class="chart-container w-full h-full">
                         <button class="chart-expand-btn absolute top-4 right-4 z-10 bg-white/10 border border-white/20 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors" onclick="expandChart('evolutionChart', 'Évolution temporelle')" title="Agrandir">
                             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
