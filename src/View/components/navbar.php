@@ -93,8 +93,8 @@ $navItems = [
                 <?php endif; ?>
             </div>
         </div>
-        <button id="mobile-menu-close" class="absolute top-6 right-6 text-white p-2">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button id="mobile-menu-close" class="absolute top-4 right-4 text-white p-4 z-50 cursor-pointer hover:bg-white/10 rounded-lg transition-colors" style="pointer-events: auto;">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
             </svg>
         </button>

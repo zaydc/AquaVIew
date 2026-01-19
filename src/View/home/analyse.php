@@ -39,7 +39,7 @@
         <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-slate-900/60"></div>
 
         <!-- CONTENU PRINCIPAL -->
-        <main class="relative z-10 max-w-7xl mx-auto px-6 py-12 text-center">
+        <main class="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12 text-center w-full overflow-hidden">
             
             <!-- En-tête de la page -->
             <div class="mb-12 slide-up slide-up-1">
@@ -57,7 +57,7 @@
             </div>
 
             <!-- Panneau de sélection -->
-            <div class="mb-8 p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 slide-up slide-up-2">
+            <div class="mb-8 p-4 md:p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-r from-blue-500/5 to-purple-500/5 border border-blue-500/20 slide-up slide-up-4 w-full">
                 <!-- Grille adaptée pour inclure les filtres de date -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
@@ -261,8 +261,8 @@
                             <!-- Graphique barres : moyennes par météo -->
                             <div class="p-4 rounded-xl bg-slate-900/50 border border-white/10">
                                 <h3 class="text-lg font-medium text-white mb-4">Valeurs moyennes par condition météo</h3>
-                                <div class="weather-chart-container">
-                                    <button class="chart-expand-btn" onclick="expandChart('weatherBarChart', 'Valeurs moyennes par condition météo')" title="Agrandir">
+                                <div class="weather-chart-container w-full relative overflow-hidden">
+                                    <button class="chart-expand-btn absolute top-4 right-4 z-10 bg-white/10 border border-white/20 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors" onclick="expandChart('weatherBarChart', 'Valeurs moyennes par condition météo')" title="Agrandir">
                                         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
                                         </svg>
@@ -364,8 +364,8 @@
                     </div>
                 </div>
 
-                <!-- Placeholder for the main graph -->
-                <div id="chartView" class="h-96 rounded-xl bg-slate-900/50 border border-white/10 p-4 relative">
+                
+                <div id="chartView" class="h-80 md:h-96 rounded-xl bg-slate-900/50 border border-white/10 p-2 md:p-4 relative w-full">
                     <!-- Loading state -->
                     <div id="chartLoading" class="absolute inset-0 flex items-center justify-center hidden">
                         <div class="flex flex-col items-center gap-3">
@@ -374,7 +374,7 @@
                         </div>
                     </div>
                     
-                    <!-- Empty state -->
+        
                     <div id="chartEmpty" class="absolute inset-0 flex items-center justify-center">
                         <div class="text-center">
                             <svg class="w-16 h-16 mx-auto mb-4 text-cyan-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -387,7 +387,7 @@
                     
                     <!-- Chart canvas with expand button -->
                     <div class="chart-container w-full h-full">
-                        <button class="chart-expand-btn" onclick="expandChart('evolutionChart', 'Évolution temporelle')" title="Agrandir">
+                        <button class="chart-expand-btn absolute top-4 right-4 z-10 bg-white/10 border border-white/20 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors" onclick="expandChart('evolutionChart', 'Évolution temporelle')" title="Agrandir">
                             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
                             </svg>
@@ -540,13 +540,17 @@
                 <!-- Graphique camembert - Répartition qualité -->
                 <div class="p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 slide-up slide-up-3">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-medium">Répartition de la qualité</h3>
+                        <h3 class="text-lg text-white font-medium">Répartition de la qualité</h3>
                         <div class="flex items-center gap-2">
                     
                         </div>
                     </div>
                     <div class="h-64 relative chart-container">
-                        
+                        <button class="chart-expand-btn absolute top-4 right-4 z-10 bg-white/10 border border-white/20 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors" onclick="expandChart('qualityPieChart', 'Répartition de la qualité')" title="Agrandir">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                            </svg>
+                        </button>
                         <canvas id="qualityPieChart"></canvas>
                         <div id="pieChartEmpty" class="absolute inset-0 flex items-center justify-center">
                             <p class="text-white/30">En attente de données...</p>
@@ -557,7 +561,7 @@
                 <!-- Histogramme mensuel -->
                 <div class="p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 slide-up slide-up-4">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-medium">Moyennes mensuelles</h3>
+                        <h3 class="text-lg text-white font-medium">Moyennes mensuelles</h3>
                         <div class="flex items-center gap-2">
                             <span class="text-sm text-white/50">Trié par:</span>
                             <select id="barChartSort" class="bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-1 focus:outline-none focus:border-cyan-400">
@@ -568,7 +572,7 @@
                         </div>
                     </div>
                     <div class="h-64 relative chart-container">
-                        <button class="chart-expand-btn" onclick="expandChart('monthlyBarChart', 'Moyennes mensuelles')" title="Agrandir">
+                        <button class="chart-expand-btn absolute top-4 right-4 z-10 bg-white/10 border border-white/20 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors" onclick="expandChart('monthlyBarChart', 'Moyennes mensuelles')" title="Agrandir">
                             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
                             </svg>
@@ -614,27 +618,35 @@
                     </div>
                 </div>
                 
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl font-semibold text-white">Comparaison entre indicateurs</h2>
-                    <div class="flex items-center gap-3">
-                        <span class="text-sm text-white/50">Comparer:</span>
-                        <select id="metric1" class="bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-1 focus:outline-none focus:border-cyan-400">
-                            <option value="" disabled selected>À choisir</option>
-                            <option value="dissoxygen">Oxygène dissous</option>
-                            <option value="water_temp">Température</option>
-                            <option value="salinity">Salinité</option>
-                            <option value="ph">pH</option>
-                        </select>
-                        <span class="text-sm text-white/50">vs</span>
-                        <select id="metric2" class="bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-1 focus:outline-none focus:border-cyan-400">
-                            <option value="" disabled selected>À choisir</option>
-                            <option value="water_temp">Température</option>
-                            <option value="dissoxygen">Oxygène dissous</option>
-                            <option value="salinity">Salinité</option>
-                            <option value="ph">pH</option>
-                        </select>
-                    </div>
-                </div>
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+    <h2 class="text-xl font-semibold text-white">Comparaison entre indicateurs</h2>
+    
+    <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+        
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+            <span class="text-sm text-white/50 whitespace-nowrap min-w-[65px]">Comparer:</span>
+            <select id="metric1" class="flex-1 sm:flex-none w-full sm:w-40 bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-400">
+                <option value="" disabled selected>À choisir</option>
+                <option value="dissoxygen">Oxygène dissous</option>
+                <option value="water_temp">Température</option>
+                <option value="salinity">Salinité</option>
+                <option value="ph">pH</option>
+            </select>
+        </div>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+            <span class="text-sm text-white/50 whitespace-nowrap min-w-[20px] text-center sm:text-left">vs</span>
+            <select id="metric2" class="flex-1 sm:flex-none w-full sm:w-40 bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-400">
+                <option value="" disabled selected>À choisir</option>
+                <option value="water_temp">Température</option>
+                <option value="dissoxygen">Oxygène dissous</option>
+                <option value="salinity">Salinité</option>
+                <option value="ph">pH</option>
+            </select>
+        </div>
+        
+    </div>
+</div>
                 
                 <!-- Section explicative pour la comparaison -->
                 <div class="mb-6 p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20">
@@ -659,15 +671,15 @@
                         </div>
                         
                         <div class="h-80 relative chart-container">
-                            <button class="chart-expand-btn" onclick="expandChart('comparisonChart', 'Comparaison d\'indicateurs')" title="Agrandir">
+                            <button class="chart-expand-btn absolute top-4 right-4 z-10 bg-white/10 border border-white/20 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors" onclick="expandChart('comparisonChart', 'Comparaison d\'indicateurs')" title="Agrandir">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
                                 </svg>
                             </button>
-                            <canvas id="comparisonChart"></canvas>
-                            <div id="comparisonEmpty" class="absolute inset-0 flex items-center justify-center">
-                                <p class="text-white/30">En attente de données...</p>
-                            </div>
+                            <canvas id="comparisonChart" class="w-full h-full"></canvas>
+                        </div>
+                        <div id="comparisonEmpty" class="absolute inset-0 flex items-center justify-center">
+                            <p class="text-white/30">En attente de données...</p>
                         </div>
                         <div class="mt-3 p-3 rounded-lg bg-white/5 border border-white/10">
                             <p class="text-xs text-white/60" id="comparisonDescription">
