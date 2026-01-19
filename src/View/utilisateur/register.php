@@ -111,7 +111,7 @@ $success = getSuccess();
                 <div class="mt-6 text-center">
                     <p class="text-white/60 text-sm">
                         Déjà un compte ?
-                        <a href="/login" class="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors">
+                        <a href="?controller=utilisateur&action=login" class="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors">
                             Se connecter
                         </a>
                     </p>

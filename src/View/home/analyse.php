@@ -1442,17 +1442,17 @@
                     statusBg = 'bg-gray-500/20';
                 } else if (quality.level === 'good') {
                     statusIcon = '✓';
-                    statusText = 'SAIN';
+                    statusText = 'Normal';
                     statusColor = 'text-green-400';
                     statusBg = 'bg-green-500/20';
                 } else if (quality.level === 'moderate') {
                     statusIcon = '!';
-                    statusText = 'ATTENTION';
+                    statusText = 'Anormal';
                     statusColor = 'text-yellow-400';
                     statusBg = 'bg-yellow-500/20';
                 } else {
                     statusIcon = '✗';
-                    statusText = 'DANGER';
+                    statusText = 'Dangereux';
                     statusColor = 'text-red-400';
                     statusBg = 'bg-red-500/20';
                 }
