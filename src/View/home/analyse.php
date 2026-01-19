@@ -205,10 +205,24 @@
                         <div class="flex items-center justify-center py-12">
                             <div class="flex flex-col items-center gap-3">
                                 <div class="w-10 h-10 border-2 border-blue-400/30 border-t-blue-400 rounded-full animate-spin"></div>
-                                <p class="text-white/50 text-sm">Chargement des données météo...</p>
+                                <p class="text-white/50 text-sm">Analyse des conditions météo...</p>
                             </div>
                         </div>
                     </div>
+
+                    <!-- État vide -->
+                    <div id="weatherEmpty" class="">
+                        <div class="text-center py-12">
+                            <svg class="w-16 h-16 mx-auto mb-4 text-blue-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
+                            </svg>
+                            <p class="text-white/50 text-lg">Analyse météo</p>
+                            <p class="text-white/30 text-sm mt-2">Lancez l'analyse pour voir les données météo</p>
+                        </div>
+                    </div>
+
+                    <!-- Résultats de l'analyse -->
+                    <div id="weatherResults" class="hidden">
                         <!-- Cartes de résumé météo -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                             <div class="p-4 rounded-xl bg-white/5 border border-white/10">
@@ -248,7 +262,7 @@
                             <div class="p-4 rounded-xl bg-slate-900/50 border border-white/10">
                                 <h3 class="text-lg font-medium text-white mb-4">Valeurs moyennes par condition météo</h3>
                                 <div class="weather-chart-container w-full relative overflow-hidden">
-                                    <button class="chart-expand-btn absolute top-4 right-4 z-10 bg-white/10 border border-white/20 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors" onclick="expandChart('weatherBarChart', 'Valeurs moyennes par condition météo')" title="Agrandir">
+                                    <button class="absolute top-2 right-2 z-10 !w-8 !h-8 !p-0 rounded-lg bg-slate-900/60 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white/20 transition-colors shadow-lg" onclick="expandChart('weatherBarChart', 'Valeurs moyennes par condition météo')" title="Plein écran">
                                         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
                                         </svg>
@@ -260,7 +274,12 @@
                             <!-- Graphique camembert : distribution météo -->
                             <div class="p-4 rounded-xl bg-slate-900/50 border border-white/10">
                                 <h3 class="text-lg font-medium text-white mb-4">Distribution des mesures par météo</h3>
-                                <div class="weather-chart-container">
+                                <div class="weather-chart-container relative">
+                                    <button class="absolute top-2 right-2 z-10 !w-8 !h-8 !p-0 rounded-lg bg-slate-900/60 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white/20 transition-colors shadow-lg" onclick="expandChart('weatherPieChart', 'Distribution des mesures par météo')" title="Plein écran">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                                        </svg>
+                                    </button>
                                     <canvas id="weatherPieChart"></canvas>
                                 </div>
                             </div>
@@ -322,27 +341,27 @@
 
             <!-- Zone de visualisation principale -->
             <div class="mb-8 p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 slide-up slide-up-5">
-                <div class="flex items-center justify-between mb-6">
-                    <div>
-                        <h2 class="text-2xl font-medium">Analyse spatiale et temporelle</h2>
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                    <div class="text-center md:text-left">
+                        <h2 class="text-2xl font-medium text-white">Analyse spatiale et temporelle</h2>
                         <p id="chartSubtitle" class="text-white/50 text-sm mt-1">Visualisez l'évolution et la répartition des niveaux d'oxygène pour identifier les zones critiques</p>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <div class="flex gap-2">
-                            <button id="btnMapView" class="px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
+                    <div class="flex flex-col sm:flex-row items-center gap-3">
+                        <div class="flex gap-2 w-full sm:w-auto justify-center">
+                            <button id="btnMapView" class="px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 text-white">
                                 Carte
                             </button>
-                            <button id="btnChartView" class="px-4 py-2 rounded-lg text-sm bg-white/10 border border-white/20 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
+                            <button id="btnChartView" class="px-4 py-2 rounded-lg text-sm bg-white/10 border border-white/20 hover:bg-white/10 hover:border-white/20 transition-all duration-300 text-white">
                                 Graphique
                             </button>
-                            <button id="btnTableView" class="px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
+                            <button id="btnTableView" class="px-4 py-2 rounded-lg text-sm bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 text-white">
                                 Tableau
                             </button>
                         </div>
                         <!-- Sélecteur de type d'affichage de carte -->
-                        <div id="mapDisplayOptions" class="hidden items-center gap-2 pl-3 border-l border-white/20">
+                        <div id="mapDisplayOptions" class="hidden flex-col sm:flex-row items-center gap-2 sm:pl-3 sm:border-l border-white/20 w-full sm:w-auto">
                             <span class="text-sm text-white/50">Affichage:</span>
-                            <select id="mapDisplayType" class="bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-1 focus:outline-none focus:border-cyan-400">
+                            <select id="mapDisplayType" class="bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-1 focus:outline-none focus:border-cyan-400 w-full sm:w-auto">
                                 <option value="markers">Pastilles</option>
                                 <option value="heatmap">Zones de chaleur</option>
                             </select>
@@ -371,9 +390,9 @@
                         </div>
                     </div>
                     
-                    <!-- Canvas du graphique avec bouton d'agrandissement -->
-                    <div class="chart-container w-full h-full">
-                        <button class="chart-expand-btn absolute top-4 right-4 z-10 bg-white/10 border border-white/20 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors" onclick="expandChart('evolutionChart', 'Évolution temporelle')" title="Agrandir">
+                    <!-- Chart canvas with expand button -->
+                    <div class="chart-container w-full h-full relative">
+                        <button class="absolute top-2 right-2 z-10 !w-8 !h-8 !p-0 rounded-lg bg-slate-900/60 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white/20 transition-colors shadow-lg" onclick="expandChart('evolutionChart', 'Évolution temporelle')" title="Plein écran">
                             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
                             </svg>
@@ -532,7 +551,7 @@
                         </div>
                     </div>
                     <div class="h-64 relative chart-container">
-                        <button class="chart-expand-btn absolute top-4 right-4 z-10 bg-white/10 border border-white/20 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors" onclick="expandChart('qualityPieChart', 'Répartition de la qualité')" title="Agrandir">
+                        <button class="absolute top-2 right-2 z-10 !w-8 !h-8 !p-0 rounded-lg bg-slate-900/60 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white/20 transition-colors shadow-lg" onclick="expandChart('qualityPieChart', 'Répartition de la qualité')" title="Plein écran">
                             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
                             </svg>
@@ -558,7 +577,7 @@
                         </div>
                     </div>
                     <div class="h-64 relative chart-container">
-                        <button class="chart-expand-btn absolute top-4 right-4 z-10 bg-white/10 border border-white/20 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors" onclick="expandChart('monthlyBarChart', 'Moyennes mensuelles')" title="Agrandir">
+                        <button class="absolute top-2 right-2 z-10 !w-8 !h-8 !p-0 rounded-lg bg-slate-900/60 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white/20 transition-colors shadow-lg" onclick="expandChart('monthlyBarChart', 'Moyennes mensuelles')" title="Plein écran">
                             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
                             </svg>
@@ -657,15 +676,15 @@
                         </div>
                         
                         <div class="h-80 relative chart-container">
-                            <button class="chart-expand-btn absolute top-4 right-4 z-10 bg-white/10 border border-white/20 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors" onclick="expandChart('comparisonChart', 'Comparaison d\'indicateurs')" title="Agrandir">
+                            <button class="absolute top-2 right-2 z-10 !w-8 !h-8 !p-0 rounded-lg bg-slate-900/60 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white/20 transition-colors shadow-lg" onclick="expandChart('comparisonChart', 'Comparaison d\'indicateurs')" title="Plein écran">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
                                 </svg>
                             </button>
-                            <canvas id="comparisonChart" class="w-full h-full"></canvas>
-                        </div>
-                        <div id="comparisonEmpty" class="absolute inset-0 flex items-center justify-center">
-                            <p class="text-white/30">En attente de données...</p>
+                            <canvas id="comparisonChart"></canvas>
+                            <div id="comparisonEmpty" class="absolute inset-0 flex items-center justify-center">
+                                <p class="text-white/30">En attente de données...</p>
+                            </div>
                         </div>
                         <div class="mt-3 p-3 rounded-lg bg-white/5 border border-white/10">
                             <p class="text-xs text-white/60" id="comparisonDescription">
