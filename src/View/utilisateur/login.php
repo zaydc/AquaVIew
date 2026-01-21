@@ -83,7 +83,7 @@ $success = getSuccess();
                 <div class="mt-6 text-center">
                     <p class="text-white/60 text-sm">
                         Pas encore de compte ?
-                        <a href="/register" class="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors">
+                        <a href="?controller=utilisateur&action=doRegister" class="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors">
                             S'inscrire
                         </a>
                     </p>
