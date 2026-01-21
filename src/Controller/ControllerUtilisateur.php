@@ -184,7 +184,7 @@ class ControllerUtilisateur {
 
         // Verification que l'email n'est pas deja utilise
         if ($this->repository->emailExists($email)) {
-            $_SESSION['error'] = 'Cet email est deja utilise.';
+            $_SESSION['error'] = 'Cet email est deja utilisé.';
             header('Location: ?controller=utilisateur&action=register');
             exit;
         }
@@ -200,7 +200,7 @@ class ControllerUtilisateur {
             'numero' => $numero,
             'mot_de_passe' => $hash
         ])) {
-            $_SESSION['success'] = 'Compte cree avec succes !';
+            $_SESSION['success'] = 'Compte crée avec succes !';
             header('Location: ?controller=utilisateur&action=login');
             exit;
         }
