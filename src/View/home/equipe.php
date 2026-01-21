@@ -72,7 +72,7 @@
             <div class="mb-12 slide-up slide-up-1">
                 <h1 class="text-4xl md:text-5xl font-light mb-4">Notre Équipe</h1>
                 <p class="text-white/60 text-lg max-w-2xl leading-relaxed">
-                    Découvrez notre équipe qui a contribue à la création d'AquaView, une application innovante dédiée à la visualisation des données hydrométriques. 
+                    Découvrez notre équipe qui contribue à la création d'AquaView, une application innovante dédiée à la visualisation des données hydrométriques. 
                 </p>
             </div>
 
