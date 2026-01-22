@@ -77,7 +77,7 @@
                         </h1>
 
                         <p id="hero-desc" class="text-lg md:text-xl text-slate-100 leading-relaxed max-w-xl transition-all duration-700 ease-out delay-200 opacity-0 translate-y-8 drop-shadow-md">
-                            Un phénomène invisible qui menace la vie marine et l'équilibre de notre planète. Explorez les données en temps réel et comprenez les enjeux.
+                            Un phénomène invisible qui menace la vie marine et l'équilibre de notre planète. Explorez les données liés à la désoxygénation des océans et comprenez les enjeux.
                         </p>
 
                         <div id="hero-btn-more" class="transition-all duration-700 ease-out delay-300 opacity-0 translate-y-8 flex gap-4">
