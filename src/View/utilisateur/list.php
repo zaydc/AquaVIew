@@ -8,7 +8,15 @@ $success = getSuccess();
 ?>
 
 <div class="relative min-h-screen text-white bg-slate-900 pt-20">
-    <div class="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-blue-900/85 to-cyan-800/75"></div>
+    <!-- Arrière-plan avec image oceanique et overlay -->
+    <div class="fixed inset-0 z-0">
+        <div id="global-bg" class="absolute inset-0 transition-all duration-[2500ms] ease-out opacity-0 scale-110">
+            <!-- Image d'ocean depuis Unsplash -->
+            <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1920&q=80" alt="Ocean" class="w-full h-full object-cover" />
+        </div>
+        <!-- Overlay sombre pour la lisibilite du texte -->
+        <div class="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/60 to-slate-900"></div>
+    </div>
 
     <main class="relative z-10 max-w-7xl mx-auto px-6 py-12">
         <div class="flex justify-between items-center mb-8">
@@ -65,5 +73,19 @@ $success = getSuccess();
         </div>
     </main>
 </div>
+
+<!-- Script pour l'animation du fond -->
+<script>
+    // Animation du fond au chargement de la page
+    document.addEventListener('DOMContentLoaded', function() {
+        const bg = document.getElementById('global-bg');
+        if (bg) {
+            setTimeout(() => {
+                bg.classList.remove('opacity-0', 'scale-110');
+                bg.classList.add('opacity-100', 'scale-100');
+            }, 100);
+        }
+    });
+</script>
 
 <?php require_once __DIR__ . '/../components/footer.php'; ?>

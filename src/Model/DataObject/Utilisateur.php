@@ -9,7 +9,8 @@ class Utilisateur extends AbstractDataObject {
         private string $email,
         private string $numero,
         private ?string $motDePasse = null,
-        private ?string $dateInscription = null
+        private ?string $dateInscription = null,
+        private string $role = 'user'
     ) {}
 
     public function getId(): ?int { return $this->id; }
@@ -19,6 +20,7 @@ class Utilisateur extends AbstractDataObject {
     public function getNumero(): string { return $this->numero; }
     public function getMotDePasse(): ?string { return $this->motDePasse; }
     public function getDateInscription(): ?string { return $this->dateInscription; }
+    public function getRole(): string { return $this->role; }
 
     public function setId(int $id): void { $this->id = $id; }
     public function setNom(string $nom): void { $this->nom = $nom; }
@@ -26,6 +28,7 @@ class Utilisateur extends AbstractDataObject {
     public function setEmail(string $email): void { $this->email = $email; }
     public function setNumero(string $numero): void { $this->numero = $numero; }
     public function setMotDePasse(string $motDePasse): void { $this->motDePasse = $motDePasse; }
+    public function setRole(string $role): void { $this->role = $role; }
 
     public function toArray(): array {
         return [
@@ -34,7 +37,8 @@ class Utilisateur extends AbstractDataObject {
             'prenom' => $this->prenom,
             'email' => $this->email,
             'numero' => $this->numero,
-            'date_inscription' => $this->dateInscription
+            'date_inscription' => $this->dateInscription,
+            'role' => $this->role
         ];
     }
 }

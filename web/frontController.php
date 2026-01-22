@@ -19,11 +19,12 @@ $loader->addNamespace('App', __DIR__ . '/../src');
 // Import des classes necessaires
 use App\Config\Conf;
 use App\Controller\ControllerUtilisateur;
+use App\Controller\ControllerAdmin;
 use App\Lib\GeoHelper;
 use App\Lib\TimeHelper;
 use App\Lib\MetricHelper;
 
-// Recuperation des parametres d'URL pour le routage
+// Récupération des paramètres d'URL pour le routage
 $action = $_GET['action'] ?? 'home';
 $controller = $_GET['controller'] ?? 'main';
 
@@ -34,6 +35,12 @@ try {
         case 'utilisateur':
             $ctrl = new ControllerUtilisateur();
             break;
+        
+        // Route vers le controleur admin
+        case 'admin':
+            $ctrl = new ControllerAdmin();
+            break;
+            
         default:
             // Routes par defaut pour les pages principales
             switch ($action) {

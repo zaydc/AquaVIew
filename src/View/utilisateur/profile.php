@@ -1,16 +1,68 @@
-<?php 
-$pageTitle = 'AquaView - Mon Profil';
-require_once __DIR__ . '/../components/header.php';
-require_once __DIR__ . '/../components/navbar.php';
+<!-- 
+    Page profil utilisateur d'AquaView
+    BUT2 - S3 - AquaView Project
+    Page personnelle pour gérer les informations utilisateur
+-->
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquaView - Mon Profil</title>
+    <!-- TailwindCSS pour le design moderne et responsive -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Outfit pour le design moderne -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles personnalises pour les animations et le design -->
+    <style>
+        body { font-family: 'Outfit', sans-serif; }
 
+        /* Animation de revelation au scroll */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        
+        .reveal-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Delais pour les animations en cascade */
+        .delay-100 { transition-delay: 0.1s; }
+        .delay-200 { transition-delay: 0.2s; }
+        .delay-300 { transition-delay: 0.3s; }
+    </style>
+</head>
+<!-- Corps de la page avec theme sombre et design moderne -->
+<body class="bg-slate-900 text-slate-200 overflow-x-hidden selection:bg-cyan-500/30 selection:text-cyan-200">
+
+    <!-- Inclusion de la barre de navigation -->
+    <?php include __DIR__ . '/../components/navbar.php'; ?>
+    
+    <!-- Arriere-plan avec image oceanique et overlay -->
+    <div class="fixed inset-0 z-0">
+        <div id="global-bg" class="absolute inset-0 transition-all duration-[2500ms] ease-out opacity-0 scale-110">
+            <!-- Image d'ocean depuis Unsplash -->
+            <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1920&q=80" alt="Ocean" class="w-full h-full object-cover" />
+        </div>
+        <!-- Overlay sombre pour la lisibilite du texte -->
+        <div class="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/60 to-slate-900"></div>
+    </div>
+
+    <!-- Contenu principal au-dessus du fond -->
+    <div class="relative z-10">
+
+<?php 
+require_once __DIR__ . '/../../Lib/helpers.php';
 $error = getError();
 $success = getSuccess();
 ?>
 
-<div class="relative min-h-screen text-white bg-slate-900 pt-20">
-    <div class="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-blue-900/85 to-cyan-800/75"></div>
-
-    <main class="relative z-10 max-w-6xl mx-auto px-6 py-12">
+<div class="min-h-screen pt-24 px-4 pb-12">
+    <div class="max-w-6xl mx-auto">
         <!-- En-tête épuré -->
         <div class="mb-12">
             <h1 class="text-4xl font-light mb-2">Mon Profil</h1>
@@ -202,22 +254,6 @@ $success = getSuccess();
                             </form>
                         </div>
 
-                        <!-- Actions rapides -->
-                        <div class="pt-6 border-t border-white/10">
-                            <h3 class="font-medium text-white mb-4">Actions rapides</h3>
-                            <div class="space-y-3">
-                                <a href="?action=analyse" class="block w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white transition-all text-center">
-                                    📊 Nouvelle analyse
-                                </a>
-                                <a href="/" class="block w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white transition-all text-center">
-                                    🏠 Retour à l'accueil
-                                </a>
-                                <a href="?controller=utilisateur&action=logout" class="block w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white transition-all text-center">
-                                    🚪 Déconnexion
-                                </a>
-                            </div>
-                        </div>
-
                         <!-- Modification du mot de passe -->
                         <div class="pt-6 border-t border-white/10">
                             <h3 class="font-medium text-white mb-4">Modifier le mot de passe</h3>
@@ -268,33 +304,47 @@ $success = getSuccess();
                             </form>
                         </div>
                     </div>
-                </div>
-
-                </div>
         </div>
-    </main>
-</div>
+    </div>
 
-<?php require_once __DIR__ . '/../components/footer.php'; ?>
+    <!-- Scripts pour l'animation du fond -->
+    <script>
+        // Animation du fond au chargement de la page
+        document.addEventListener('DOMContentLoaded', function() {
+            const bg = document.getElementById('global-bg');
+            if (bg) {
+                setTimeout(() => {
+                    bg.classList.remove('opacity-0', 'scale-110');
+                    bg.classList.add('opacity-100', 'scale-100');
+                }, 100);
+            }
+        });
+    </script>
 
-<script>
-function togglePassword(fieldId) {
-    const passwordField = document.getElementById(fieldId);
-    const icon = document.getElementById(fieldId + '_icon');
-    
-    if (passwordField.type === 'password') {
-        passwordField.type = 'text';
-        // Changer l'icône pour œil barré (masqué)
-        icon.innerHTML = `
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
-        `;
-    } else {
-        passwordField.type = 'password';
-        // Remettre l'icône œil (visible)
-        icon.innerHTML = `
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-        `;
+    <!-- Script pour la gestion des mots de passe -->
+    <script>
+    function togglePassword(fieldId) {
+        const passwordField = document.getElementById(fieldId);
+        const icon = document.getElementById(fieldId + '_icon');
+        
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            // Changer l'icône pour œil barré (masqué)
+            icon.innerHTML = `
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+            `;
+        } else {
+            passwordField.type = 'password';
+            // Remettre l'icône œil (visible)
+            icon.innerHTML = `
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+            `;
+        }
     }
-}
-</script>
+    </script>
+
+    <!-- Inclusion du footer -->
+    <?php include __DIR__ . '/../components/footer.php'; ?>
+</body>
+</html>

@@ -10,6 +10,8 @@ namespace App\Controller;
 use App\Model\Repository\UtilisateurRepository;
 use App\Model\Repository\UserAnalysisRepository;
 
+require_once __DIR__ . '/../Lib/auth_helpers.php';
+
 /**
  * ControllerUtilisateur - Gestion complete du cycle de vie utilisateur
  * 
@@ -126,13 +128,8 @@ class ControllerUtilisateur {
             exit;
         }
 
-        // Creation de la session utilisateur (sans le mot de passe !)
-        $_SESSION['user'] = [
-            'id' => $user['id'],
-            'email' => $user['email'],
-            'nom' => $user['nom'],
-            'prenom' => $user['prenom']
-        ];
+        // Création de la session utilisateur avec le rôle (sans le mot de passe !)
+        updateUserSession($user);
 
         // Redirection vers l'accueil apres connexion reussie
         header('Location: /');
@@ -374,10 +371,11 @@ class ControllerUtilisateur {
             'email' => $email,
             'numero' => $numero
         ])) {
-            // Mise à jour de la session avec les nouvelles données
-            $_SESSION['user']['nom'] = $nom;
-            $_SESSION['user']['prenom'] = $prenom;
-            $_SESSION['user']['email'] = $email;
+            // Récupération des données complètes et mise à jour de la session
+            $updatedUser = $this->repository->findById($userId);
+            if ($updatedUser) {
+                updateUserSession($updatedUser);
+            }
             $_SESSION['success'] = 'Profil mis à jour avec succès !';
         } else {
             $_SESSION['error'] = 'Erreur lors de la mise à jour du profil.';

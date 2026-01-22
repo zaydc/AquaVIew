@@ -1,14 +1,21 @@
 <?php
+require_once __DIR__ . '/../../Lib/auth_helpers.php';
+
 $currentPage = $_GET['action'] ?? 'home';
 $isLoggedIn = isset($_SESSION['user']) && !empty($_SESSION['user']);
 $user = $_SESSION['user'] ?? null;
+$isAdmin = $isLoggedIn && isAdmin();
 
 $navItems = [
     ['label' => 'Accueil', 'path' => '?action=home', 'action' => 'home'],
     ['label' => 'Analyse', 'path' => '?action=analyse', 'action' => 'analyse'],
     ['label' => 'Équipe', 'path' => '?action=equipe', 'action' => 'equipe'],
-    
 ];
+
+// Ajouter le lien Admin seulement si l'utilisateur est admin
+if ($isAdmin) {
+    $navItems[] = ['label' => 'Admin', 'path' => '?controller=admin&action=dashboard', 'action' => 'admin'];
+}
 ?>
 
 <!-- Floating Top Navigation -->
