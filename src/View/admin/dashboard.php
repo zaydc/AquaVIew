@@ -83,7 +83,7 @@
             <div class="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-white/70 text-sm mb-1">Utilisateurs totaux</p>
+                        <p class="text-white/70 text-sm mb-1">Utilisateurs</p>
                         <p class="text-3xl font-bold text-white"><?= $stats['totalUsers'] ?></p>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">

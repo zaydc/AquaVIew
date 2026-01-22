@@ -41,10 +41,10 @@ class ControllerUtilisateur {
     /**
      * Routeur principal - Dispatch vers la bonne methode selon l'action
      * Utilise le parametre GET 'action' pour determiner la methode a appeler
-     * Par defaut : affiche la liste des utilisateurs
+     * Par defaut : affiche le profil
      */
     private function handleAction(): void {
-        $action = $_GET['action'] ?? 'list';
+        $action = $_GET['action'] ?? 'profile';
         
         switch ($action) {
             case 'login':
@@ -61,9 +61,6 @@ class ControllerUtilisateur {
                 break;
             case 'logout':
                 $this->logout();
-                break;
-            case 'list':
-                $this->list();
                 break;
             case 'detail':
                 $this->detail();
@@ -90,7 +87,7 @@ class ControllerUtilisateur {
                 $this->doDeleteAccount();
                 break;
             default:
-                $this->list();
+                $this->profile();
         }
     }
 
@@ -217,14 +214,6 @@ class ControllerUtilisateur {
         exit;
     }
 
-    /**
-     * Affiche la liste de tous les utilisateurs (admin)
-     * Recupere tous les utilisateurs depuis la BDD
-     */
-    private function list(): void {
-        $utilisateurs = $this->repository->findAll();
-        require_once __DIR__ . '/../View/utilisateur/list.php';
-    }
 
     /**
      * Affiche les details d'un utilisateur specifique
@@ -237,7 +226,7 @@ class ControllerUtilisateur {
         // Verification que l'utilisateur existe
         if (!$utilisateur) {
             $_SESSION['error'] = 'Utilisateur non trouve.';
-            header('Location: ?controller=utilisateur&action=list');
+            header('Location: ?controller=utilisateur&action=profile');
             exit;
         }
         
@@ -260,7 +249,7 @@ class ControllerUtilisateur {
                 'mot_de_passe' => $hash
             ]);
             $_SESSION['success'] = 'Utilisateur cree avec succes.';
-            header('Location: ?controller=utilisateur&action=list');
+            header('Location: ?controller=admin&action=users');
             exit;
         }
         require_once __DIR__ . '/../View/utilisateur/create.php';
@@ -283,7 +272,7 @@ class ControllerUtilisateur {
                 'numero' => $_POST['numero']
             ]);
             $_SESSION['success'] = 'Utilisateur mis a jour.';
-            header('Location: ?controller=utilisateur&action=list');
+            header('Location: ?controller=admin&action=users');
             exit;
         }
         
@@ -300,7 +289,7 @@ class ControllerUtilisateur {
         $id = (int) ($_GET['id'] ?? 0);
         $this->repository->delete($id);
         $_SESSION['success'] = 'Utilisateur supprime.';
-        header('Location: ?controller=utilisateur&action=list');
+        header('Location: ?controller=admin&action=users');
         exit;
     }
 
