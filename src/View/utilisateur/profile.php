@@ -61,12 +61,17 @@ $error = getError();
 $success = getSuccess();
 ?>
 
-<div class="min-h-screen pt-24 px-4 pb-12">
-    <div class="max-w-6xl mx-auto">
+<div class="min-h-screen pt-24 px-4 pb-12 flex justify-center">
+    <div class="w-full max-w-5xl px-6 md:px-10">
         <!-- En-tête épuré -->
         <div class="mb-12">
-            <h1 class="text-4xl font-light mb-2">Mon Profil</h1>
-            <p class="text-white/60">Gérez vos informations et consultez vos analyses océaniques</p>
+            <?php 
+            $isOwnProfile = isset($_SESSION['user']['id']) && $utilisateur['id'] == $_SESSION['user']['id'];
+            $pageTitle = $isOwnProfile ? 'Mon Profil' : 'Profil de ' . htmlspecialchars($utilisateur['prenom'] . ' ' . $utilisateur['nom']);
+            $pageSubtitle = $isOwnProfile ? 'Gérez vos informations et consultez vos analyses océaniques' : 'Consultez les informations et les analyses océaniques de cet utilisateur';
+            ?>
+            <h1 class="text-4xl font-light mb-2"><?= $pageTitle ?></h1>
+            <p class="text-white/60"><?= $pageSubtitle ?></p>
         </div>
 
         <?php if ($error): ?>
@@ -93,6 +98,7 @@ $success = getSuccess();
                         </div>
                     </div>
                     
+                    <?php if ($isOwnProfile): ?>
                     <form action="?controller=utilisateur&action=doUpdateProfile" method="POST" class="space-y-6">
                         <div class="grid md:grid-cols-2 gap-6">
                             <div>
@@ -130,15 +136,61 @@ $success = getSuccess();
                             </div>
                         </div>
                     </form>
+                <?php else: ?>
+                    <!-- Affichage en lecture seule pour l'admin -->
+                    <div class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-white/70 mb-2">Nom</label>
+                                <div class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white/80">
+                                    <?= htmlspecialchars($utilisateur['nom']) ?>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-white/70 mb-2">Prénom</label>
+                                <div class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white/80">
+                                    <?= htmlspecialchars($utilisateur['prenom']) ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-white/70 mb-2">Email</label>
+                            <div class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white/80">
+                                <?= htmlspecialchars($utilisateur['email']) ?>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-white/70 mb-2">Numéro de téléphone</label>
+                            <div class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white/80">
+                                <?= htmlspecialchars($utilisateur['numero']) ?>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-6 border-t border-white/10">
+                            <div class="flex items-center justify-between">
+                                <div class="text-sm text-white/50">
+                                    <p>Membre depuis le <?= date('d F Y', strtotime($utilisateur['date_inscription'])) ?></p>
+                                </div>
+                                <a href="?controller=admin&action=users" class="px-8 py-3 rounded-xl bg-white/10 border border-white/20 text-white font-medium hover:bg-white/20 transition-all">
+                                    ← Retour à la liste
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
                 </div>
 
                 <!-- Carte analyses -->
                 <div class="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8">
                     <div class="flex items-center justify-between mb-8">
-                        <h2 class="text-2xl font-semibold text-green-300">Mes analyses</h2>
-                        <a href="?action=analyse" class="text-cyan-400 hover:text-cyan-300 font-medium text-sm transition-colors">
-                            Nouvelle analyse →
-                        </a>
+                        <h2 class="text-2xl font-semibold text-green-300"><?= $isOwnProfile ? 'Mes analyses' : 'Analyses de ' . htmlspecialchars($utilisateur['prenom']) ?></h2>
+                        <?php if ($isOwnProfile): ?>
+                            <a href="?action=analyse" class="text-cyan-400 hover:text-cyan-300 font-medium text-sm transition-colors">
+                                Nouvelle analyse →
+                            </a>
+                        <?php endif; ?>
                     </div>
                     
                     <?php if (empty($recentAnalyses)): ?>
@@ -149,10 +201,12 @@ $success = getSuccess();
                                 </svg>
                             </div>
                             <h3 class="text-lg font-medium text-white mb-2">Aucune analyse</h3>
-                            <p class="text-white/50 mb-6">Commencez à explorer les données océaniques</p>
-                            <a href="?action=analyse" class="inline-flex items-center px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium hover:from-cyan-600 hover:to-blue-600 transition-all shadow-lg shadow-cyan-500/30">
-                                Commencer une analyse
-                            </a>
+                            <p class="text-white/50 mb-6"><?= $isOwnProfile ? 'Commencez à explorer les données océaniques' : htmlspecialchars($utilisateur['prenom']) . ' n\'a pas encore effectué d\'analyse' ?></p>
+                            <?php if ($isOwnProfile): ?>
+                                <a href="?action=analyse" class="inline-flex items-center px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium hover:from-cyan-600 hover:to-blue-600 transition-all shadow-lg shadow-cyan-500/30">
+                                    Commencer une analyse
+                                </a>
+                            <?php endif; ?>
                         </div>
                     <?php else: ?>
                         <!-- Statistiques -->
@@ -219,6 +273,7 @@ $success = getSuccess();
             </div>
 
             <!-- Section Paramètres -->
+            <?php if ($isOwnProfile): ?>
             <div class="lg:col-span-1">
                 <div class="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8">
                     <h2 class="text-2xl font-semibold text-white mb-8">Paramètres</h2>
@@ -305,6 +360,7 @@ $success = getSuccess();
                         </div>
                     </div>
         </div>
+            <?php endif; ?>
     </div>
 
     <!-- Scripts pour l'animation du fond -->

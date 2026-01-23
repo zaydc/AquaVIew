@@ -363,7 +363,6 @@
                             <span class="text-sm text-white/50">Affichage:</span>
                             <select id="mapDisplayType" class="bg-white/5 border border-white/10 text-white text-sm rounded-lg px-3 py-1 focus:outline-none focus:border-cyan-400 w-full sm:w-auto">
                                 <option value="markers">Pastilles</option>
-                                <option value="heatmap">Zones de chaleur</option>
                             </select>
                         </div>
                     </div>

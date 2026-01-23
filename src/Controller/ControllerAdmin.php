@@ -8,6 +8,7 @@
 namespace App\Controller;
 
 use App\Model\Repository\UtilisateurRepository;
+use App\Model\Repository\UserAnalysisRepository;
 
 require_once __DIR__ . '/../Lib/auth_helpers.php';
 require_once __DIR__ . '/../Lib/RoleHierarchy.php';
@@ -82,6 +83,9 @@ class ControllerAdmin {
                 break;
             case 'deleteUser':
                 $this->deleteUser();
+                break;
+            case 'viewUserProfile':
+                $this->viewUserProfile();
                 break;
             default:
                 $this->dashboard();
@@ -237,5 +241,36 @@ class ControllerAdmin {
         
         header('Location: ?controller=admin&action=users');
         exit;
+    }
+
+    /**
+     * Affiche le profil détaillé d'un utilisateur avec son historique d'analyses
+     * Permet à l'admin de voir toutes les informations d'un utilisateur
+     */
+    private function viewUserProfile(): void {
+        $id = (int) ($_GET['id'] ?? 0);
+        
+        if ($id === 0) {
+            $_SESSION['error'] = 'ID utilisateur invalide.';
+            header('Location: ?controller=admin&action=users');
+            exit;
+        }
+        
+        // Récupérer les informations de l'utilisateur
+        $utilisateur = $this->userRepository->findById($id);
+        
+        if (!$utilisateur) {
+            $_SESSION['error'] = 'Utilisateur non trouvé.';
+            header('Location: ?controller=admin&action=users');
+            exit;
+        }
+        
+        // Récupérer l'historique des analyses de l'utilisateur
+        $analysisRepository = new UserAnalysisRepository();
+        $recentAnalyses = $analysisRepository->findByUserId($id, 10);
+        $userStats = $analysisRepository->getUserStats($id);
+        
+        // Passer les données à la vue
+        require_once __DIR__ . '/../View/utilisateur/profile.php';
     }
 }
