@@ -66,8 +66,14 @@ $success = getSuccess();
         <!-- En-tête épuré -->
         <div class="mb-12">
             <?php 
+            // Vérification que l'utilisateur existe
+            if (!$utilisateur) {
+                echo '<div class="text-red-400">Utilisateur non trouvé.</div>';
+                return;
+            }
+            
             $isOwnProfile = isset($_SESSION['user']['id']) && $utilisateur['id'] == $_SESSION['user']['id'];
-            $pageTitle = $isOwnProfile ? 'Mon Profil' : 'Profil de ' . htmlspecialchars($utilisateur['prenom'] . ' ' . $utilisateur['nom']);
+            $pageTitle = $isOwnProfile ? 'Mon Profil' : 'Profil de ' . htmlspecialchars($utilisateur['prenom'] ?? '') . ' ' . htmlspecialchars($utilisateur['nom'] ?? '');
             $pageSubtitle = $isOwnProfile ? 'Gérez vos informations et consultez vos analyses océaniques' : 'Consultez les informations et les analyses océaniques de cet utilisateur';
             ?>
             <h1 class="text-4xl font-light mb-2"><?= $pageTitle ?></h1>
@@ -94,7 +100,7 @@ $success = getSuccess();
                     <div class="flex items-center justify-between mb-8">
                         <h2 class="text-2xl font-semibold text-cyan-300">Informations personnelles</h2>
                         <div class="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold shadow-lg shadow-cyan-500/30">
-                            <?= strtoupper(substr($utilisateur['prenom'], 0, 1)) . strtoupper(substr($utilisateur['nom'], 0, 1)) ?>
+                            <?= strtoupper(substr($utilisateur['prenom'] ?? '', 0, 1)) . strtoupper(substr($utilisateur['nom'] ?? '', 0, 1)) ?>
                         </div>
                     </div>
                     
@@ -103,32 +109,32 @@ $success = getSuccess();
                         <div class="grid md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-sm font-medium text-white/70 mb-2">Nom</label>
-                                <input type="text" name="nom" required value="<?= htmlspecialchars($utilisateur['nom']) ?>"
+                                <input type="text" name="nom" required value="<?= htmlspecialchars($utilisateur['nom'] ?? '') ?>"
                                        class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all" />
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-white/70 mb-2">Prénom</label>
-                                <input type="text" name="prenom" required value="<?= htmlspecialchars($utilisateur['prenom']) ?>"
+                                <input type="text" name="prenom" required value="<?= htmlspecialchars($utilisateur['prenom'] ?? '') ?>"
                                        class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all" />
                             </div>
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-white/70 mb-2">Email</label>
-                            <input type="email" name="email" required value="<?= htmlspecialchars($utilisateur['email']) ?>"
+                            <input type="email" name="email" required value="<?= htmlspecialchars($utilisateur['email'] ?? '') ?>"
                                    class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all" />
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-white/70 mb-2">Numéro de téléphone</label>
-                            <input type="tel" name="numero" required value="<?= htmlspecialchars($utilisateur['numero']) ?>"
+                            <input type="tel" name="numero" required value="<?= htmlspecialchars($utilisateur['numero'] ?? '') ?>"
                                    class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all" />
                         </div>
                         
                         <div class="pt-6 border-t border-white/10">
                             <div class="flex items-center justify-between">
                                 <div class="text-sm text-white/50">
-                                    <p>Membre depuis le <?= date('d F Y', strtotime($utilisateur['date_inscription'])) ?></p>
+                                    <p>Membre depuis le <?= $utilisateur['date_inscription'] ? date('d F Y', strtotime($utilisateur['date_inscription'])) : 'Date inconnue' ?></p>
                                 </div>
                                 <button type="submit" class="px-8 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium hover:from-cyan-600 hover:to-blue-600 transition-all transform hover:scale-105 shadow-lg shadow-cyan-500/30">
                                     Mettre à jour
@@ -143,13 +149,13 @@ $success = getSuccess();
                             <div>
                                 <label class="block text-sm font-medium text-white/70 mb-2">Nom</label>
                                 <div class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white/80">
-                                    <?= htmlspecialchars($utilisateur['nom']) ?>
+                                    <?= htmlspecialchars($utilisateur['nom'] ?? '') ?>
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-white/70 mb-2">Prénom</label>
                                 <div class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white/80">
-                                    <?= htmlspecialchars($utilisateur['prenom']) ?>
+                                    <?= htmlspecialchars($utilisateur['prenom'] ?? '') ?>
                                 </div>
                             </div>
                         </div>
@@ -157,21 +163,21 @@ $success = getSuccess();
                         <div>
                             <label class="block text-sm font-medium text-white/70 mb-2">Email</label>
                             <div class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white/80">
-                                <?= htmlspecialchars($utilisateur['email']) ?>
+                                <?= htmlspecialchars($utilisateur['email'] ?? '') ?>
                             </div>
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-white/70 mb-2">Numéro de téléphone</label>
                             <div class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white/80">
-                                <?= htmlspecialchars($utilisateur['numero']) ?>
+                                <?= htmlspecialchars($utilisateur['numero'] ?? '') ?>
                             </div>
                         </div>
                         
                         <div class="pt-6 border-t border-white/10">
                             <div class="flex items-center justify-between">
                                 <div class="text-sm text-white/50">
-                                    <p>Membre depuis le <?= date('d F Y', strtotime($utilisateur['date_inscription'])) ?></p>
+                                    <p>Membre depuis le <?= $utilisateur['date_inscription'] ? date('d F Y', strtotime($utilisateur['date_inscription'])) : 'Date inconnue' ?></p>
                                 </div>
                                 <a href="?controller=admin&action=users" class="px-8 py-3 rounded-xl bg-white/10 border border-white/20 text-white font-medium hover:bg-white/20 transition-all">
                                     ← Retour à la liste
@@ -185,7 +191,7 @@ $success = getSuccess();
                 <!-- Carte analyses -->
                 <div class="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8">
                     <div class="flex items-center justify-between mb-8">
-                        <h2 class="text-2xl font-semibold text-green-300"><?= $isOwnProfile ? 'Mes analyses' : 'Analyses de ' . htmlspecialchars($utilisateur['prenom']) ?></h2>
+                        <h2 class="text-2xl font-semibold text-green-300"><?= $isOwnProfile ? 'Mes analyses' : 'Analyses de ' . htmlspecialchars($utilisateur['prenom'] ?? '') ?></h2>
                         <?php if ($isOwnProfile): ?>
                             <a href="?action=analyse" class="text-cyan-400 hover:text-cyan-300 font-medium text-sm transition-colors">
                                 Nouvelle analyse →
@@ -201,7 +207,7 @@ $success = getSuccess();
                                 </svg>
                             </div>
                             <h3 class="text-lg font-medium text-white mb-2">Aucune analyse</h3>
-                            <p class="text-white/50 mb-6"><?= $isOwnProfile ? 'Commencez à explorer les données océaniques' : htmlspecialchars($utilisateur['prenom']) . ' n\'a pas encore effectué d\'analyse' ?></p>
+                            <p class="text-white/50 mb-6"><?= $isOwnProfile ? 'Commencez à explorer les données océaniques' : htmlspecialchars($utilisateur['prenom'] ?? '') . ' n\'a pas encore effectué d\'analyse' ?></p>
                             <?php if ($isOwnProfile): ?>
                                 <a href="?action=analyse" class="inline-flex items-center px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium hover:from-cyan-600 hover:to-blue-600 transition-all shadow-lg shadow-cyan-500/30">
                                     Commencer une analyse
