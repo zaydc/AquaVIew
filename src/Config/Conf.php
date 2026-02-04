@@ -15,13 +15,14 @@ namespace App\Config;
 class Conf {
     /**
      * Configuration de la BDD
-     * @var array Contient hostname, database, login, password
+     * @var array Contient hostname, database, login, password, port
      */
     private static array $database = [
         'hostname' => 'localhost',  // Serveur MySQL local
+        'port' => '8889',           // Port MAMP par défaut
         'database' => 'aquaview',   // Nom de notre BDD de donnees oceaniques
-        'login' => 'root',          // Utilisateur MySQL (a adapter en prod)
-        'password' => ''            // Mot de passe MySQL (vide en local)
+        'login' => 'root',          // Utilisateur MySQL
+        'password' => 'root'        // Mot de passe MySQL MAMP
     ];
 
     /**
@@ -54,5 +55,13 @@ class Conf {
      */
     public static function getPassword(): string {
         return self::$database['password'];
+    }
+
+    /**
+     * Retourne le port de connexion MySQL
+     * @return string Port MySQL (8889 pour MAMP)
+     */
+    public static function getPort(): string {
+        return self::$database['port'];
     }
 }

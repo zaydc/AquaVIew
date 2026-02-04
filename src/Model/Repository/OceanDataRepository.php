@@ -13,7 +13,7 @@ class OceanDataRepository
     public function __construct()
     {
         $this->pdo = new PDO(
-            'mysql:host=' . Conf::getHostname() . ';dbname=' . Conf::getDatabase() . ';charset=utf8',
+            'mysql:host=' . Conf::getHostname() . ';port=' . Conf::getPort() . ';dbname=' . Conf::getDatabase() . ';charset=utf8',
             Conf::getLogin(),
             Conf::getPassword(),
             [
@@ -21,6 +21,9 @@ class OceanDataRepository
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
             ]
         );
+        
+        // Désactiver ONLY_FULL_GROUP_BY pour compatibilité macOS
+        $this->pdo->exec("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
     }
 
     /**
@@ -96,7 +99,7 @@ class OceanDataRepository
             AND
                 v.valeur IS NOT NULL
             GROUP BY DATE(m.date_mesure), m.latitude, m.longitude
-            ORDER BY m.date_mesure ASC
+            ORDER BY DATE(m.date_mesure) ASC
         ";
 
         $stmt = $this->pdo->query($sql);
