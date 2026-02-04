@@ -34,11 +34,12 @@ class DatabaseConnection {
         $database = Conf::getDatabase();
         $login = Conf::getLogin();
         $password = Conf::getPassword();
+        $port = Conf::getPort(); // Ajout du port
 
         try {
             // Creation de la connexion PDO avec options de securite
             $this->pdo = new PDO(
-                "mysql:host=$hostname;dbname=$database;charset=utf8mb4",
+                "mysql:host=$hostname;port=$port;dbname=$database;charset=utf8mb4", // Ajout du port
                 $login,
                 $password,
                 [
@@ -48,6 +49,10 @@ class DatabaseConnection {
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
                 ]
             );
+            
+            // Désactiver ONLY_FULL_GROUP_BY pour compatibilité macOS
+            $this->pdo->exec("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
+            
         } catch (PDOException $e) {
             // En production, remplacer par un log d'erreur
             die("Erreur de connexion : " . $e->getMessage());
